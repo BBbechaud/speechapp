@@ -46,9 +46,10 @@ final class PracticeFlowViewModel {
         navigationPath.removeLast()
     }
 
-    /// End Practice: return to scenario list.
+    /// End Practice: show completion screen (path becomes only `.complete`).
     func endPracticeFromSession() {
-        reset()
+        personaSessionPhase = .listening
+        navigationPath = [.complete]
     }
 
     func reset() {
@@ -64,4 +65,5 @@ enum PracticeRoute: Hashable {
     case configure
     case primer
     case session
+    case complete
 }

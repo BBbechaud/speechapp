@@ -12,6 +12,8 @@ enum AppColors {
     static let background    = Color(hex: "#F2F2F7") // iOS system grouped
     static let surface       = Color.white
     static let surfaceRaised = Color(hex: "#F9F9F9")
+    /// Soft halo behind practice-complete mascot (warm peach).
+    static let mascotBackdrop = Color(hex: "#FCE8DE")
 
     // Text
     static let textPrimary   = Color(hex: "#1A1A1A")

@@ -120,7 +120,7 @@ struct PracticeSessionScreen: View {
         }
         .buttonStyle(PressButtonStyle())
         .accessibilityLabel("End practice")
-        .accessibilityHint("Returns to scenario list")
+        .accessibilityHint("Shows practice complete, then you can open conversation analysis")
     }
 }
 

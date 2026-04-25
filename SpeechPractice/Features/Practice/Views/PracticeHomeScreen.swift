@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct PracticeHomeScreen: View {
+    var onSwitchToFeedbackTab: () -> Void = {}
+
     @State private var viewModel = PracticeFlowViewModel()
     @State private var appeared = false
 
@@ -31,6 +33,11 @@ struct PracticeHomeScreen: View {
                     PracticePrimerScreen(viewModel: viewModel)
                 case .session:
                     PracticeSessionScreen(viewModel: viewModel)
+                case .complete:
+                    PracticeCompleteScreen(onSeeConversationAnalysis: {
+                        viewModel.reset()
+                        onSwitchToFeedbackTab()
+                    })
                 }
             }
             .onAppear {

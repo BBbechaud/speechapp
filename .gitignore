@@ -1,0 +1,10 @@
+.DS_Store
+DerivedData/
+.build/
+.swiftpm/
+*.xcuserstate
+*.xccheckout
+*.moved-aside
+xcuserdata/
+
+SpeechPractice/Configuration/Secrets.local.xcconfig

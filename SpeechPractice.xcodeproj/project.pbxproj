@@ -1,0 +1,790 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8F5526152BDADA7E00A00001 /* SpeechPracticeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526142BDADA7E00A00001 /* SpeechPracticeApp.swift */; };
+		8F5526192BDADA7E00A00001 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526182BDADA7E00A00001 /* AppConfiguration.swift */; };
+		8F55261B2BDADA7E00A00001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F55261A2BDADA7E00A00001 /* Assets.xcassets */; };
+		8F5526212BDADA7E00A00001 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526202BDADA7E00A00001 /* RootTabView.swift */; };
+		8F5526232BDADA7E00A00001 /* FeaturePlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526222BDADA7E00A00001 /* FeaturePlaceholderScreen.swift */; };
+		8F5526252BDADA7E00A00001 /* PracticePlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526242BDADA7E00A00001 /* PracticePlaceholderScreen.swift */; };
+		8F5526272BDADA7E00A00001 /* ReviewPlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526262BDADA7E00A00001 /* ReviewPlaceholderScreen.swift */; };
+		8F5526292BDADA7E00A00001 /* ProgressPlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5526282BDADA7E00A00001 /* ProgressPlaceholderScreen.swift */; };
+		8F55262B2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55262A2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift */; };
+		8F5527012BDADB0000A00001 /* VoiceConversationContracts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5527002BDADB0000A00001 /* VoiceConversationContracts.swift */; };
+		8F5527032BDADB0000A00001 /* PracticeConfigurationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5527022BDADB0000A00001 /* PracticeConfigurationModels.swift */; };
+		8F5528052BDADC0000A00001 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 8F5528042BDADC0000A00001 /* Supabase */; };
+		8F5528072BDADC0000A00001 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 8F5528062BDADC0000A00001 /* PostHog */; };
+		8F5528092BDADC0000A00001 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 8F5528082BDADC0000A00001 /* GoogleSignIn */; };
+		8F55280B2BDADC0000A00001 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8F55280A2BDADC0000A00001 /* GoogleSignInSwift */; };
+		8F5529012BDADD0100A00001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529002BDADD0100A00001 /* AppTheme.swift */; };
+		8F5529032BDADD0100A00001 /* PracticeHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */; };
+		8F5529052BDADD0100A00001 /* PracticePrimerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */; };
+		8F5529072BDADD0100A00001 /* ScenarioConfigScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */; };
+		8F5529092BDADD0100A00001 /* PracticeFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */; };
+		8F55290B2BDADD0100A00001 /* ScenarioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290A2BDADD0100A00001 /* ScenarioData.swift */; };
+		8F55290D2BDADD0100A00001 /* PersonaAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290C2BDADD0100A00001 /* PersonaAvatarView.swift */; };
+		8F55290F2BDADD0100A00001 /* DifficultyBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290E2BDADD0100A00001 /* DifficultyBadge.swift */; };
+		8F5529112BDADD0100A00001 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529102BDADD0100A00001 /* PrimaryButton.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8F5526042BDADA7E00A00001 /* SpeechPractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechPractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F5526142BDADA7E00A00001 /* SpeechPracticeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechPracticeApp.swift; sourceTree = "<group>"; };
+		8F5526182BDADA7E00A00001 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		8F55261A2BDADA7E00A00001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8F55261C2BDADA7E00A00001 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
+		8F55261D2BDADA7E00A00001 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		8F5526202BDADA7E00A00001 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		8F5526222BDADA7E00A00001 /* FeaturePlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturePlaceholderScreen.swift; sourceTree = "<group>"; };
+		8F5526242BDADA7E00A00001 /* PracticePlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlaceholderScreen.swift; sourceTree = "<group>"; };
+		8F5526262BDADA7E00A00001 /* ReviewPlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPlaceholderScreen.swift; sourceTree = "<group>"; };
+		8F5526282BDADA7E00A00001 /* ProgressPlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressPlaceholderScreen.swift; sourceTree = "<group>"; };
+		8F55262A2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPlaceholderScreen.swift; sourceTree = "<group>"; };
+		8F5527002BDADB0000A00001 /* VoiceConversationContracts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceConversationContracts.swift; sourceTree = "<group>"; };
+		8F5527022BDADB0000A00001 /* PracticeConfigurationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeConfigurationModels.swift; sourceTree = "<group>"; };
+		8F5529002BDADD0100A00001 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHomeScreen.swift; sourceTree = "<group>"; };
+		8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePrimerScreen.swift; sourceTree = "<group>"; };
+		8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioConfigScreen.swift; sourceTree = "<group>"; };
+		8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeFlowViewModel.swift; sourceTree = "<group>"; };
+		8F55290A2BDADD0100A00001 /* ScenarioData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioData.swift; sourceTree = "<group>"; };
+		8F55290C2BDADD0100A00001 /* PersonaAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaAvatarView.swift; sourceTree = "<group>"; };
+		8F55290E2BDADD0100A00001 /* DifficultyBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyBadge.swift; sourceTree = "<group>"; };
+		8F5529102BDADD0100A00001 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8F5526012BDADA7E00A00001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F5528052BDADC0000A00001 /* Supabase in Frameworks */,
+				8F5528072BDADC0000A00001 /* PostHog in Frameworks */,
+				8F5528092BDADC0000A00001 /* GoogleSignIn in Frameworks */,
+				8F55280B2BDADC0000A00001 /* GoogleSignInSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8F5525FB2BDADA7E00A00001 = {
+			isa = PBXGroup;
+			children = (
+				8F55260A2BDADA7E00A00001 /* SpeechPractice */,
+				8F5526052BDADA7E00A00001 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8F5526052BDADA7E00A00001 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526042BDADA7E00A00001 /* SpeechPractice.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8F55260A2BDADA7E00A00001 /* SpeechPractice */ = {
+			isa = PBXGroup;
+			children = (
+				8F55260B2BDADA7E00A00001 /* App */,
+				8F5526302BDADA7E00A00001 /* Features */,
+				8F5527102BDADB0000A00001 /* Shared */,
+				8F55260C2BDADA7E00A00001 /* Resources */,
+				8F55260D2BDADA7E00A00001 /* Configuration */,
+			);
+			path = SpeechPractice;
+			sourceTree = "<group>";
+		};
+		8F55260B2BDADA7E00A00001 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526142BDADA7E00A00001 /* SpeechPracticeApp.swift */,
+				8F5526202BDADA7E00A00001 /* RootTabView.swift */,
+				8F5526222BDADA7E00A00001 /* FeaturePlaceholderScreen.swift */,
+				8F5526182BDADA7E00A00001 /* AppConfiguration.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		8F55260C2BDADA7E00A00001 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8F55261A2BDADA7E00A00001 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8F55260D2BDADA7E00A00001 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				8F55261C2BDADA7E00A00001 /* Base.xcconfig */,
+				8F55261D2BDADA7E00A00001 /* Secrets.example.xcconfig */,
+			);
+			path = Configuration;
+			sourceTree = "<group>";
+		};
+		8F5526302BDADA7E00A00001 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526312BDADA7E00A00001 /* Practice */,
+				8F5526362BDADA7E00A00001 /* Review */,
+				8F55263B2BDADA7E00A00001 /* Progress */,
+				8F5526402BDADA7E00A00001 /* Onboarding */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		8F5526312BDADA7E00A00001 /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526322BDADA7E00A00001 /* Domain */,
+				8F5529142BDADD0100A00001 /* Models */,
+				8F5526332BDADA7E00A00001 /* Views */,
+				8F5526342BDADA7E00A00001 /* ViewModels */,
+				8F5526352BDADA7E00A00001 /* Services */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		8F5526322BDADA7E00A00001 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		8F5526332BDADA7E00A00001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */,
+				8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */,
+				8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */,
+				8F5526242BDADA7E00A00001 /* PracticePlaceholderScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8F5526342BDADA7E00A00001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8F5526352BDADA7E00A00001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8F5526362BDADA7E00A00001 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526372BDADA7E00A00001 /* Domain */,
+				8F5526382BDADA7E00A00001 /* Views */,
+				8F5526392BDADA7E00A00001 /* ViewModels */,
+				8F55263A2BDADA7E00A00001 /* Services */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		8F5526372BDADA7E00A00001 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		8F5526382BDADA7E00A00001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526262BDADA7E00A00001 /* ReviewPlaceholderScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8F5526392BDADA7E00A00001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8F55263A2BDADA7E00A00001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8F55263B2BDADA7E00A00001 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				8F55263C2BDADA7E00A00001 /* Domain */,
+				8F55263D2BDADA7E00A00001 /* Views */,
+				8F55263E2BDADA7E00A00001 /* ViewModels */,
+				8F55263F2BDADA7E00A00001 /* Services */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		8F55263C2BDADA7E00A00001 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		8F55263D2BDADA7E00A00001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526282BDADA7E00A00001 /* ProgressPlaceholderScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8F55263E2BDADA7E00A00001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8F55263F2BDADA7E00A00001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8F5526402BDADA7E00A00001 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526412BDADA7E00A00001 /* Domain */,
+				8F5526422BDADA7E00A00001 /* Views */,
+				8F5526432BDADA7E00A00001 /* ViewModels */,
+				8F5526442BDADA7E00A00001 /* Services */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		8F5526412BDADA7E00A00001 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Domain;
+			sourceTree = "<group>";
+		};
+		8F5526422BDADA7E00A00001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F55262A2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8F5526432BDADA7E00A00001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		8F5526442BDADA7E00A00001 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		8F5527102BDADB0000A00001 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				8F5527112BDADB0000A00001 /* Auth */,
+				8F5527122BDADB0000A00001 /* Networking */,
+				8F5527132BDADB0000A00001 /* Voice */,
+				8F5527182BDADB0000A00001 /* Analytics */,
+				8F5527192BDADB0000A00001 /* Billing */,
+				8F5529152BDADD0100A00001 /* Components */,
+				8F55271A2BDADB0000A00001 /* DesignSystem */,
+				8F55271B2BDADB0000A00001 /* Models */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		8F5527112BDADB0000A00001 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		8F5527122BDADB0000A00001 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		8F5527132BDADB0000A00001 /* Voice */ = {
+			isa = PBXGroup;
+			children = (
+				8F5527142BDADB0000A00001 /* Contracts */,
+				8F5527152BDADB0000A00001 /* Capture */,
+				8F5527162BDADB0000A00001 /* Playback */,
+				8F5527172BDADB0000A00001 /* Providers */,
+			);
+			path = Voice;
+			sourceTree = "<group>";
+		};
+		8F5527142BDADB0000A00001 /* Contracts */ = {
+			isa = PBXGroup;
+			children = (
+				8F5527002BDADB0000A00001 /* VoiceConversationContracts.swift */,
+			);
+			path = Contracts;
+			sourceTree = "<group>";
+		};
+		8F5527152BDADB0000A00001 /* Capture */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Capture;
+			sourceTree = "<group>";
+		};
+		8F5527162BDADB0000A00001 /* Playback */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Playback;
+			sourceTree = "<group>";
+		};
+		8F5527172BDADB0000A00001 /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Providers;
+			sourceTree = "<group>";
+		};
+		8F5527182BDADB0000A00001 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
+		8F5527192BDADB0000A00001 /* Billing */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Billing;
+			sourceTree = "<group>";
+		};
+		8F55271A2BDADB0000A00001 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				8F5529002BDADD0100A00001 /* AppTheme.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		8F55271B2BDADB0000A00001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8F5527022BDADB0000A00001 /* PracticeConfigurationModels.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8F5529142BDADD0100A00001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8F55290A2BDADD0100A00001 /* ScenarioData.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8F5529152BDADD0100A00001 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				8F55290C2BDADD0100A00001 /* PersonaAvatarView.swift */,
+				8F55290E2BDADD0100A00001 /* DifficultyBadge.swift */,
+				8F5529102BDADD0100A00001 /* PrimaryButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8F5526032BDADA7E00A00001 /* SpeechPractice */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F5526112BDADA7E00A00001 /* Build configuration list for PBXNativeTarget "SpeechPractice" */;
+			buildPhases = (
+				8F5526002BDADA7E00A00001 /* Sources */,
+				8F5526012BDADA7E00A00001 /* Frameworks */,
+				8F5526022BDADA7E00A00001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpeechPractice;
+			packageProductDependencies = (
+				8F5528042BDADC0000A00001 /* Supabase */,
+				8F5528062BDADC0000A00001 /* PostHog */,
+				8F5528082BDADC0000A00001 /* GoogleSignIn */,
+				8F55280A2BDADC0000A00001 /* GoogleSignInSwift */,
+			);
+			productName = SpeechPractice;
+			productReference = 8F5526042BDADA7E00A00001 /* SpeechPractice.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8F5525FC2BDADA7E00A00001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					8F5526032BDADA7E00A00001 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = 8F5525FF2BDADA7E00A00001 /* Build configuration list for PBXProject "SpeechPractice" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8F5525FB2BDADA7E00A00001;
+			packageReferences = (
+				8F5528002BDADC0000A00001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				8F5528012BDADC0000A00001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			productRefGroup = 8F5526052BDADA7E00A00001 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8F5526032BDADA7E00A00001 /* SpeechPractice */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8F5526022BDADA7E00A00001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F55261B2BDADA7E00A00001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8F5526002BDADA7E00A00001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F5526152BDADA7E00A00001 /* SpeechPracticeApp.swift in Sources */,
+				8F5526212BDADA7E00A00001 /* RootTabView.swift in Sources */,
+				8F5526232BDADA7E00A00001 /* FeaturePlaceholderScreen.swift in Sources */,
+				8F5526252BDADA7E00A00001 /* PracticePlaceholderScreen.swift in Sources */,
+				8F5529032BDADD0100A00001 /* PracticeHomeScreen.swift in Sources */,
+				8F5529072BDADD0100A00001 /* ScenarioConfigScreen.swift in Sources */,
+				8F5529052BDADD0100A00001 /* PracticePrimerScreen.swift in Sources */,
+				8F5526272BDADA7E00A00001 /* ReviewPlaceholderScreen.swift in Sources */,
+				8F5526292BDADA7E00A00001 /* ProgressPlaceholderScreen.swift in Sources */,
+				8F55262B2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift in Sources */,
+				8F5526192BDADA7E00A00001 /* AppConfiguration.swift in Sources */,
+				8F5529012BDADD0100A00001 /* AppTheme.swift in Sources */,
+				8F55290D2BDADD0100A00001 /* PersonaAvatarView.swift in Sources */,
+				8F55290F2BDADD0100A00001 /* DifficultyBadge.swift in Sources */,
+				8F5529112BDADD0100A00001 /* PrimaryButton.swift in Sources */,
+				8F5527032BDADB0000A00001 /* PracticeConfigurationModels.swift in Sources */,
+				8F55290B2BDADD0100A00001 /* ScenarioData.swift in Sources */,
+				8F5529092BDADD0100A00001 /* PracticeFlowViewModel.swift in Sources */,
+				8F5527012BDADB0000A00001 /* VoiceConversationContracts.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8F55260E2BDADA7E00A00001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F55261C2BDADA7E00A00001 /* Base.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8F55260F2BDADA7E00A00001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F55261C2BDADA7E00A00001 /* Base.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8F5526122BDADA7E00A00001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F55261C2BDADA7E00A00001 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_POSTHOG_AUTOCAPTURE_ENABLED = "$(POSTHOG_AUTOCAPTURE_ENABLED)";
+				INFOPLIST_KEY_POSTHOG_CAPTURE_ENABLED = "$(POSTHOG_CAPTURE_ENABLED)";
+				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_POSTHOG_PROJECT_TOKEN = "$(POSTHOG_PROJECT_TOKEN)";
+				INFOPLIST_KEY_POSTHOG_SESSION_REPLAY_ENABLED = "$(POSTHOG_SESSION_REPLAY_ENABLED)";
+				INFOPLIST_KEY_SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SUPABASE_URL = "$(SUPABASE_URL)";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		8F5526132BDADA7E00A00001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8F55261C2BDADA7E00A00001 /* Base.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
+				INFOPLIST_KEY_POSTHOG_AUTOCAPTURE_ENABLED = "$(POSTHOG_AUTOCAPTURE_ENABLED)";
+				INFOPLIST_KEY_POSTHOG_CAPTURE_ENABLED = "$(POSTHOG_CAPTURE_ENABLED)";
+				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
+				INFOPLIST_KEY_POSTHOG_PROJECT_TOKEN = "$(POSTHOG_PROJECT_TOKEN)";
+				INFOPLIST_KEY_POSTHOG_SESSION_REPLAY_ENABLED = "$(POSTHOG_SESSION_REPLAY_ENABLED)";
+				INFOPLIST_KEY_SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
+				INFOPLIST_KEY_SUPABASE_URL = "$(SUPABASE_URL)";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8F5525FF2BDADA7E00A00001 /* Build configuration list for PBXProject "SpeechPractice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F55260E2BDADA7E00A00001 /* Debug */,
+				8F55260F2BDADA7E00A00001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8F5526112BDADA7E00A00001 /* Build configuration list for PBXNativeTarget "SpeechPractice" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F5526122BDADA7E00A00001 /* Debug */,
+				8F5526132BDADA7E00A00001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F5528002BDADC0000A00001 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.43.1;
+			};
+		};
+		8F5528012BDADC0000A00001 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.57.0;
+			};
+		};
+		8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = exactVersion;
+				version = 9.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F5528042BDADC0000A00001 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F5528002BDADC0000A00001 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+		8F5528062BDADC0000A00001 /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F5528012BDADC0000A00001 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+		8F5528082BDADC0000A00001 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		8F55280A2BDADC0000A00001 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8F5525FC2BDADA7E00A00001 /* Project object */;
+}

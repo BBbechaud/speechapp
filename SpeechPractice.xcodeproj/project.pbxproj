@@ -25,6 +25,7 @@
 		8F5529012BDADD0100A00001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529002BDADD0100A00001 /* AppTheme.swift */; };
 		8F5529032BDADD0100A00001 /* PracticeHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */; };
 		8F5529052BDADD0100A00001 /* PracticePrimerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */; };
+		8F5529132BDADD0100A00001 /* PracticeSessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */; };
 		8F5529072BDADD0100A00001 /* ScenarioConfigScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */; };
 		8F5529092BDADD0100A00001 /* PracticeFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */; };
 		8F55290B2BDADD0100A00001 /* ScenarioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290A2BDADD0100A00001 /* ScenarioData.swift */; };
@@ -51,6 +52,7 @@
 		8F5529002BDADD0100A00001 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHomeScreen.swift; sourceTree = "<group>"; };
 		8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePrimerScreen.swift; sourceTree = "<group>"; };
+		8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionScreen.swift; sourceTree = "<group>"; };
 		8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioConfigScreen.swift; sourceTree = "<group>"; };
 		8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeFlowViewModel.swift; sourceTree = "<group>"; };
 		8F55290A2BDADD0100A00001 /* ScenarioData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioData.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */,
 				8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */,
 				8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */,
+				8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */,
 				8F5526242BDADA7E00A00001 /* PracticePlaceholderScreen.swift */,
 			);
 			path = Views;
@@ -510,6 +513,7 @@
 				8F5529032BDADD0100A00001 /* PracticeHomeScreen.swift in Sources */,
 				8F5529072BDADD0100A00001 /* ScenarioConfigScreen.swift in Sources */,
 				8F5529052BDADD0100A00001 /* PracticePrimerScreen.swift in Sources */,
+				8F5529132BDADD0100A00001 /* PracticeSessionScreen.swift in Sources */,
 				8F5526272BDADA7E00A00001 /* ReviewPlaceholderScreen.swift in Sources */,
 				8F5526292BDADA7E00A00001 /* ProgressPlaceholderScreen.swift in Sources */,
 				8F55262B2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift in Sources */,

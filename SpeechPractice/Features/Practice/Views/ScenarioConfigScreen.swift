@@ -47,16 +47,12 @@ struct ScenarioConfigScreen: View {
     // MARK: - Selected Scenario Banner
 
     private func selectedScenarioBanner(scenario: Scenario) -> some View {
-        HStack(spacing: AppSpacing.md) {
-            ZStack {
-                RoundedRectangle(cornerRadius: AppRadius.md)
-                    .fill(AppColors.accentSubtle)
-                    .frame(width: 56, height: 56)
-
-                Image(systemName: scenario.sfSymbol)
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
-            }
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: scenario.sfSymbol)
+                .font(.system(size: 24, weight: .semibold))
+                .foregroundStyle(AppColors.accent)
+                .frame(width: 52, height: 56, alignment: .center)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text(scenario.title)

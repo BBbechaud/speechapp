@@ -14,20 +14,34 @@ struct PracticePrimerScreen: View {
                     .opacity(appeared ? 1 : 0)
                     .animation(.spring(response: 0.45, dampingFraction: 0.85).delay(0.05), value: appeared)
 
-                headlineSection
+                personaDescription
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 8)
                     .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.1), value: appeared)
 
-                tipsSection
+                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                    focusOnHeading
+                    tipsSection
+                }
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.sm)
             .padding(.bottom, 120)
         }
         .background(AppColors.background)
-        .navigationTitle("Practice Primer")
+        .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(scenario.title)
+                    .font(AppFonts.display(24))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.85)
+                    .multilineTextAlignment(.center)
+            }
+        }
         .safeAreaInset(edge: .bottom) {
             startButton
         }
@@ -39,37 +53,28 @@ struct PracticePrimerScreen: View {
     // MARK: - Persona Hero
 
     private var personaHero: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: AppRadius.xxl)
-                .fill(AppColors.surfaceRaised)
-                .frame(maxWidth: .infinity)
-                .frame(height: 220)
+        VStack(spacing: AppSpacing.sm) {
+            PersonaAvatarView(name: persona.name, size: 88)
+                .overlay {
+                    Circle()
+                        .strokeBorder(AppColors.accentMedium, lineWidth: 2)
+                }
+                .scaleEffect(appeared ? 1 : 0.85)
+                .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.08), value: appeared)
 
-            VStack(spacing: AppSpacing.md) {
-                PersonaAvatarView(name: persona.name, size: 96)
-                    .overlay {
-                        Circle()
-                            .strokeBorder(AppColors.accentMedium, lineWidth: 2)
-                    }
-                    .scaleEffect(appeared ? 1 : 0.85)
-                    .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.08), value: appeared)
-
-                DifficultyBadge(difficulty: persona.difficulty)
-            }
+            DifficultyBadge(difficulty: persona.difficulty)
         }
+        .frame(maxWidth: .infinity)
+        .accessibilityElement(children: .combine)
     }
 
-    // MARK: - Headline
+    // MARK: - Focus on (tips)
 
-    private var headlineSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
-            Text("Ready to practice with \(persona.name)?")
-                .font(AppFonts.display(26))
-                .foregroundStyle(AppColors.textPrimary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            personaDescription
-        }
+    private var focusOnHeading: some View {
+        Text("Focus on")
+            .font(AppFonts.title(20))
+            .foregroundStyle(AppColors.textPrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var personaDescription: some View {
@@ -89,20 +94,61 @@ struct PracticePrimerScreen: View {
         .fixedSize(horizontal: false, vertical: true)
     }
 
-    // MARK: - Tips
+    // MARK: - Tips (goal + scenario tips)
 
     private var tipsSection: some View {
         VStack(spacing: AppSpacing.sm) {
+            scenarioGoalCard
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 10)
+                .animation(
+                    .spring(response: 0.4, dampingFraction: 0.8).delay(0.18),
+                    value: appeared
+                )
+
             ForEach(Array(scenario.tips.enumerated()), id: \.element.id) { index, tip in
                 TipCard(tip: tip)
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 10)
                     .animation(
                         .spring(response: 0.4, dampingFraction: 0.8)
-                            .delay(0.18 + Double(index) * 0.07),
+                            .delay(0.25 + Double(index) * 0.07),
                         value: appeared
                     )
             }
+        }
+    }
+
+    private var scenarioGoalCard: some View {
+        HStack(alignment: .top, spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(AppColors.background)
+                    .frame(width: 40, height: 40)
+
+                Image(systemName: "scope")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                Text("Your goal")
+                    .font(AppFonts.label(14))
+                    .foregroundStyle(AppColors.textPrimary)
+
+                Text(scenario.description)
+                    .font(AppFonts.body(13))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(AppSpacing.base)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(AppColors.surface)
+                .subtleShadow()
         }
     }
 

@@ -16,12 +16,12 @@ struct PracticeHomeScreen: View {
                     scenarioListSection
                 }
                 .padding(.horizontal, AppSpacing.base)
-                .padding(.top, AppSpacing.md)
+                .padding(.top, AppSpacing.xs)
                 .padding(.bottom, AppSpacing.xxxl)
             }
             .background(AppColors.background)
             .navigationTitle("Select Scenario")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.background, for: .navigationBar)
             .navigationDestination(for: PracticeRoute.self) { route in
                 switch route {
@@ -30,8 +30,7 @@ struct PracticeHomeScreen: View {
                 case .primer:
                     PracticePrimerScreen(viewModel: viewModel)
                 case .session:
-                    // Placeholder until session screen is built
-                    FeaturePlaceholderScreen(title: "Live Practice", systemImage: "mic.fill")
+                    PracticeSessionScreen(viewModel: viewModel)
                 }
             }
             .onAppear {
@@ -48,16 +47,12 @@ struct PracticeHomeScreen: View {
         return Button {
             viewModel.select(scenario: scenario)
         } label: {
-            HStack(spacing: AppSpacing.base) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: AppRadius.md)
-                        .fill(AppColors.accentSubtle)
-                        .frame(width: 52, height: 52)
-
-                    Image(systemName: scenario.sfSymbol)
-                        .font(.system(size: 22, weight: .semibold))
-                        .foregroundStyle(AppColors.accent)
-                }
+            HStack(spacing: AppSpacing.sm) {
+                Image(systemName: scenario.sfSymbol)
+                    .font(.system(size: 22, weight: .semibold))
+                    .foregroundStyle(AppColors.accent)
+                    .frame(width: 52, height: 52, alignment: .center)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: AppSpacing.xs) {
                     HStack(spacing: AppSpacing.xs) {
@@ -131,16 +126,12 @@ private struct ScenarioRow: View {
     let scenario: Scenario
 
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
-            ZStack {
-                RoundedRectangle(cornerRadius: AppRadius.md)
-                    .fill(AppColors.accentSubtle)
-                    .frame(width: 48, height: 48)
-
-                Image(systemName: scenario.sfSymbol)
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
-            }
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: scenario.sfSymbol)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(AppColors.accent)
+                .frame(width: 44, height: 48, alignment: .center)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 HStack(alignment: .center, spacing: AppSpacing.sm) {

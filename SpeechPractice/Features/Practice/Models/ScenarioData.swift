@@ -18,6 +18,15 @@ struct PracticeTip: Identifiable, Hashable {
     let description: String
 }
 
+struct DailyChallenge: Identifiable, Hashable {
+    let id: String
+    let category: String
+    let title: String
+    let description: String
+    let sfSymbol: String
+    let scenario: Scenario
+}
+
 // MARK: - Persona
 
 struct Persona: Identifiable, Hashable {
@@ -97,6 +106,65 @@ extension Scenario {
                 PracticeTip(sfSymbol: "pause.fill", title: "Slow down first", description: "Name the tension before trying to resolve it."),
                 PracticeTip(sfSymbol: "figure.2.arms.open", title: "Find the real need", description: "Most arguments aren't about the stated issue. Go one level deeper."),
             ]
+        ),
+    ]
+}
+
+extension DailyChallenge {
+    static let all: [DailyChallenge] = [
+        DailyChallenge(
+            id: "pause-master",
+            category: "Speaking Drill",
+            title: "The Pause Master",
+            description: "Master silence by eliminating filler words like \"um\" and \"ah\".",
+            sfSymbol: "speaker.wave.2.fill",
+            scenario: Scenario(
+                id: ScenarioID(rawValue: "daily-pause-master"),
+                title: "The Pause Master",
+                description: "Master silence by eliminating filler words like \"um\" and \"ah\".",
+                sfSymbol: "speaker.wave.2.fill",
+                durationRange: "2-3 min",
+                tips: [
+                    PracticeTip(sfSymbol: "pause.fill", title: "Use the pause", description: "Let silence replace filler words before your next idea."),
+                    PracticeTip(sfSymbol: "waveform", title: "Reset your pace", description: "Slow the next sentence when you notice a filler word forming."),
+                ]
+            )
+        ),
+        DailyChallenge(
+            id: "sixty-second-scenario",
+            category: "Daily Minute",
+            title: "The 60-Second Scenario",
+            description: "A high-stakes situation that rotates every 24 hours. Think fast.",
+            sfSymbol: "timer",
+            scenario: Scenario(
+                id: ScenarioID(rawValue: "daily-sixty-second-scenario"),
+                title: "The 60-Second Scenario",
+                description: "A high-stakes situation that rotates every 24 hours. Think fast.",
+                sfSymbol: "timer",
+                durationRange: "1 min",
+                tips: [
+                    PracticeTip(sfSymbol: "bolt.fill", title: "Start immediately", description: "Open with the point before adding context."),
+                    PracticeTip(sfSymbol: "target", title: "Choose one goal", description: "Keep the response anchored to a single outcome."),
+                ]
+            )
+        ),
+        DailyChallenge(
+            id: "skill-sprint",
+            category: "Speed Drill",
+            title: "Skill Sprint",
+            description: "A specialized high-intensity drill to boost your active listening skills.",
+            sfSymbol: "wand.and.stars",
+            scenario: Scenario(
+                id: ScenarioID(rawValue: "daily-skill-sprint"),
+                title: "Skill Sprint",
+                description: "A specialized high-intensity drill to boost your active listening skills.",
+                sfSymbol: "wand.and.stars",
+                durationRange: "3-5 min",
+                tips: [
+                    PracticeTip(sfSymbol: "ear.fill", title: "Reflect first", description: "Repeat the core idea before adding your own response."),
+                    PracticeTip(sfSymbol: "questionmark.circle.fill", title: "Ask one sharper question", description: "Use a focused follow-up to prove you understood."),
+                ]
+            )
         ),
     ]
 }

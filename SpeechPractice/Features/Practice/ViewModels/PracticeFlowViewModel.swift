@@ -18,6 +18,10 @@ final class PracticeFlowViewModel {
 
     var navigationPath: [PracticeRoute] = []
 
+    func showDailyChallenges() {
+        navigationPath.append(.dailyChallenges)
+    }
+
     func select(scenario: Scenario) {
         selectedScenario = scenario
         selectedPersona = Persona.all.first // default to Sarah
@@ -62,6 +66,7 @@ final class PracticeFlowViewModel {
 }
 
 enum PracticeRoute: Hashable {
+    case dailyChallenges
     case configure
     case primer
     case session

@@ -3,7 +3,7 @@ import SwiftUI
 private enum MainTab: Hashable {
     case practice
     case feedback
-    case progress
+    case profile
 }
 
 struct RootTabView: View {
@@ -26,12 +26,12 @@ struct RootTabView: View {
             .tag(MainTab.feedback)
 
             NavigationStack {
-                FeaturePlaceholderScreen(title: "Progress", systemImage: "chart.line.uptrend.xyaxis")
+                ProfileScreen()
             }
             .tabItem {
-                Label("Progress", systemImage: "chart.line.uptrend.xyaxis")
+                Label("Profile", systemImage: "person.fill")
             }
-            .tag(MainTab.progress)
+            .tag(MainTab.profile)
         }
         .tint(AppColors.accent)
     }

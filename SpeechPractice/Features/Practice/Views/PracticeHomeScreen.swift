@@ -10,7 +10,7 @@ struct PracticeHomeScreen: View {
         NavigationStack(path: $viewModel.navigationPath) {
             ScrollView {
                 VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                    dailyScenarioCard
+                    dailyChallengesSection
                         .opacity(appeared ? 1 : 0)
                         .offset(y: appeared ? 0 : 12)
                         .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.05), value: appeared)
@@ -27,6 +27,8 @@ struct PracticeHomeScreen: View {
             .toolbarBackground(AppColors.background, for: .navigationBar)
             .navigationDestination(for: PracticeRoute.self) { route in
                 switch route {
+                case .dailyChallenges:
+                    DailyChallengesScreen(viewModel: viewModel)
                 case .configure:
                     ScenarioConfigScreen(viewModel: viewModel)
                 case .primer:
@@ -46,70 +48,70 @@ struct PracticeHomeScreen: View {
         }
     }
 
-    // MARK: - Daily Scenario
+    // MARK: - Daily Challenges
 
-    private var dailyScenarioCard: some View {
-        let scenario = Scenario.all[2] // "The Big Pitch" as daily
+    private var dailyChallengesSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Button {
+                viewModel.showDailyChallenges()
+            } label: {
+                HStack(spacing: AppSpacing.md) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: AppRadius.lg)
+                            .fill(.white.opacity(0.22))
 
-        return Button {
-            viewModel.select(scenario: scenario)
-        } label: {
-            HStack(spacing: AppSpacing.sm) {
-                Image(systemName: scenario.sfSymbol)
-                    .font(.system(size: 22, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
-                    .frame(width: 52, height: 52, alignment: .center)
-                    .accessibilityHidden(true)
+                        Circle()
+                            .fill(.white)
+                            .frame(width: 34, height: 34)
+                    }
+                    .frame(width: 64, height: 64)
 
-                VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                    HStack(spacing: AppSpacing.xs) {
-                        Text("Daily Scenario")
-                            .font(AppFonts.label(11, weight: .semibold))
-                            .foregroundStyle(AppColors.accent)
-                            .padding(.horizontal, AppSpacing.sm)
-                            .padding(.vertical, 3)
-                            .background(AppColors.accentSubtle, in: Capsule())
+                    VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                        Text("Daily Challenges")
+                            .font(AppFonts.title(20, weight: .bold))
+                            .foregroundStyle(.white)
+                            .lineLimit(1)
 
-                        Spacer()
-
-                        TimeBadge(duration: scenario.durationRange)
+                        Text("Quick practice sessions to help refine your skills")
+                            .font(AppFonts.label(13, weight: .semibold))
+                            .foregroundStyle(.white)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
 
-                    Text(scenario.title)
-                        .font(AppFonts.title(17))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(1)
+                    Spacer(minLength: 0)
 
-                    Text(scenario.description)
-                        .font(AppFonts.body(13))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .lineLimit(2)
+                    Image(systemName: "sparkles")
+                        .font(.system(size: 30, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.22))
+                        .accessibilityHidden(true)
+
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.95))
+                        .accessibilityHidden(true)
                 }
-
-                Spacer(minLength: 0)
-
-                Image(systemName: "arrow.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
+                .padding(.horizontal, AppSpacing.lg)
+                .padding(.vertical, AppSpacing.md)
+                .frame(maxWidth: .infinity, minHeight: 100)
+                .background {
+                    RoundedRectangle(cornerRadius: AppRadius.xxl)
+                        .fill(AppColors.accent)
+                        .cardShadow()
+                }
             }
-            .padding(AppSpacing.base)
-            .background {
-                RoundedRectangle(cornerRadius: AppRadius.xl)
-                    .fill(AppColors.surface)
-                    .cardShadow()
-            }
-            .overlay {
-                RoundedRectangle(cornerRadius: AppRadius.xl)
-                    .strokeBorder(AppColors.accentMedium, lineWidth: 1.5)
-            }
+            .buttonStyle(PressButtonStyle())
         }
-        .buttonStyle(PressButtonStyle())
     }
 
     // MARK: - Scenario List
 
     private var scenarioListSection: some View {
-        VStack(spacing: AppSpacing.sm) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text("Scenarios")
+                .font(AppFonts.label(13, weight: .bold))
+                .foregroundStyle(AppColors.textSecondary)
+
             ForEach(Array(Scenario.all.enumerated()), id: \.element.id) { index, scenario in
                 Button { viewModel.select(scenario: scenario) } label: {
                     ScenarioRow(scenario: scenario)
@@ -124,6 +126,123 @@ struct PracticeHomeScreen: View {
                 )
             }
         }
+    }
+}
+
+// MARK: - Daily Challenges Screen
+
+private struct DailyChallengesScreen: View {
+    let viewModel: PracticeFlowViewModel
+
+    @State private var appeared = false
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                ForEach(Array(DailyChallenge.all.enumerated()), id: \.element.id) { index, challenge in
+                    Button {
+                        viewModel.select(scenario: challenge.scenario)
+                    } label: {
+                        DailyChallengeCard(challenge: challenge)
+                    }
+                    .buttonStyle(PressButtonStyle())
+                    .opacity(appeared ? 1 : 0)
+                    .offset(y: appeared ? 0 : 14)
+                    .animation(
+                        .spring(response: 0.45, dampingFraction: 0.82)
+                            .delay(Double(index) * 0.06),
+                        value: appeared
+                    )
+                }
+            }
+            .padding(.horizontal, AppSpacing.base)
+            .padding(.top, AppSpacing.lg)
+            .padding(.bottom, AppSpacing.xxxl)
+        }
+        .background(AppColors.background)
+        .navigationTitle("Daily Challenges")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .onAppear {
+            appeared = true
+        }
+    }
+}
+
+// MARK: - Daily Challenge Card
+
+private struct DailyChallengeCard: View {
+    let challenge: DailyChallenge
+
+    var body: some View {
+        HStack(spacing: AppSpacing.md) {
+            VStack(alignment: .leading, spacing: AppSpacing.lg) {
+                Label {
+                    Text(challenge.category)
+                        .font(AppFonts.label(12, weight: .bold))
+                } icon: {
+                    Image(systemName: challenge.sfSymbol)
+                        .font(.system(size: 16, weight: .bold))
+                }
+                .foregroundStyle(AppColors.accent)
+
+                VStack(alignment: .leading, spacing: AppSpacing.md) {
+                    Text(challenge.title)
+                        .font(AppFonts.display(28, weight: .bold))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(challenge.description)
+                        .font(AppFonts.body(18, weight: .medium))
+                        .foregroundStyle(AppColors.textSecondary)
+                        .lineSpacing(4)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+
+            Spacer(minLength: 0)
+
+            ChallengeArtwork(symbolName: challenge.sfSymbol)
+                .frame(width: 106, height: 128)
+                .accessibilityHidden(true)
+        }
+        .padding(AppSpacing.xl)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(minHeight: 190)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.xxl)
+                .fill(AppColors.surface)
+                .cardShadow()
+        }
+    }
+}
+
+// MARK: - Challenge Artwork
+
+private struct ChallengeArtwork: View {
+    let symbolName: String
+
+    var body: some View {
+        ZStack {
+            Image(systemName: symbolName)
+                .font(.system(size: 86, weight: .bold))
+                .foregroundStyle(AppColors.accentSubtle)
+                .offset(x: 14, y: 8)
+
+            VStack(spacing: 8) {
+                ForEach([28.0, 48.0, 82.0, 52.0, 34.0], id: \.self) { height in
+                    Capsule()
+                        .fill(AppColors.accentSubtle)
+                        .frame(width: 10, height: height)
+                }
+            }
+            .rotationEffect(.degrees(90))
+            .opacity(0.75)
+            .offset(x: 12, y: 10)
+        }
+        .clipped()
     }
 }
 

@@ -31,6 +31,12 @@ enum AppColors {
     // UI
     static let separator     = Color(hex: "#E8E8E8")
     static let tabInactive   = Color(hex: "#9E9E9E")
+
+    // Daily Minute Wheel
+    static let wheelGold     = Color(hex: "#FFC95F")
+    static let wheelOrange   = Color(hex: "#F47632")
+    static let wheelRim      = Color(hex: "#C9472F")
+    static let wheelLine     = Color(hex: "#8E3428")
 }
 
 // MARK: - Typography

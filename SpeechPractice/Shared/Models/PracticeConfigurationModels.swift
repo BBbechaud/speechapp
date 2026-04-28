@@ -16,6 +16,10 @@ struct PracticeSessionID: Hashable, Sendable {
     let rawValue: UUID
 }
 
+struct DailyMinutePromptID: Hashable, Sendable {
+    let rawValue: String
+}
+
 enum PracticeDifficulty: String, CaseIterable, Hashable, Sendable {
     case easy
     case medium

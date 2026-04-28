@@ -2,70 +2,149 @@ import SwiftUI
 
 /// Shown after the user ends a live practice session.
 struct PracticeCompleteScreen: View {
-    let onSeeConversationAnalysis: () -> Void
+    let onReviewFeedback: () -> Void
+
+    @State private var appeared = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer(minLength: AppSpacing.xxxl)
+        ZStack {
+            LinearGradient(
+                stops: [
+                    .init(color: AppColors.accentSubtle.opacity(0.5), location: 0),
+                    .init(color: AppColors.background, location: 0.42),
+                    .init(color: AppColors.background, location: 1),
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
 
-            PracticeCompleteMascotView()
-                .padding(.bottom, AppSpacing.xxl)
+            VStack(spacing: 0) {
+                Spacer(minLength: AppSpacing.xxl)
 
-            Text("Practice Complete!")
-                .font(AppFonts.display(28))
-                .foregroundStyle(AppColors.textPrimary)
-                .multilineTextAlignment(.center)
-                .accessibilityAddTraits(.isHeader)
+                PracticeCompleteMascotView(appeared: appeared, reduceMotion: reduceMotion)
+                    .padding(.bottom, AppSpacing.xl)
 
-            Spacer(minLength: AppSpacing.xxxl)
+                VStack(spacing: AppSpacing.md) {
+                    Text("Practice complete")
+                        .font(AppFonts.display(28))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .multilineTextAlignment(.center)
+                        .accessibilityAddTraits(.isHeader)
 
-            PrimaryButton(title: "See Conversation Analysis") {
-                onSeeConversationAnalysis()
+                    Text("You showed up and spoke out loud—that’s what builds confidence. See how you did and what to try next.")
+                        .font(AppFonts.body(16))
+                        .foregroundStyle(AppColors.textSecondary)
+                        .multilineTextAlignment(.center)
+                        .lineSpacing(3)
+                        .padding(.horizontal, AppSpacing.lg)
+                }
+                .padding(.bottom, AppSpacing.lg)
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 10)
+                .animation(
+                    reduceMotion ? .easeOut(duration: 0.22) : .spring(response: 0.48, dampingFraction: 0.82).delay(0.06),
+                    value: appeared
+                )
+
+                Spacer(minLength: AppSpacing.xxl)
+
+                PrimaryButton(title: "See Conversation Analysis") {
+                    onReviewFeedback()
+                }
+                .padding(.horizontal, AppSpacing.base)
+                .padding(.bottom, AppSpacing.xl)
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 14)
+                .animation(
+                    reduceMotion ? .easeOut(duration: 0.22) : .spring(response: 0.48, dampingFraction: 0.82).delay(0.14),
+                    value: appeared
+                )
             }
-            .padding(.horizontal, AppSpacing.base)
-            .padding(.bottom, AppSpacing.xl)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(AppColors.background)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .onAppear {
+            appeared = true
+        }
     }
 }
 
 // MARK: - Mascot
 
 private struct PracticeCompleteMascotView: View {
+    let appeared: Bool
+    let reduceMotion: Bool
+
     var body: some View {
         ZStack {
             Circle()
-                .fill(AppColors.mascotBackdrop)
-                .frame(width: 220, height: 220)
+                .fill(
+                    RadialGradient(
+                        colors: [
+                            AppColors.surface.opacity(0.92),
+                            AppColors.mascotBackdrop,
+                        ],
+                        center: .center,
+                        startRadius: 24,
+                        endRadius: 130
+                    )
+                )
+                .frame(width: 244, height: 244)
+                .subtleShadow()
+
+            Circle()
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [
+                            AppColors.accentMedium.opacity(0.9),
+                            AppColors.accent.opacity(0.35),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 3
+                )
+                .frame(width: 236, height: 236)
 
             Image(systemName: "star.fill")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(AppColors.accent.opacity(0.85))
-                .offset(x: -78, y: -62)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(AppColors.accent.opacity(0.88))
+                .offset(x: -86, y: -68)
                 .accessibilityHidden(true)
 
             Image(systemName: "sparkle")
-                .font(.system(size: 11, weight: .semibold))
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(AppColors.accentMedium)
-                .offset(x: 72, y: -58)
+                .offset(x: 80, y: -64)
                 .accessibilityHidden(true)
 
-            MascotCharacterView()
+            MascotCharacterView(appeared: appeared, reduceMotion: reduceMotion)
         }
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Celebration mascot")
+        .opacity(appeared || reduceMotion ? 1 : 0)
+        .offset(y: appeared || reduceMotion ? 0 : 18)
+        .scaleEffect(appeared || reduceMotion ? 1 : 0.9)
+        .animation(
+            reduceMotion ? .easeOut(duration: 0.2) : .spring(response: 0.52, dampingFraction: 0.76),
+            value: appeared
+        )
     }
 }
 
 private struct MascotCharacterView: View {
+    let appeared: Bool
+    let reduceMotion: Bool
+
     var body: some View {
         ZStack {
             Circle()
                 .fill(AppColors.accent)
                 .frame(width: 112, height: 112)
+                .subtleShadow()
 
             // Face
             HStack(spacing: 22) {
@@ -109,11 +188,21 @@ private struct MascotCharacterView: View {
                 .offset(x: 58, y: -8)
                 .rotationEffect(.degrees(35))
         }
+        .rotationEffect(.degrees(characterWiggle))
+        .animation(
+            reduceMotion ? .default : .spring(response: 0.55, dampingFraction: 0.68).delay(0.12),
+            value: appeared
+        )
+    }
+
+    private var characterWiggle: Double {
+        if reduceMotion { return 0 }
+        return appeared ? 0 : -4
     }
 }
 
 #Preview {
     NavigationStack {
-        PracticeCompleteScreen(onSeeConversationAnalysis: {})
+        PracticeCompleteScreen(onReviewFeedback: {})
     }
 }

@@ -11,12 +11,7 @@ struct ProfileScreen: View {
         totalXP: 4_120
     )
 
-    private let skills: [ProfileSkill] = [
-        ProfileSkill(title: "Breath Focus", level: "Level 1", progress: 0.50, systemImage: "wind"),
-        ProfileSkill(title: "Body Scan", level: "Level 1", progress: 0.08, systemImage: "figure.mind.and.body"),
-        ProfileSkill(title: "Labeling", level: "Level 1", progress: 0.12, systemImage: "tag.fill"),
-        ProfileSkill(title: "Loving-Kindness", level: "Level 1", progress: 0.28, systemImage: "heart.fill"),
-    ]
+    private let skills: [ProfileSkill] = makeProfileSkills()
 
     var body: some View {
         ScrollView {
@@ -87,6 +82,10 @@ struct ProfileScreen: View {
 
     private var overviewSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.lg) {
+            Text("Overview")
+                .font(AppFonts.title(20, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+
             HStack(alignment: .top, spacing: AppSpacing.lg) {
                 VStack(alignment: .leading, spacing: AppSpacing.lg) {
                     OverviewMetricRow(
@@ -224,6 +223,58 @@ private enum ProfileTab: String, CaseIterable, Identifiable {
     }
 }
 
+private func makeProfileSkills() -> [ProfileSkill] {
+    CommunicationSkill.all.map { skill in
+        ProfileSkill(
+            skill: skill,
+            level: profileLevel(for: skill.id),
+            progress: profileProgress(for: skill.id)
+        )
+    }
+}
+
+private func profileLevel(for skillID: CommunicationSkillID) -> String {
+    switch skillID {
+    case .fillerWords:
+        return "Level 7"
+    case .flow:
+        return "Level 8"
+    case .articulation:
+        return "Level 8"
+    case .conciseness:
+        return "Level 6"
+    case .pitch:
+        return "Level 7"
+    case .rapport:
+        return "Level 8"
+    case .listening:
+        return "Level 7"
+    case .situationHandling:
+        return "Level 7"
+    }
+}
+
+private func profileProgress(for skillID: CommunicationSkillID) -> CGFloat {
+    switch skillID {
+    case .fillerWords:
+        return 0.70
+    case .flow:
+        return 0.78
+    case .articulation:
+        return 0.83
+    case .conciseness:
+        return 0.68
+    case .pitch:
+        return 0.76
+    case .rapport:
+        return 0.81
+    case .listening:
+        return 0.79
+    case .situationHandling:
+        return 0.73
+    }
+}
+
 private struct ProfileOverview {
     let streakDays: Int
     let level: String
@@ -232,18 +283,20 @@ private struct ProfileOverview {
 }
 
 private struct ProfileSkill: Identifiable {
-    let id: String
+    let id: CommunicationSkillID
     let title: String
     let level: String
     let progress: CGFloat
     let systemImage: String
+    let color: Color
 
-    init(title: String, level: String, progress: CGFloat, systemImage: String) {
-        self.id = title
-        self.title = title
+    init(skill: CommunicationSkill, level: String, progress: CGFloat) {
+        self.id = skill.id
+        self.title = skill.title
         self.level = level
         self.progress = progress
-        self.systemImage = systemImage
+        self.systemImage = skill.systemImage
+        self.color = Color(hex: skill.colorHex)
     }
 }
 
@@ -312,27 +365,18 @@ private struct ProfileSkillRow: View {
 
     var body: some View {
         HStack(spacing: AppSpacing.base) {
-            ZStack {
-                RoundedRectangle(cornerRadius: AppRadius.lg)
-                    .fill(AppColors.accentSubtle)
-                    .frame(width: 72, height: 72)
-
-                Image(systemName: skill.systemImage)
-                    .font(.system(size: 30, weight: .semibold))
-                    .foregroundStyle(AppColors.accent.opacity(0.82))
-                    .accessibilityHidden(true)
-            }
+            Image(systemName: skill.systemImage)
+                .font(.system(size: 30, weight: .semibold))
+                .foregroundStyle(skill.color)
+                .frame(width: 56, height: 56)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.sm) {
                 Text(skill.title)
-                    .font(AppFonts.title(22, weight: .bold))
+                    .font(AppFonts.title(19, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.82)
-
-                Text(skill.level)
-                    .font(AppFonts.body(17))
-                    .foregroundStyle(AppColors.textTertiary)
 
                 GeometryReader { proxy in
                     ZStack(alignment: .leading) {
@@ -340,11 +384,15 @@ private struct ProfileSkillRow: View {
                             .fill(AppColors.separator)
 
                         Capsule()
-                            .fill(AppColors.accent.opacity(0.68))
+                            .fill(skill.color.opacity(0.78))
                             .frame(width: proxy.size.width * skill.progress)
                     }
                 }
                 .frame(height: 10)
+
+                Text(skill.level)
+                    .font(AppFonts.body(15, weight: .medium))
+                    .foregroundStyle(AppColors.textTertiary)
             }
         }
         .padding(AppSpacing.base)

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PracticeHomeScreen: View {
-    var onSwitchToFeedbackTab: () -> Void = {}
+    let onReviewFeedbackClosed: (ReviewFeedback) -> Void
 
     @State private var viewModel = PracticeFlowViewModel()
     @State private var appeared = false
@@ -29,6 +29,10 @@ struct PracticeHomeScreen: View {
                 switch route {
                 case .dailyChallenges:
                     DailyChallengesScreen(viewModel: viewModel)
+                case .dailyMinuteWheel:
+                    DailyMinuteWheelScreen(viewModel: viewModel)
+                case .dailyMinuteSession(let prompt):
+                    DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
                 case .configure:
                     ScenarioConfigScreen(viewModel: viewModel)
                 case .primer:
@@ -36,10 +40,18 @@ struct PracticeHomeScreen: View {
                 case .session:
                     PracticeSessionScreen(viewModel: viewModel)
                 case .complete:
-                    PracticeCompleteScreen(onSeeConversationAnalysis: {
-                        viewModel.reset()
-                        onSwitchToFeedbackTab()
+                    PracticeCompleteScreen(onReviewFeedback: {
+                        viewModel.showReviewFeedback()
                     })
+                case .reviewFeedback:
+                    let feedback = viewModel.currentReviewFeedback()
+                    ReviewFeedbackScreen(
+                        feedback: feedback,
+                        onClose: {
+                            onReviewFeedbackClosed(feedback)
+                            viewModel.reset()
+                        }
+                    )
                 }
             }
             .onAppear {
@@ -141,7 +153,11 @@ private struct DailyChallengesScreen: View {
             VStack(alignment: .leading, spacing: AppSpacing.xl) {
                 ForEach(Array(DailyChallenge.all.enumerated()), id: \.element.id) { index, challenge in
                     Button {
-                        viewModel.select(scenario: challenge.scenario)
+                        if challenge.isDailyMinute {
+                            viewModel.showDailyMinuteWheel()
+                        } else {
+                            viewModel.select(scenario: challenge.scenario)
+                        }
                     } label: {
                         DailyChallengeCard(challenge: challenge)
                     }
@@ -288,5 +304,5 @@ private struct ScenarioRow: View {
 }
 
 #Preview {
-    PracticeHomeScreen()
+    PracticeHomeScreen(onReviewFeedbackClosed: { _ in })
 }

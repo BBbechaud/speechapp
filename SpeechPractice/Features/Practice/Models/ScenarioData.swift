@@ -27,6 +27,14 @@ struct DailyChallenge: Identifiable, Hashable {
     let scenario: Scenario
 }
 
+struct DailyMinutePrompt: Identifiable, Hashable, Sendable {
+    let id: DailyMinutePromptID
+    let title: String
+    let prompt: String
+    let category: String
+    let sfSymbol: String
+}
+
 // MARK: - Persona
 
 struct Persona: Identifiable, Hashable {
@@ -111,6 +119,8 @@ extension Scenario {
 }
 
 extension DailyChallenge {
+    static let dailyMinuteChallengeID = "sixty-second-scenario"
+
     static let all: [DailyChallenge] = [
         DailyChallenge(
             id: "pause-master",
@@ -167,6 +177,85 @@ extension DailyChallenge {
             )
         ),
     ]
+
+    var isDailyMinute: Bool {
+        id == Self.dailyMinuteChallengeID
+    }
+}
+
+extension DailyMinutePrompt {
+    static let all: [DailyMinutePrompt] = [
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "missed-deadline"),
+            title: "Own a Missed Deadline",
+            prompt: "You missed a deadline that affects your team. Explain what happened, name the impact, and propose the next step without sounding defensive.",
+            category: "Accountability",
+            sfSymbol: "calendar.badge.exclamationmark"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "unexpected-introduction"),
+            title: "Introduce Yourself Fast",
+            prompt: "You just met someone impressive at an event. Introduce yourself, make the moment feel natural, and give them one reason to keep talking.",
+            category: "Small Talk",
+            sfSymbol: "person.2.wave.2.fill"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "push-back"),
+            title: "Push Back Clearly",
+            prompt: "A teammate suggests a plan you think is risky. Disagree respectfully, explain the risk, and offer a better path forward.",
+            category: "Conflict",
+            sfSymbol: "exclamationmark.bubble.fill"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "pitch-your-idea"),
+            title: "Pitch One Idea",
+            prompt: "You have one minute to pitch a useful idea to a busy decision-maker. Start with the outcome, then explain why it matters now.",
+            category: "Pitch",
+            sfSymbol: "chart.line.uptrend.xyaxis"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "give-recognition"),
+            title: "Give Specific Praise",
+            prompt: "Recognize someone for good work in a way that feels genuine. Be specific about what they did and why it mattered.",
+            category: "Feedback",
+            sfSymbol: "hand.thumbsup.fill"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "recover-from-fumble"),
+            title: "Recover Mid-Sentence",
+            prompt: "You lost your train of thought while speaking. Pause, reset cleanly, and continue without apologizing too much or using filler words.",
+            category: "Clarity",
+            sfSymbol: "arrow.counterclockwise"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "tell-the-story"),
+            title: "Tell a Short Story",
+            prompt: "Describe a recent moment when you solved a problem. Give it a beginning, a turn, and a clear takeaway.",
+            category: "Story",
+            sfSymbol: "book.closed.fill"
+        ),
+        DailyMinutePrompt(
+            id: DailyMinutePromptID(rawValue: "calm-the-room"),
+            title: "Calm the Room",
+            prompt: "A conversation is getting tense. Acknowledge the pressure, slow the pace, and guide everyone toward one practical next step.",
+            category: "Leadership",
+            sfSymbol: "figure.2.arms.open"
+        ),
+    ]
+
+    var scenario: Scenario {
+        Scenario(
+            id: ScenarioID(rawValue: "daily-minute-\(id.rawValue)"),
+            title: title,
+            description: prompt,
+            sfSymbol: sfSymbol,
+            durationRange: "1 min",
+            tips: [
+                PracticeTip(sfSymbol: "pause.fill", title: "Use clean pauses", description: "Let silence replace filler words while you find the next thought."),
+                PracticeTip(sfSymbol: "target", title: "Land one point", description: "Keep the minute anchored to a single outcome."),
+            ]
+        )
+    }
 }
 
 extension Persona {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ReviewHistoryScreen: View {
-    let summaries: [ReviewSessionSummary]
+    let records: [ReviewSessionRecord]
 
     @State private var appeared: Bool = false
 
@@ -16,15 +16,18 @@ struct ReviewHistoryScreen: View {
                         .foregroundStyle(AppColors.textSecondary)
 
                     VStack(spacing: AppSpacing.md) {
-                        ForEach(Array(summaries.enumerated()), id: \.element.id) { index, summary in
-                            ReviewSessionSummaryCard(summary: summary)
-                                .opacity(appeared ? 1 : 0)
-                                .offset(y: appeared ? 0 : 12)
-                                .animation(
-                                    .spring(response: 0.42, dampingFraction: 0.84)
-                                        .delay(Double(index) * 0.04),
-                                    value: appeared
-                                )
+                        ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
+                            NavigationLink(value: record) {
+                                ReviewSessionSummaryCard(summary: record.summary)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .opacity(appeared ? 1 : 0)
+                            .offset(y: appeared ? 0 : 12)
+                            .animation(
+                                .spring(response: 0.42, dampingFraction: 0.84)
+                                    .delay(Double(index) * 0.04),
+                                value: appeared
+                            )
                         }
                     }
                 }
@@ -37,6 +40,9 @@ struct ReviewHistoryScreen: View {
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             appeared = true
+        }
+        .navigationDestination(for: ReviewSessionRecord.self) { record in
+            ReviewHistoryFeedbackDestination(feedback: record.feedback)
         }
     }
 
@@ -52,6 +58,21 @@ struct ReviewHistoryScreen: View {
                 .foregroundStyle(AppColors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
         }
+    }
+}
+
+private struct ReviewHistoryFeedbackDestination: View {
+    let feedback: ReviewFeedback
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ReviewFeedbackScreen(
+            feedback: feedback,
+            onClose: {
+                dismiss()
+            }
+        )
     }
 }
 
@@ -180,6 +201,6 @@ private func unitText(value: Int, singular: String) -> String {
 
 #Preview {
     NavigationStack {
-        ReviewHistoryScreen(summaries: ReviewHistoryStore.loadSummaries())
+        ReviewHistoryScreen(records: ReviewHistoryStore.loadRecords())
     }
 }

@@ -80,22 +80,29 @@ enum ReviewFeedbackViewModel {
 }
 
 enum ReviewHistoryStore {
-    private static let storageKey: String = "reviewSessionSummaries"
+    private static let recordsStorageKey: String = "reviewSessionRecords"
+    private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
 
-    static func loadSummaries() -> [ReviewSessionSummary] {
-        guard let data = UserDefaults.standard.data(forKey: storageKey) else {
-            return seededSummaries()
+    static func loadRecords() -> [ReviewSessionRecord] {
+        if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
+            do {
+                let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
+                return sortedByMostRecent(records)
+            } catch {
+                preconditionFailure("Could not decode review session records from UserDefaults key \(recordsStorageKey): \(error)")
+            }
         }
 
-        do {
-            let summaries: [ReviewSessionSummary] = try JSONDecoder().decode([ReviewSessionSummary].self, from: data)
-            return sortedByMostRecent(summaries)
-        } catch {
-            preconditionFailure("Could not decode review session summaries from UserDefaults key \(storageKey): \(error)")
-        }
+        let records: [ReviewSessionRecord] = loadLegacyRecords()
+        save(records)
+        return records
     }
 
-    static func record(feedback: ReviewFeedback, in summaries: [ReviewSessionSummary]) -> [ReviewSessionSummary] {
+    static func loadSummaries() -> [ReviewSessionSummary] {
+        loadRecords().map(\.summary)
+    }
+
+    static func record(feedback: ReviewFeedback, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
         let summary = ReviewSessionSummary(
             id: UUID(),
             scenarioTitle: feedback.scenarioTitle,
@@ -104,24 +111,53 @@ enum ReviewHistoryStore {
             durationSeconds: seededDurationSeconds(for: feedback.scenarioTitle, personaName: feedback.personaName),
             completedAt: Date()
         )
+        let record = ReviewSessionRecord(summary: summary, feedback: feedback)
 
-        let updatedSummaries: [ReviewSessionSummary] = sortedByMostRecent([summary] + summaries)
-        save(updatedSummaries)
-        return updatedSummaries
+        let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + records)
+        save(updatedRecords)
+        return updatedRecords
     }
 
-    private static func save(_ summaries: [ReviewSessionSummary]) {
+    private static func save(_ records: [ReviewSessionRecord]) {
         do {
-            let data: Data = try JSONEncoder().encode(summaries)
-            UserDefaults.standard.set(data, forKey: storageKey)
+            let data: Data = try JSONEncoder().encode(records)
+            UserDefaults.standard.set(data, forKey: recordsStorageKey)
         } catch {
-            preconditionFailure("Could not encode review session summaries for UserDefaults key \(storageKey): \(error)")
+            preconditionFailure("Could not encode review session records for UserDefaults key \(recordsStorageKey): \(error)")
+        }
+    }
+
+    private static func loadLegacyRecords() -> [ReviewSessionRecord] {
+        guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
+            return seededRecords()
+        }
+
+        do {
+            let summaries: [ReviewSessionSummary] = try JSONDecoder().decode([ReviewSessionSummary].self, from: data)
+            let records: [ReviewSessionRecord] = summaries.map { summary in
+                ReviewSessionRecord(summary: summary, feedback: feedback(for: summary))
+            }
+            return sortedByMostRecent(records)
+        } catch {
+            preconditionFailure("Could not decode review session summaries from UserDefaults key \(legacySummariesStorageKey): \(error)")
+        }
+    }
+
+    private static func sortedByMostRecent(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+        records.sorted { lhs, rhs in
+            lhs.summary.completedAt > rhs.summary.completedAt
         }
     }
 
     private static func sortedByMostRecent(_ summaries: [ReviewSessionSummary]) -> [ReviewSessionSummary] {
         summaries.sorted { lhs, rhs in
             lhs.completedAt > rhs.completedAt
+        }
+    }
+
+    private static func seededRecords() -> [ReviewSessionRecord] {
+        seededSummaries().map { summary in
+            ReviewSessionRecord(summary: summary, feedback: feedback(for: summary))
         }
     }
 
@@ -159,5 +195,46 @@ enum ReviewHistoryStore {
     private static func seededDurationSeconds(for scenarioTitle: String, personaName: String) -> Int {
         let seed: Int = scenarioTitle.count + personaName.count
         return 210 + (seed % 170)
+    }
+
+    private static func feedback(for summary: ReviewSessionSummary) -> ReviewFeedback {
+        ReviewFeedback(
+            scenarioTitle: summary.scenarioTitle,
+            personaName: summary.personaName,
+            overallScore: summary.overallScore,
+            skillAnalyses: skillAnalyses(for: summary),
+            didWell: "You kept the practice focused and made the interaction feel intentional. Your strongest moments came when you responded directly to \(summary.personaName) and stayed anchored to the goal of \(summary.scenarioTitle.lowercased()).",
+            improve: "Use a tighter opening and make your closing action more explicit. The session has a solid foundation, and a little more structure would make the next attempt land with more confidence."
+        )
+    }
+
+    private static func skillAnalyses(for summary: ReviewSessionSummary) -> [SkillReviewAnalysis] {
+        CommunicationSkill.all.enumerated().map { index, skill in
+            let score: Int = skillScore(overallScore: summary.overallScore, index: index)
+            return SkillReviewAnalysis(
+                id: skill.id,
+                skill: skill,
+                score: score,
+                note: skillNote(for: skill, score: score, summary: summary)
+            )
+        }
+    }
+
+    private static func skillScore(overallScore: Int, index: Int) -> Int {
+        let offsets: [Int] = [4, -3, 6, -7, 1, 5, -1, -5]
+        let offset: Int = offsets[index % offsets.count]
+        return min(100, max(0, overallScore + offset))
+    }
+
+    private static func skillNote(for skill: CommunicationSkill, score: Int, summary: ReviewSessionSummary) -> String {
+        if score >= 82 {
+            return "\(skill.title) was a strength in this session. Keep using it to make the conversation with \(summary.personaName) feel clear and grounded."
+        }
+
+        if score >= 70 {
+            return "\(skill.title) was mostly steady, with room to sharpen the moment-to-moment delivery in \(summary.scenarioTitle.lowercased())."
+        }
+
+        return "\(skill.title) needs more deliberate practice here. Slow down, choose one clear move, and let the next response do less work."
     }
 }

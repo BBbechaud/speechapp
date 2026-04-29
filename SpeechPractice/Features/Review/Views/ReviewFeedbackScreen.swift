@@ -66,16 +66,6 @@ struct ReviewFeedbackScreen: View {
                 .accessibilityLabel("Close feedback")
 
                 Spacer(minLength: 0)
-
-                ShareLink(item: shareSummary) {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundStyle(.white)
-                        .frame(width: 54, height: 54)
-                        .background(AppColors.accent, in: Circle())
-                }
-                .buttonStyle(PressButtonStyle())
-                .accessibilityLabel("Share feedback")
             }
         }
         .padding(.top, AppSpacing.sm)
@@ -84,17 +74,17 @@ struct ReviewFeedbackScreen: View {
     private var scenarioPill: some View {
         VStack(spacing: AppSpacing.sm) {
             Text(feedback.scenarioTitle)
-                .font(AppFonts.label(13, weight: .bold))
-                .foregroundStyle(AppColors.accent)
-                .lineLimit(1)
-                .minimumScaleFactor(0.78)
-
-            Text("Practice with \(feedback.personaName)")
                 .font(AppFonts.display(24))
                 .foregroundStyle(AppColors.textPrimary)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
                 .minimumScaleFactor(0.82)
+
+            Text("With \(feedback.personaName)")
+                .font(AppFonts.label(13, weight: .bold))
+                .foregroundStyle(AppColors.accent)
+                .lineLimit(1)
+                .minimumScaleFactor(0.78)
         }
         .padding(.horizontal, AppSpacing.xl)
         .padding(.vertical, AppSpacing.lg)
@@ -150,19 +140,6 @@ struct ReviewFeedbackScreen: View {
         .animation(.spring(response: 0.42, dampingFraction: 0.84).delay(0.46), value: appeared)
     }
 
-    private var shareSummary: String {
-        let skillLines: [String] = feedback.skillAnalyses.map { analysis in
-            "\(analysis.skill.title): \(analysis.score)/100"
-        }
-
-        return """
-        \(feedback.scenarioTitle) feedback
-        Practice with \(feedback.personaName)
-        Overall: \(feedback.overallScore)/100
-
-        \(skillLines.joined(separator: "\n"))
-        """
-    }
 }
 
 private struct OverallScoreRing: View {

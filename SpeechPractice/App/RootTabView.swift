@@ -8,12 +8,12 @@ private enum MainTab: Hashable {
 
 struct RootTabView: View {
     @State private var selectedTab: MainTab = .practice
-    @State private var reviewSummaries: [ReviewSessionSummary] = ReviewHistoryStore.loadSummaries()
+    @State private var reviewRecords: [ReviewSessionRecord] = ReviewHistoryStore.loadRecords()
 
     var body: some View {
         TabView(selection: $selectedTab) {
             PracticeHomeScreen(onReviewFeedbackClosed: { feedback in
-                reviewSummaries = ReviewHistoryStore.record(feedback: feedback, in: reviewSummaries)
+                reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
                 selectedTab = .feedback
             })
                 .tabItem {
@@ -22,7 +22,7 @@ struct RootTabView: View {
                 .tag(MainTab.practice)
 
             NavigationStack {
-                ReviewHistoryScreen(summaries: reviewSummaries)
+                ReviewHistoryScreen(records: reviewRecords)
             }
             .tabItem {
                 Label("Feedback", systemImage: "text.bubble.fill")

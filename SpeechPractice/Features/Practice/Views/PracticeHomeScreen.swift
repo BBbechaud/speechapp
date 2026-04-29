@@ -63,7 +63,11 @@ struct PracticeHomeScreen: View {
     // MARK: - Daily Challenges
 
     private var dailyChallengesSection: some View {
-        VStack(alignment: .leading, spacing: 0) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            Text("Daily Challenges")
+                .font(AppFonts.label(15, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+
             Button {
                 viewModel.showDailyChallenges()
             } label: {
@@ -75,15 +79,15 @@ struct PracticeHomeScreen: View {
                         Circle()
                             .fill(.white)
                             .frame(width: 34, height: 34)
+                            .overlay {
+                                Text("\(DailyChallenge.all.count)")
+                                    .font(AppFonts.title(17, weight: .bold))
+                                    .foregroundStyle(AppColors.accent)
+                            }
                     }
                     .frame(width: 64, height: 64)
 
                     VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                        Text("Daily Challenges")
-                            .font(AppFonts.title(20, weight: .bold))
-                            .foregroundStyle(.white)
-                            .lineLimit(1)
-
                         Text("Quick practice sessions to help refine your skills")
                             .font(AppFonts.label(13, weight: .semibold))
                             .foregroundStyle(.white)
@@ -92,11 +96,6 @@ struct PracticeHomeScreen: View {
                     }
 
                     Spacer(minLength: 0)
-
-                    Image(systemName: "sparkles")
-                        .font(.system(size: 30, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.22))
-                        .accessibilityHidden(true)
 
                     Image(systemName: "chevron.right")
                         .font(.system(size: 16, weight: .bold))
@@ -113,6 +112,7 @@ struct PracticeHomeScreen: View {
                 }
             }
             .buttonStyle(PressButtonStyle())
+            .accessibilityLabel("Daily challenges, \(DailyChallenge.all.count) remaining")
         }
     }
 
@@ -121,8 +121,8 @@ struct PracticeHomeScreen: View {
     private var scenarioListSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("Scenarios")
-                .font(AppFonts.label(13, weight: .bold))
-                .foregroundStyle(AppColors.textSecondary)
+                .font(AppFonts.label(15, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
 
             ForEach(Array(Scenario.all.enumerated()), id: \.element.id) { index, scenario in
                 Button { viewModel.select(scenario: scenario) } label: {

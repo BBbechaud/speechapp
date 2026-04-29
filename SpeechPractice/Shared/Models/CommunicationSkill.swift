@@ -1,6 +1,6 @@
 import Foundation
 
-enum CommunicationSkillID: String, CaseIterable, Identifiable, Hashable, Sendable {
+enum CommunicationSkillID: String, CaseIterable, Codable, Identifiable, Hashable, Sendable {
     case fillerWords
     case flow
     case articulation
@@ -15,7 +15,7 @@ enum CommunicationSkillID: String, CaseIterable, Identifiable, Hashable, Sendabl
     }
 }
 
-struct CommunicationSkill: Identifiable, Hashable, Sendable {
+struct CommunicationSkill: Identifiable, Codable, Hashable, Sendable {
     let id: CommunicationSkillID
     let title: String
     let definition: String

@@ -32,6 +32,12 @@ enum AppColors {
     static let separator     = Color(hex: "#E8E8E8")
     static let tabInactive   = Color(hex: "#9E9E9E")
 
+    /// Level / XP row on skill list cards (readable on white surfaces).
+    static let xpMetricGold = Color(hex: "#C29412")
+
+    /// Outer stroke on XP progress capsules (faint black).
+    static let xpMeterStroke = Color.black.opacity(0.14)
+
     // Daily Minute Wheel
     static let wheelGold     = Color(hex: "#FFC95F")
     static let wheelOrange   = Color(hex: "#F47632")

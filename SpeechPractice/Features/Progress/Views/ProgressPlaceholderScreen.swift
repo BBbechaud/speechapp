@@ -30,6 +30,7 @@ struct ProfileScreen: View {
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
+        .toolbar(.visible, for: .tabBar)
         .onAppear {
             appeared = true
         }
@@ -613,7 +614,7 @@ private struct ProfileSkillRow: View {
         .background {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .fill(AppColors.surface)
-                .subtleShadow()
+                .cardShadow()
         }
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.lg)

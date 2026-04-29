@@ -4,6 +4,8 @@ struct ReviewFeedback: Codable, Equatable, Hashable, Sendable {
     let scenarioTitle: String
     let personaName: String
     let overallScore: Int
+    let durationSeconds: Int
+    let userSpeakingPercent: Int
     let skillAnalyses: [SkillReviewAnalysis]
     let didWell: String
     let improve: String

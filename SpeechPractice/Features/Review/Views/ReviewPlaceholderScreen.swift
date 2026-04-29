@@ -38,6 +38,7 @@ struct ReviewHistoryScreen: View {
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
+        .toolbar(.visible, for: .tabBar)
         .onAppear {
             appeared = true
         }
@@ -83,50 +84,28 @@ private struct ReviewSessionSummaryCard: View {
         HStack(alignment: .center, spacing: AppSpacing.lg) {
             scoreView
 
-            VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                HStack(alignment: .center, spacing: AppSpacing.md) {
-                    Text(summary.scenarioTitle)
-                        .font(AppFonts.title(21, weight: .bold))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                Text(summary.scenarioTitle)
+                    .font(AppFonts.title(21, weight: .bold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
 
-                    Spacer(minLength: AppSpacing.sm)
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(AppColors.textTertiary)
-                        .accessibilityHidden(true)
-                }
-
-                HStack(alignment: .firstTextBaseline, spacing: AppSpacing.sm) {
-                    Text("with \(summary.personaName)")
-                        .font(AppFonts.body(14, weight: .medium))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.82)
-
-                    Spacer(minLength: AppSpacing.sm)
-
-                    Text(formattedDuration(summary.durationSeconds))
-                        .font(AppFonts.label(13, weight: .medium))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .lineLimit(1)
-                        .monospacedDigit()
-
-                    Text("•")
-                        .font(AppFonts.label(13, weight: .bold))
-                        .foregroundStyle(AppColors.textTertiary)
-                        .accessibilityHidden(true)
-
-                    Text(relativeCompletionText(summary.completedAt))
-                        .font(AppFonts.label(13, weight: .medium))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .lineLimit(1)
-                }
+                Text(relativeCompletionText(summary.completedAt))
+                    .font(AppFonts.label(13, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .lineLimit(1)
             }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundStyle(AppColors.textTertiary)
+                .padding(.trailing, AppSpacing.xs)
+                .accessibilityHidden(true)
         }
-        .padding(AppSpacing.lg)
+        .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xxl)
@@ -142,14 +121,14 @@ private struct ReviewSessionSummaryCard: View {
     }
 
     private var scoreView: some View {
-        VStack(spacing: AppSpacing.xs) {
+        VStack(spacing: 1) {
             Text("\(summary.overallScore)")
                 .font(AppFonts.display(26))
                 .foregroundStyle(AppColors.accent)
                 .monospacedDigit()
                 .lineLimit(1)
 
-            Text("score")
+            Text("overall")
                 .font(AppFonts.label(10, weight: .bold))
                 .foregroundStyle(AppColors.accent.opacity(0.9))
         }

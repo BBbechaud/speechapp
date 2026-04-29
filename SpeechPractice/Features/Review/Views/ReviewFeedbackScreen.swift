@@ -85,6 +85,29 @@ struct ReviewFeedbackScreen: View {
                 .foregroundStyle(AppColors.accent)
                 .lineLimit(1)
                 .minimumScaleFactor(0.78)
+
+            Rectangle()
+                .fill(AppColors.accentMedium.opacity(0.4))
+                .frame(height: 1)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.top, AppSpacing.xs)
+
+            HStack(spacing: AppSpacing.sm) {
+                Text(formattedDuration(feedback.durationSeconds))
+                    .font(AppFonts.label(13, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .monospacedDigit()
+
+                Text("•")
+                    .font(AppFonts.label(13, weight: .bold))
+                    .foregroundStyle(AppColors.textTertiary)
+
+                Text("\(feedback.userSpeakingPercent)% you · \(100 - feedback.userSpeakingPercent)% \(feedback.personaName)")
+                    .font(AppFonts.label(13, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
         }
         .padding(.horizontal, AppSpacing.xl)
         .padding(.vertical, AppSpacing.lg)
@@ -97,6 +120,12 @@ struct ReviewFeedbackScreen: View {
             RoundedRectangle(cornerRadius: AppRadius.xxl)
                 .strokeBorder(AppColors.accentMedium.opacity(0.72), lineWidth: 1)
         }
+    }
+
+    private func formattedDuration(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remaining = seconds % 60
+        return "\(minutes)m \(remaining)s"
     }
 
     private var skillAnalysisSection: some View {

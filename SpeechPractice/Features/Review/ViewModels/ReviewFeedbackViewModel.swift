@@ -18,6 +18,8 @@ enum ReviewFeedbackViewModel {
             scenarioTitle: scenario.title,
             personaName: persona.name,
             overallScore: overallScore(from: analyses),
+            durationSeconds: 272,
+            userSpeakingPercent: 62,
             skillAnalyses: analyses,
             didWell: "You stayed grounded and kept the conversation moving. Your strongest moments came when you answered directly, acknowledged \(persona.name)'s perspective, and returned to the goal of \(scenario.title.lowercased()).",
             improve: "Trim the setup before your main point and use cleaner pauses when you need a moment to think. A little more structure would make your strongest ideas land faster."
@@ -89,7 +91,8 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                preconditionFailure("Could not decode review session records from UserDefaults key \(recordsStorageKey): \(error)")
+                // Stored data is unreadable (schema change or corruption) — clear it and fall through to seeded records.
+                UserDefaults.standard.removeObject(forKey: recordsStorageKey)
             }
         }
 
@@ -139,7 +142,9 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            preconditionFailure("Could not decode review session summaries from UserDefaults key \(legacySummariesStorageKey): \(error)")
+            // Legacy data is unreadable — clear it and fall through to seeded records.
+            UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+            return seededRecords()
         }
     }
 
@@ -198,10 +203,15 @@ enum ReviewHistoryStore {
     }
 
     private static func feedback(for summary: ReviewSessionSummary) -> ReviewFeedback {
-        ReviewFeedback(
+        let seed: Int = summary.scenarioTitle.count + summary.personaName.count
+        let userSpeakingPercent: Int = 50 + (seed % 21)
+
+        return ReviewFeedback(
             scenarioTitle: summary.scenarioTitle,
             personaName: summary.personaName,
             overallScore: summary.overallScore,
+            durationSeconds: summary.durationSeconds,
+            userSpeakingPercent: userSpeakingPercent,
             skillAnalyses: skillAnalyses(for: summary),
             didWell: "You kept the practice focused and made the interaction feel intentional. Your strongest moments came when you responded directly to \(summary.personaName) and stayed anchored to the goal of \(summary.scenarioTitle.lowercased()).",
             improve: "Use a tighter opening and make your closing action more explicit. The session has a solid foundation, and a little more structure would make the next attempt land with more confidence."

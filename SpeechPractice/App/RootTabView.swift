@@ -9,17 +9,23 @@ private enum MainTab: Hashable {
 struct RootTabView: View {
     @State private var selectedTab: MainTab = .practice
     @State private var reviewRecords: [ReviewSessionRecord] = ReviewHistoryStore.loadRecords()
+    @State private var practiceFlowViewModel = PracticeFlowViewModel()
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            PracticeHomeScreen(onReviewFeedbackClosed: { feedback in
-                reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
-                selectedTab = .feedback
-            })
-                .tabItem {
-                    Label("Practice", systemImage: "mic.circle.fill")
-                }
-                .tag(MainTab.practice)
+            NavigationStack(path: $practiceFlowViewModel.navigationPath) {
+                PracticeHomeScreen(
+                    viewModel: practiceFlowViewModel,
+                    onReviewFeedbackClosed: { feedback in
+                        reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
+                        selectedTab = .feedback
+                    }
+                )
+            }
+            .tabItem {
+                Label("Practice", systemImage: "mic.circle.fill")
+            }
+            .tag(MainTab.practice)
 
             NavigationStack {
                 ReviewHistoryScreen(records: reviewRecords)

@@ -1,62 +1,60 @@
 import SwiftUI
 
 struct PracticeHomeScreen: View {
+    var viewModel: PracticeFlowViewModel
     let onReviewFeedbackClosed: (ReviewFeedback) -> Void
 
-    @State private var viewModel = PracticeFlowViewModel()
     @State private var appeared = false
 
     var body: some View {
-        NavigationStack(path: $viewModel.navigationPath) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                    dailyChallengesSection
-                        .opacity(appeared ? 1 : 0)
-                        .offset(y: appeared ? 0 : 12)
-                        .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.05), value: appeared)
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                dailyChallengesSection
+                    .opacity(appeared ? 1 : 0)
+                    .offset(y: appeared ? 0 : 12)
+                    .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.05), value: appeared)
 
-                    scenarioListSection
-                }
-                .padding(.horizontal, AppSpacing.base)
-                .padding(.top, AppSpacing.xs)
-                .padding(.bottom, AppSpacing.xxxl)
+                scenarioListSection
             }
-            .background(AppColors.background)
-            .navigationTitle("Select Scenario")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.background, for: .navigationBar)
-            .navigationDestination(for: PracticeRoute.self) { route in
-                switch route {
-                case .dailyChallenges:
-                    DailyChallengesScreen(viewModel: viewModel)
-                case .dailyMinuteWheel:
-                    DailyMinuteWheelScreen(viewModel: viewModel)
-                case .dailyMinuteSession(let prompt):
-                    DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
-                case .configure:
-                    ScenarioConfigScreen(viewModel: viewModel)
-                case .primer:
-                    PracticePrimerScreen(viewModel: viewModel)
-                case .session:
-                    PracticeSessionScreen(viewModel: viewModel)
-                case .complete:
-                    PracticeCompleteScreen(onReviewFeedback: {
-                        viewModel.showReviewFeedback()
-                    })
-                case .reviewFeedback:
-                    let feedback = viewModel.currentReviewFeedback()
-                    ReviewFeedbackScreen(
-                        feedback: feedback,
-                        onClose: {
-                            onReviewFeedbackClosed(feedback)
-                            viewModel.reset()
-                        }
-                    )
-                }
+            .padding(.horizontal, AppSpacing.base)
+            .padding(.top, AppSpacing.xs)
+            .padding(.bottom, AppSpacing.xxxl)
+        }
+        .background(AppColors.background)
+        .navigationTitle("Select Scenario")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .navigationDestination(for: PracticeRoute.self) { route in
+            switch route {
+            case .dailyChallenges:
+                DailyChallengesScreen(viewModel: viewModel)
+            case .dailyMinuteWheel:
+                DailyMinuteWheelScreen(viewModel: viewModel)
+            case .dailyMinuteSession(let prompt):
+                DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
+            case .configure:
+                ScenarioConfigScreen(viewModel: viewModel)
+            case .primer:
+                PracticePrimerScreen(viewModel: viewModel)
+            case .session:
+                PracticeSessionScreen(viewModel: viewModel)
+            case .complete:
+                PracticeCompleteScreen(onReviewFeedback: {
+                    viewModel.showReviewFeedback()
+                })
+            case .reviewFeedback:
+                let feedback = viewModel.currentReviewFeedback()
+                ReviewFeedbackScreen(
+                    feedback: feedback,
+                    onClose: {
+                        onReviewFeedbackClosed(feedback)
+                        viewModel.reset()
+                    }
+                )
             }
-            .onAppear {
-                appeared = true
-            }
+        }
+        .onAppear {
+            appeared = true
         }
     }
 
@@ -71,48 +69,105 @@ struct PracticeHomeScreen: View {
             Button {
                 viewModel.showDailyChallenges()
             } label: {
-                HStack(spacing: AppSpacing.md) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: AppRadius.lg)
-                            .fill(.white.opacity(0.22))
+                ZStack(alignment: .leading) {
+                    // Decorative background geometry — right-anchored, no GeometryReader
+                    HStack {
+                        Spacer(minLength: 0)
+                        ZStack(alignment: .topTrailing) {
+                            Circle()
+                                .fill(.white.opacity(0.09))
+                                .frame(width: 130, height: 130)
+                                .offset(x: 30, y: -24)
+                            Circle()
+                                .fill(.white.opacity(0.06))
+                                .frame(width: 80, height: 80)
+                                .offset(x: 18, y: 46)
+                            Circle()
+                                .fill(.white.opacity(0.06))
+                                .frame(width: 50, height: 50)
+                                .offset(x: -40, y: 60)
+                        }
+                        .frame(width: 120)
+                        .clipped()
+                    }
 
-                        Circle()
-                            .fill(.white)
-                            .frame(width: 34, height: 34)
-                            .overlay {
-                                Text("\(DailyChallenge.all.count)")
-                                    .font(AppFonts.title(17, weight: .bold))
-                                    .foregroundStyle(AppColors.accent)
+                    VStack(alignment: .leading, spacing: AppSpacing.md) {
+                        HStack(alignment: .center) {
+                            HStack(spacing: AppSpacing.md) {
+                                // Count badge
+                                ZStack {
+                                    Circle()
+                                        .fill(.white)
+                                        .frame(width: 44, height: 44)
+                                    Text("\(DailyChallenge.all.count)")
+                                        .font(AppFonts.display(22, weight: .bold))
+                                        .foregroundStyle(AppColors.accent)
+                                }
+
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Today's challenges")
+                                        .font(AppFonts.label(11, weight: .semibold))
+                                        .foregroundStyle(.white.opacity(0.7))
+                                        .textCase(.uppercase)
+                                        .tracking(0.4)
+
+                                    Text("Sharpen your skills")
+                                        .font(AppFonts.title(17, weight: .bold))
+                                        .foregroundStyle(.white)
+                                }
                             }
+
+                            Spacer(minLength: 0)
+
+                            // Arrow circle
+                            ZStack {
+                                Circle()
+                                    .fill(.white.opacity(0.2))
+                                    .frame(width: 34, height: 34)
+                                Image(systemName: "arrow.right")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundStyle(.white)
+                            }
+                            .accessibilityHidden(true)
+                        }
+
+                        // Category pills
+                        HStack(spacing: AppSpacing.sm) {
+                            ForEach(DailyChallenge.all, id: \.id) { challenge in
+                                Label {
+                                    Text(challenge.category)
+                                        .font(AppFonts.label(10, weight: .semibold))
+                                } icon: {
+                                    Image(systemName: challenge.sfSymbol)
+                                        .font(.system(size: 9, weight: .bold))
+                                }
+                                .foregroundStyle(.white.opacity(0.88))
+                                .padding(.horizontal, 9)
+                                .padding(.vertical, 5)
+                                .background(Capsule().fill(.white.opacity(0.18)))
+                            }
+                        }
                     }
-                    .frame(width: 64, height: 64)
-
-                    VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                        Text("Quick practice sessions to help refine your skills")
-                            .font(AppFonts.label(13, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    Spacer(minLength: 0)
-
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundStyle(.white.opacity(0.95))
-                        .accessibilityHidden(true)
+                    .padding(.horizontal, AppSpacing.xl)
+                    .padding(.vertical, AppSpacing.lg)
                 }
-                .padding(.horizontal, AppSpacing.lg)
-                .padding(.vertical, AppSpacing.md)
-                .frame(maxWidth: .infinity, minHeight: 100)
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 116)
                 .background {
                     RoundedRectangle(cornerRadius: AppRadius.xxl)
-                        .fill(AppColors.accent)
+                        .fill(
+                            LinearGradient(
+                                colors: [AppColors.accent, Color(hex: "#C8501E")],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
                         .cardShadow()
                 }
+                .clipShape(RoundedRectangle(cornerRadius: AppRadius.xxl))
             }
             .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Daily challenges, \(DailyChallenge.all.count) remaining")
+            .accessibilityLabel("Daily challenges, \(DailyChallenge.all.count) available")
         }
     }
 
@@ -148,9 +203,32 @@ private struct DailyChallengesScreen: View {
 
     @State private var appeared = false
 
+    private static let dateFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "EEEE, MMMM d"
+        return f
+    }()
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+            VStack(alignment: .leading, spacing: AppSpacing.lg) {
+                // Subtitle header
+                VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                    Text(Self.dateFormatter.string(from: Date()))
+                        .font(AppFonts.label(12, weight: .bold))
+                        .foregroundStyle(AppColors.textTertiary)
+                        .textCase(.uppercase)
+                        .tracking(0.5)
+
+                    Text("\(DailyChallenge.all.count) challenges ready for you")
+                        .font(AppFonts.body(15, weight: .regular))
+                        .foregroundStyle(AppColors.textSecondary)
+                }
+                .padding(.horizontal, AppSpacing.base)
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 8)
+                .animation(.easeOut(duration: 0.3), value: appeared)
+
                 ForEach(Array(DailyChallenge.all.enumerated()), id: \.element.id) { index, challenge in
                     Button {
                         if challenge.isDailyMinute {
@@ -166,7 +244,7 @@ private struct DailyChallengesScreen: View {
                     .offset(y: appeared ? 0 : 14)
                     .animation(
                         .spring(response: 0.45, dampingFraction: 0.82)
-                            .delay(Double(index) * 0.06),
+                            .delay(0.08 + Double(index) * 0.07),
                         value: appeared
                     )
                 }
@@ -190,75 +268,104 @@ private struct DailyChallengesScreen: View {
 private struct DailyChallengeCard: View {
     let challenge: DailyChallenge
 
-    var body: some View {
-        HStack(spacing: AppSpacing.md) {
-            VStack(alignment: .leading, spacing: AppSpacing.lg) {
-                Label {
-                    Text(challenge.category)
-                        .font(AppFonts.label(12, weight: .bold))
-                } icon: {
-                    Image(systemName: challenge.sfSymbol)
-                        .font(.system(size: 16, weight: .bold))
-                }
-                .foregroundStyle(AppColors.accent)
-
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
-                    Text(challenge.title)
-                        .font(AppFonts.display(28, weight: .bold))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text(challenge.description)
-                        .font(AppFonts.body(18, weight: .medium))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .lineSpacing(4)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-            }
-
-            Spacer(minLength: 0)
-
-            ChallengeArtwork(symbolName: challenge.sfSymbol)
-                .frame(width: 106, height: 128)
-                .accessibilityHidden(true)
+    private var accentColor: Color {
+        switch challenge.category {
+        case "Daily Minute": return AppColors.wheelOrange
+        case "Speed Drill":  return Color(hex: "#5B6AF0")
+        default:             return AppColors.accent
         }
-        .padding(AppSpacing.xl)
+    }
+
+    private var accentSubtle: Color {
+        switch challenge.category {
+        case "Daily Minute": return Color(hex: "#FFF4E0")
+        case "Speed Drill":  return Color(hex: "#EEEEFF")
+        default:             return AppColors.accentSubtle
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // ── Header row ──────────────────────────────────
+            HStack(alignment: .center, spacing: AppSpacing.md) {
+                // Icon in tinted rounded square
+                ZStack {
+                    RoundedRectangle(cornerRadius: AppRadius.md)
+                        .fill(accentSubtle)
+                        .frame(width: 50, height: 50)
+                    Image(systemName: challenge.sfSymbol)
+                        .font(.system(size: 22, weight: .semibold))
+                        .foregroundStyle(accentColor)
+                }
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(challenge.category.uppercased())
+                        .font(AppFonts.label(10, weight: .bold))
+                        .foregroundStyle(accentColor)
+                        .tracking(0.6)
+
+                    Text(challenge.title)
+                        .font(AppFonts.title(17, weight: .bold))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding(.horizontal, AppSpacing.xl)
+            .padding(.top, AppSpacing.xl)
+            .padding(.bottom, AppSpacing.md)
+
+            // Thin divider
+            Rectangle()
+                .fill(AppColors.separator)
+                .frame(height: 1)
+                .padding(.horizontal, AppSpacing.xl)
+
+            // ── Description ─────────────────────────────────
+            Text(challenge.description)
+                .font(AppFonts.body(14))
+                .foregroundStyle(AppColors.textSecondary)
+                .lineSpacing(3)
+                .lineLimit(3)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, AppSpacing.xl)
+                .padding(.top, AppSpacing.md)
+
+            // ── Footer ──────────────────────────────────────
+            HStack(alignment: .center) {
+                Label {
+                    Text(challenge.scenario.durationRange)
+                        .font(AppFonts.label(12, weight: .medium))
+                } icon: {
+                    Image(systemName: "clock")
+                        .font(.system(size: 11, weight: .medium))
+                }
+                .foregroundStyle(AppColors.textTertiary)
+
+                Spacer()
+
+                HStack(spacing: 5) {
+                    Text("Start")
+                        .font(AppFonts.label(13, weight: .bold))
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 11, weight: .bold))
+                }
+                .foregroundStyle(accentColor)
+                .padding(.horizontal, AppSpacing.md)
+                .padding(.vertical, AppSpacing.sm)
+                .background(Capsule().fill(accentColor.opacity(0.1)))
+            }
+            .padding(.horizontal, AppSpacing.xl)
+            .padding(.top, AppSpacing.lg)
+            .padding(.bottom, AppSpacing.xl)
+        }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .frame(minHeight: 190)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xxl)
                 .fill(AppColors.surface)
                 .cardShadow()
         }
-    }
-}
-
-// MARK: - Challenge Artwork
-
-private struct ChallengeArtwork: View {
-    let symbolName: String
-
-    var body: some View {
-        ZStack {
-            Image(systemName: symbolName)
-                .font(.system(size: 86, weight: .bold))
-                .foregroundStyle(AppColors.accentSubtle)
-                .offset(x: 14, y: 8)
-
-            VStack(spacing: 8) {
-                ForEach([28.0, 48.0, 82.0, 52.0, 34.0], id: \.self) { height in
-                    Capsule()
-                        .fill(AppColors.accentSubtle)
-                        .frame(width: 10, height: height)
-                }
-            }
-            .rotationEffect(.degrees(90))
-            .opacity(0.75)
-            .offset(x: 12, y: 10)
-        }
-        .clipped()
     }
 }
 
@@ -304,5 +411,8 @@ private struct ScenarioRow: View {
 }
 
 #Preview {
-    PracticeHomeScreen(onReviewFeedbackClosed: { _ in })
+    @Previewable @State var viewModel = PracticeFlowViewModel()
+    NavigationStack(path: $viewModel.navigationPath) {
+        PracticeHomeScreen(viewModel: viewModel, onReviewFeedbackClosed: { _ in })
+    }
 }

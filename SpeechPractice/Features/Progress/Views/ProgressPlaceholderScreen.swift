@@ -30,7 +30,6 @@ struct ProfileScreen: View {
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
-        .toolbar(.visible, for: .tabBar)
         .onAppear {
             appeared = true
         }
@@ -68,7 +67,7 @@ struct ProfileScreen: View {
 
                 VStack(spacing: AppSpacing.xs) {
                     Text("Brian Bechaud")
-                        .font(AppFonts.display(28))
+                        .font(AppFonts.title(28, weight: .semibold))
                         .foregroundStyle(AppColors.textPrimary)
                         .multilineTextAlignment(.center)
 
@@ -481,7 +480,7 @@ private struct OverviewMetricRow: View {
                 .accessibilityHidden(true)
 
             Text(value)
-                .font(AppFonts.title(24, weight: .bold))
+                .font(AppFonts.title(24, weight: .semibold))
                 .foregroundStyle(AppColors.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)

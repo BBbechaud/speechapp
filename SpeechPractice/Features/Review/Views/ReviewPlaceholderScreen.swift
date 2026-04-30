@@ -38,7 +38,6 @@ struct ReviewHistoryScreen: View {
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
-        .toolbar(.visible, for: .tabBar)
         .onAppear {
             appeared = true
         }
@@ -48,17 +47,11 @@ struct ReviewHistoryScreen: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.sm) {
-            Text("Feedback")
-                .font(AppFonts.display(34))
-                .foregroundStyle(AppColors.textPrimary)
-                .accessibilityAddTraits(.isHeader)
-
-            Text("Review your past communication performances")
-                .font(AppFonts.body(16))
-                .foregroundStyle(AppColors.textSecondary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
+        Text("Feedback")
+            .font(AppFonts.display(34))
+            .foregroundStyle(AppColors.textPrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .accessibilityAddTraits(.isHeader)
     }
 }
 

@@ -22,7 +22,7 @@ struct PracticeHomeScreen: View {
         }
         .background(AppColors.background)
         .navigationTitle("Select Scenario")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .navigationDestination(for: PracticeRoute.self) { route in
             switch route {

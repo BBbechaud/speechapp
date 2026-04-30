@@ -72,54 +72,13 @@ struct ReviewFeedbackScreen: View {
     }
 
     private var scenarioPill: some View {
-        VStack(spacing: AppSpacing.sm) {
-            Text(feedback.scenarioTitle)
-                .font(AppFonts.display(24))
-                .foregroundStyle(AppColors.textPrimary)
-                .multilineTextAlignment(.center)
-                .lineLimit(2)
-                .minimumScaleFactor(0.82)
-
-            Text("With \(feedback.personaName)")
-                .font(AppFonts.label(13, weight: .bold))
-                .foregroundStyle(AppColors.accent)
-                .lineLimit(1)
-                .minimumScaleFactor(0.78)
-
-            Rectangle()
-                .fill(AppColors.accentMedium.opacity(0.4))
-                .frame(height: 1)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.top, AppSpacing.xs)
-
-            HStack(spacing: AppSpacing.sm) {
-                Text(formattedDuration(feedback.durationSeconds))
-                    .font(AppFonts.label(13, weight: .medium))
-                    .foregroundStyle(AppColors.textSecondary)
-                    .monospacedDigit()
-
-                Text("•")
-                    .font(AppFonts.label(13, weight: .bold))
-                    .foregroundStyle(AppColors.textTertiary)
-
-                Text("\(feedback.userSpeakingPercent)% you · \(100 - feedback.userSpeakingPercent)% \(feedback.personaName)")
-                    .font(AppFonts.label(13, weight: .medium))
-                    .foregroundStyle(AppColors.textSecondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-            }
-        }
-        .padding(.horizontal, AppSpacing.xl)
-        .padding(.vertical, AppSpacing.lg)
-        .frame(maxWidth: .infinity)
-        .background {
-            RoundedRectangle(cornerRadius: AppRadius.xxl)
-                .fill(AppColors.accentSubtle.opacity(0.42))
-        }
-        .overlay {
-            RoundedRectangle(cornerRadius: AppRadius.xxl)
-                .strokeBorder(AppColors.accentMedium.opacity(0.72), lineWidth: 1)
-        }
+        Text(feedback.scenarioTitle)
+            .font(AppFonts.title(28, weight: .semibold))
+            .foregroundStyle(AppColors.textPrimary)
+            .multilineTextAlignment(.center)
+            .lineLimit(2)
+            .minimumScaleFactor(0.82)
+            .frame(maxWidth: .infinity)
     }
 
     private func formattedDuration(_ seconds: Int) -> String {
@@ -131,7 +90,7 @@ struct ReviewFeedbackScreen: View {
     private var skillAnalysisSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("Skill analysis")
-                .font(AppFonts.display(24))
+                .font(AppFonts.title(20, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
             VStack(spacing: AppSpacing.md) {
@@ -315,7 +274,7 @@ private struct PracticeNotesSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("Practice notes")
-                .font(AppFonts.display(22))
+                .font(AppFonts.title(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
             ZStack(alignment: .topLeading) {

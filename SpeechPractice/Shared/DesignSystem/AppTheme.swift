@@ -9,7 +9,7 @@ enum AppColors {
     static let accentMedium  = Color(hex: "#FFDCC8")
 
     // Backgrounds
-    static let background    = Color(hex: "#F2F2F7") // iOS system grouped
+    static let background    = Color(hex: "#EDE9E3") // warm cream
     static let surface       = Color.white
     static let surfaceRaised = Color(hex: "#F9F9F9")
     /// Soft halo behind practice-complete mascot (warm peach).
@@ -49,19 +49,30 @@ enum AppColors {
 
 enum AppFonts {
     static func display(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
-        .system(size: size, weight: weight, design: .rounded)
+        dmSans(size, weight: weight)
     }
 
     static func title(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
-        .system(size: size, weight: weight, design: .rounded)
+        dmSans(size, weight: weight)
     }
 
     static func body(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .rounded)
+        dmSans(size, weight: weight)
     }
 
     static func label(_ size: CGFloat, weight: Font.Weight = .medium) -> Font {
         .system(size: size, weight: weight, design: .rounded)
+    }
+
+    private static func dmSans(_ size: CGFloat, weight: Font.Weight) -> Font {
+        let name: String
+        switch weight {
+        case .bold, .heavy, .black: name = "DMSans-Bold"
+        case .semibold:             name = "DMSans-SemiBold"
+        case .medium:               name = "DMSans-Medium"
+        default:                    name = "DMSans-Regular"
+        }
+        return .custom(name, size: size)
     }
 }
 

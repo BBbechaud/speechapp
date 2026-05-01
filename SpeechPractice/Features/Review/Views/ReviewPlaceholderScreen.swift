@@ -42,7 +42,7 @@ struct ReviewHistoryScreen: View {
             appeared = true
         }
         .navigationDestination(for: ReviewSessionRecord.self) { record in
-            ReviewHistoryFeedbackDestination(feedback: record.feedback)
+            ReviewHistoryFeedbackDestination(record: record)
         }
     }
 
@@ -56,13 +56,14 @@ struct ReviewHistoryScreen: View {
 }
 
 private struct ReviewHistoryFeedbackDestination: View {
-    let feedback: ReviewFeedback
+    let record: ReviewSessionRecord
 
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ReviewFeedbackScreen(
-            feedback: feedback,
+            feedback: record.feedback,
+            sessionID: record.id,
             onClose: {
                 dismiss()
             }

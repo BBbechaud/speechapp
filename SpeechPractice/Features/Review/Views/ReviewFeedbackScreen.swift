@@ -2,10 +2,18 @@ import SwiftUI
 
 struct ReviewFeedbackScreen: View {
     let feedback: ReviewFeedback
+    let sessionID: UUID
     let onClose: () -> Void
 
-    @AppStorage("latestPracticeReviewNotes") private var practiceNotes: String = ""
+    @AppStorage private var practiceNotes: String
     @State private var appeared: Bool = false
+
+    init(feedback: ReviewFeedback, sessionID: UUID, onClose: @escaping () -> Void) {
+        self.feedback = feedback
+        self.sessionID = sessionID
+        self.onClose = onClose
+        _practiceNotes = AppStorage(wrappedValue: "", ReviewNotesStorage.key(for: sessionID))
+    }
 
     var body: some View {
         ScrollView {
@@ -318,6 +326,7 @@ private struct PracticeNotesSection: View {
                 scenario: Scenario.all[3],
                 persona: Persona.all[1]
             ),
+            sessionID: UUID(uuidString: "8E929020-36E5-4C37-94E0-FE0EEDBC9121") ?? UUID(),
             onClose: {}
         )
     }

@@ -62,17 +62,17 @@ struct PracticeSessionScreen: View {
 
         return HStack(spacing: AppSpacing.sm) {
             Circle()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 6, height: 6)
                 .accessibilityHidden(true)
 
             Text(title)
                 .font(AppFonts.label(11, weight: .semibold))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
         }
         .padding(.horizontal, AppSpacing.md)
         .padding(.vertical, AppSpacing.sm)
-        .background(AppColors.accentSubtle, in: Capsule())
+        .background(AppColors.primarySubtle, in: Capsule())
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(title.lowercased().capitalized)
     }
@@ -130,11 +130,11 @@ private struct StopGlyphView: View {
     var body: some View {
         ZStack {
             Circle()
-                .strokeBorder(AppColors.accent, lineWidth: 2)
+                .strokeBorder(AppColors.primary, lineWidth: 2)
                 .frame(width: 24, height: 24)
 
             RoundedRectangle(cornerRadius: 2)
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 9, height: 9)
         }
     }
@@ -179,7 +179,7 @@ private struct SessionAudioWaveBars: View {
 
     private func barView(width: CGFloat, height: CGFloat) -> some View {
         RoundedRectangle(cornerRadius: 2)
-            .fill(AppColors.accent.opacity(0.85))
+            .fill(AppColors.primary.opacity(0.85))
             .frame(width: width, height: height)
     }
 }

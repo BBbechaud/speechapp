@@ -50,7 +50,7 @@ struct ScenarioConfigScreen: View {
         HStack(spacing: AppSpacing.sm) {
             Image(systemName: scenario.sfSymbol)
                 .font(.system(size: 24, weight: .semibold))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
                 .frame(width: 52, height: 56, alignment: .center)
                 .accessibilityHidden(true)
 
@@ -70,7 +70,7 @@ struct ScenarioConfigScreen: View {
         .padding(AppSpacing.base)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xl)
-                .fill(AppColors.accentSubtle)
+                .fill(AppColors.primarySubtle)
         }
     }
 
@@ -186,7 +186,7 @@ private struct PersonaCard: View {
                 .overlay {
                     if isSelected {
                         Circle()
-                            .strokeBorder(AppColors.accent, lineWidth: 2.5)
+                            .strokeBorder(AppColors.primary, lineWidth: 2.5)
                     }
                 }
                 .scaleEffect(isSelected ? 1.04 : 1.0)
@@ -216,7 +216,7 @@ private struct PersonaCard: View {
         .overlay {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .strokeBorder(
-                    isSelected ? AppColors.accent : Color.clear,
+                    isSelected ? AppColors.primary : Color.clear,
                     lineWidth: 2
                 )
         }

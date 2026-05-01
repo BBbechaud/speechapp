@@ -136,13 +136,13 @@ private struct OverallScoreRing: View {
     var body: some View {
         ZStack {
             Circle()
-                .stroke(AppColors.accentSubtle, lineWidth: 17)
+                .stroke(AppColors.primarySubtle, lineWidth: 17)
                 .frame(width: 190, height: 190)
 
             Circle()
                 .trim(from: 0, to: scoreProgress)
                 .stroke(
-                    AppColors.accent,
+                    AppColors.primary,
                     style: StrokeStyle(lineWidth: 17, lineCap: .round)
                 )
                 .frame(width: 190, height: 190)
@@ -243,7 +243,7 @@ private struct FeedbackTextCard: View {
             HStack(spacing: AppSpacing.sm) {
                 Image(systemName: systemImage)
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
+                    .foregroundStyle(AppColors.primary)
                     .accessibilityHidden(true)
 
                 Text(title)

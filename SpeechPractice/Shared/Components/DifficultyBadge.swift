@@ -19,10 +19,10 @@ struct TimeBadge: View {
     var body: some View {
         Text(duration)
             .font(AppFonts.label(11, weight: .semibold))
-            .foregroundStyle(AppColors.accent)
+            .foregroundStyle(AppColors.primary)
             .padding(.horizontal, AppSpacing.sm)
             .padding(.vertical, 3)
-            .background(AppColors.accentSubtle, in: Capsule())
+            .background(AppColors.primarySubtle, in: Capsule())
     }
 }
 

@@ -60,7 +60,7 @@ struct RootTabView: View {
         .safeAreaInset(edge: .bottom, spacing: 0) {
             AppTabBar(selectedTab: $selectedTab)
         }
-        .tint(AppColors.accent)
+        .tint(AppColors.primary)
     }
 }
 
@@ -104,12 +104,12 @@ private struct TabBarItem: View {
             VStack(spacing: 4) {
                 Image(systemName: tab.icon)
                     .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
-                    .foregroundStyle(isSelected ? AppColors.accent : AppColors.tabInactive)
+                    .foregroundStyle(isSelected ? AppColors.primary : AppColors.tabInactive)
                     .animation(.easeInOut(duration: 0.16), value: isSelected)
 
                 Text(tab.label)
                     .font(AppFonts.label(10, weight: isSelected ? .bold : .medium))
-                    .foregroundStyle(isSelected ? AppColors.accent : AppColors.tabInactive)
+                    .foregroundStyle(isSelected ? AppColors.primary : AppColors.tabInactive)
                     .animation(.easeInOut(duration: 0.16), value: isSelected)
             }
             .frame(maxWidth: .infinity)

@@ -57,7 +57,7 @@ struct PracticePrimerScreen: View {
             PersonaAvatarView(name: persona.name, size: 88)
                 .overlay {
                     Circle()
-                        .strokeBorder(AppColors.accentMedium, lineWidth: 2)
+                        .strokeBorder(AppColors.primaryMedium, lineWidth: 2)
                 }
                 .scaleEffect(appeared ? 1 : 0.85)
                 .animation(.spring(response: 0.5, dampingFraction: 0.7).delay(0.08), value: appeared)
@@ -86,7 +86,7 @@ struct PracticePrimerScreen: View {
                 .foregroundStyle(AppColors.textSecondary)
             + Text(parts.highlight)
                 .font(AppFonts.body(15, weight: .semibold))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
             + Text(parts.suffix)
                 .font(AppFonts.body(15))
                 .foregroundStyle(AppColors.textSecondary)

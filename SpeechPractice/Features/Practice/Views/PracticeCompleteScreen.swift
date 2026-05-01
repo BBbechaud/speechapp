@@ -11,7 +11,7 @@ struct PracticeCompleteScreen: View {
         ZStack {
             LinearGradient(
                 stops: [
-                    .init(color: AppColors.accentSubtle.opacity(0.5), location: 0),
+                    .init(color: AppColors.primarySubtle.opacity(0.5), location: 0),
                     .init(color: AppColors.background, location: 0.42),
                     .init(color: AppColors.background, location: 1),
                 ],
@@ -99,8 +99,8 @@ private struct PracticeCompleteMascotView: View {
                 .strokeBorder(
                     LinearGradient(
                         colors: [
-                            AppColors.accentMedium.opacity(0.9),
-                            AppColors.accent.opacity(0.35),
+                            AppColors.primaryMedium.opacity(0.9),
+                            AppColors.primary.opacity(0.35),
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -111,13 +111,13 @@ private struct PracticeCompleteMascotView: View {
 
             Image(systemName: "star.fill")
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(AppColors.accent.opacity(0.88))
+                .foregroundStyle(AppColors.primary.opacity(0.88))
                 .offset(x: -86, y: -68)
                 .accessibilityHidden(true)
 
             Image(systemName: "sparkle")
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(AppColors.accentMedium)
+                .foregroundStyle(AppColors.primaryMedium)
                 .offset(x: 80, y: -64)
                 .accessibilityHidden(true)
 
@@ -142,7 +142,7 @@ private struct MascotCharacterView: View {
     var body: some View {
         ZStack {
             Circle()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 112, height: 112)
                 .subtleShadow()
 
@@ -165,25 +165,25 @@ private struct MascotCharacterView: View {
 
             // Limbs
             Capsule()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 12, height: 28)
                 .offset(x: -52, y: 18)
                 .rotationEffect(.degrees(-18))
 
             Capsule()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 12, height: 28)
                 .offset(x: 52, y: 18)
                 .rotationEffect(.degrees(18))
 
             Capsule()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 12, height: 32)
                 .offset(x: -58, y: -8)
                 .rotationEffect(.degrees(-125))
 
             Capsule()
-                .fill(AppColors.accent)
+                .fill(AppColors.primary)
                 .frame(width: 12, height: 32)
                 .offset(x: 58, y: -8)
                 .rotationEffect(.degrees(35))

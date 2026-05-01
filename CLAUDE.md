@@ -53,8 +53,9 @@ Example: `PracticeFlowViewModel` owns `navigationPath: [PracticeRoute]` and the 
 `AppTheme.swift` is the single source of truth for all visual constants. Never use hardcoded colors, font sizes, or spacing values inline — always pull from `AppColors`, `AppFonts`, `AppSpacing`, or `AppRadius`.
 
 Key patterns:
-- `AppColors.accent` = `#E8632A` (primary orange — the only saturated color)
-- `AppFonts.*` use SF Pro Rounded (`design: .rounded`) throughout
+- `AppColors.primary` = `#E8632A` (Sunset orange — main brand color for CTAs and hero moments)
+- `AppColors.accent` = `#7B6BD1` (Indigo purple — supporting accent for streaks, info, and secondary brand moments)
+- `AppFonts.display`, `AppFonts.title`, and `AppFonts.body` use DM Sans; `AppFonts.label` keeps rounded system type
 - `.cardShadow()` / `.subtleShadow()` — apply via View extension, never raw `.shadow()`
 - `PressButtonStyle` / `.pressScale()` — spring 0.97 scale on all tappable elements; use consistently
 

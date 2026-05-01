@@ -117,13 +117,13 @@ private struct ReviewSessionSummaryCard: View {
         VStack(spacing: 1) {
             Text("\(summary.overallScore)")
                 .font(AppFonts.display(26))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
                 .monospacedDigit()
                 .lineLimit(1)
 
             Text("overall")
                 .font(AppFonts.label(10, weight: .bold))
-                .foregroundStyle(AppColors.accent.opacity(0.9))
+                .foregroundStyle(AppColors.primary.opacity(0.9))
         }
         .frame(width: 54)
     }

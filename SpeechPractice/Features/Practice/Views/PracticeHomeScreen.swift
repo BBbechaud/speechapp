@@ -101,7 +101,7 @@ struct PracticeHomeScreen: View {
                                         .frame(width: 44, height: 44)
                                     Text("\(DailyChallenge.all.count)")
                                         .font(AppFonts.display(22, weight: .bold))
-                                        .foregroundStyle(AppColors.accent)
+                                        .foregroundStyle(AppColors.primary)
                                 }
 
                                 VStack(alignment: .leading, spacing: 2) {
@@ -157,7 +157,7 @@ struct PracticeHomeScreen: View {
                     RoundedRectangle(cornerRadius: AppRadius.xxl)
                         .fill(
                             LinearGradient(
-                                colors: [AppColors.accent, Color(hex: "#C8501E")],
+                                colors: [AppColors.primary, Color(hex: "#C8501E")],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -272,7 +272,7 @@ private struct DailyChallengeCard: View {
         switch challenge.category {
         case "Daily Minute": return AppColors.wheelOrange
         case "Speed Drill":  return Color(hex: "#5B6AF0")
-        default:             return AppColors.accent
+        default:             return AppColors.primary
         }
     }
 
@@ -280,7 +280,7 @@ private struct DailyChallengeCard: View {
         switch challenge.category {
         case "Daily Minute": return Color(hex: "#FFF4E0")
         case "Speed Drill":  return Color(hex: "#EEEEFF")
-        default:             return AppColors.accentSubtle
+        default:             return AppColors.primarySubtle
         }
     }
 
@@ -378,7 +378,7 @@ private struct ScenarioRow: View {
         HStack(spacing: AppSpacing.sm) {
             Image(systemName: scenario.sfSymbol)
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
                 .frame(width: 44, height: 48, alignment: .center)
                 .accessibilityHidden(true)
 

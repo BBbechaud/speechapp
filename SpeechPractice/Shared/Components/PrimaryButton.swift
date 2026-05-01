@@ -11,7 +11,7 @@ struct PrimaryButton: View {
         Button(action: action) {
             ZStack {
                 RoundedRectangle(cornerRadius: AppRadius.pill)
-                    .fill(AppColors.accent)
+                    .fill(AppColors.primary)
 
                 if isLoading {
                     ProgressView()

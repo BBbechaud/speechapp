@@ -39,7 +39,7 @@ A practice-first app where users rehearse realistic conversations with AI person
 - **Respectful of effort** — the app celebrates trying, not just succeeding
 
 ### 2.2 Visual Design
-- **Primary accent color:** Orange
+- **Primary brand color:** Orange, with purple reserved for supporting accent moments
 - **Other bright colors:** Used sparingly and intentionally (e.g., for category differentiation in scoring, badge tiers)
 - **Typography:** Three fonts total across the app
 - **Mascot:** Used between screens to convey emotion, celebrate wins, and add character. Placeholder assets used in MVP build until final mascot is designed.

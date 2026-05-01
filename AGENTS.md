@@ -104,7 +104,8 @@ Prioritize the next phases in this order unless the user redirects:
 - `Shared/DesignSystem/AppTheme.swift` is the source of truth for colors, fonts, spacing, radii, shadows, and press feedback.
 - Avoid hardcoded colors, font sizes, spacing, radii, and shadows inside feature screens.
 - Use `AppColors`, `AppFonts`, `AppSpacing`, `AppRadius`, `.cardShadow()`, `.subtleShadow()`, and `PressButtonStyle`.
-- Keep orange as the primary saturated accent color.
+- Use `AppColors.primary*` for the orange Sunset brand scale and CTAs.
+- Use `AppColors.accent*` for the purple Indigo support scale, such as streaks, info, and secondary brand moments.
 - Maintain the app's rounded, warm, confidence-building feel without adding decorative clutter.
 - Prefer real, functional states over purely ornamental UI.
 

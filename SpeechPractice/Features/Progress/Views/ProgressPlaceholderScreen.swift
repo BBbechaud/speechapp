@@ -97,7 +97,7 @@ struct ProfileScreen: View {
                     OverviewMetricRow(
                         systemImage: "rosette",
                         value: overview.level,
-                        tint: AppColors.accent
+                        tint: AppColors.primary
                     )
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -112,7 +112,7 @@ struct ProfileScreen: View {
                     OverviewMetricRow(
                         systemImage: "bolt.fill",
                         value: "\(formattedWholeNumber(overview.totalXP)) XP",
-                        tint: AppColors.accent
+                        tint: AppColors.primary
                     )
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -165,7 +165,7 @@ struct ProfileScreen: View {
                 } label: {
                     Text(tab.title)
                         .font(AppFonts.title(17, weight: selectedTab == tab ? .bold : .semibold))
-                        .foregroundStyle(selectedTab == tab ? AppColors.accent : AppColors.textTertiary)
+                        .foregroundStyle(selectedTab == tab ? AppColors.primary : AppColors.textTertiary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.82)
                         .frame(maxWidth: .infinity)
@@ -434,7 +434,7 @@ private struct ProfileAvatar: View {
         ZStack(alignment: .bottom) {
             ZStack {
                 Circle()
-                    .fill(AppColors.accent.opacity(0.72))
+                    .fill(AppColors.primary.opacity(0.72))
                     .frame(width: 112, height: 112)
 
                 Circle()
@@ -456,8 +456,8 @@ private struct ProfileAvatar: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, AppSpacing.md)
                 .padding(.vertical, AppSpacing.xs)
-                .background(AppColors.accent, in: Capsule())
-                .shadow(color: AppColors.accent.opacity(0.28), radius: 8, x: 0, y: 4)
+                .background(AppColors.primary, in: Capsule())
+                .shadow(color: AppColors.primary.opacity(0.28), radius: 8, x: 0, y: 4)
                 .offset(y: AppSpacing.sm)
         }
         .padding(.bottom, AppSpacing.sm)
@@ -691,9 +691,9 @@ private struct ProfileSkillDetailScreen: View {
             HStack(spacing: AppSpacing.base) {
                 Image(systemName: detail.systemImage)
                     .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(AppColors.accent)
+                    .foregroundStyle(AppColors.primary)
                     .frame(width: 72, height: 72)
-                    .background(AppColors.accentSubtle, in: Circle())
+                    .background(AppColors.primarySubtle, in: Circle())
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: AppSpacing.xs) {
@@ -712,7 +712,7 @@ private struct ProfileSkillDetailScreen: View {
                 HStack(alignment: .firstTextBaseline) {
                     Text("Level \(detail.level)")
                         .font(AppFonts.label(14, weight: .bold))
-                        .foregroundStyle(AppColors.accent)
+                        .foregroundStyle(AppColors.primary)
                         .textCase(.uppercase)
 
                     Spacer(minLength: AppSpacing.md)
@@ -725,7 +725,7 @@ private struct ProfileSkillDetailScreen: View {
                         .minimumScaleFactor(0.8)
                 }
 
-                ProgressCapsule(progress: levelProgress, foregroundColor: AppColors.accent, backgroundColor: AppColors.accentSubtle)
+                ProgressCapsule(progress: levelProgress, foregroundColor: AppColors.primary, backgroundColor: AppColors.primarySubtle)
                     .frame(height: 13)
             }
         }
@@ -763,7 +763,7 @@ private struct ProfileSkillDetailScreen: View {
                 VStack(alignment: .leading, spacing: AppSpacing.sm) {
                     Text("How to improve")
                         .font(AppFonts.label(16, weight: .bold))
-                        .foregroundStyle(AppColors.accent)
+                        .foregroundStyle(AppColors.primary)
                         .textCase(.uppercase)
 
                     Text("\"\(detail.improvementTip)\"")
@@ -812,7 +812,7 @@ private struct ProfileSkillDetailScreen: View {
                 border: Color(hex: "#FFD4D6")
             )
 
-            SkillTrendCard(points: detail.trendPoints, tint: AppColors.accent)
+            SkillTrendCard(points: detail.trendPoints, tint: AppColors.primary)
         }
     }
 
@@ -1031,7 +1031,7 @@ private struct ProfileEmptyTabView: View {
         VStack(spacing: AppSpacing.sm) {
             Image(systemName: systemImage)
                 .font(.system(size: 28, weight: .semibold))
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
                 .accessibilityHidden(true)
 
             Text(title)

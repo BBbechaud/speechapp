@@ -69,7 +69,7 @@ struct DailyMinuteWheelScreen: View {
 
                 Text("SPIN FOR YOUR CHALLENGE")
                     .font(AppFonts.label(11, weight: .bold))
-                    .foregroundStyle(AppColors.accent)
+                    .foregroundStyle(AppColors.primary)
             }
 
             Spacer(minLength: 0)
@@ -108,7 +108,7 @@ struct DailyMinuteWheelScreen: View {
                     Image(systemName: selectedPrompt.sfSymbol)
                         .font(.system(size: 15, weight: .bold))
                 }
-                .foregroundStyle(AppColors.accent)
+                .foregroundStyle(AppColors.primary)
 
                 Text(selectedPrompt.title)
                     .font(AppFonts.display(26, weight: .bold))
@@ -127,7 +127,7 @@ struct DailyMinuteWheelScreen: View {
             .frame(maxWidth: .infinity)
             .background {
                 RoundedRectangle(cornerRadius: AppRadius.xxl)
-                    .fill(AppColors.accentSubtle)
+                    .fill(AppColors.primarySubtle)
             }
             .transition(.move(edge: .bottom).combined(with: .opacity))
         } else {
@@ -166,7 +166,7 @@ struct DailyMinuteWheelScreen: View {
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
-                    .background(AppColors.accent, in: RoundedRectangle(cornerRadius: AppRadius.pill))
+                    .background(AppColors.primary, in: RoundedRectangle(cornerRadius: AppRadius.pill))
                 }
                 .buttonStyle(PressButtonStyle())
                 .accessibilityHint("Starts the one-minute speaking challenge")
@@ -187,7 +187,7 @@ struct DailyMinuteWheelScreen: View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 56)
                     .background(
-                        isSpinning ? AppColors.textTertiary : AppColors.accent,
+                        isSpinning ? AppColors.textTertiary : AppColors.primary,
                         in: RoundedRectangle(cornerRadius: AppRadius.pill)
                     )
                 }
@@ -270,7 +270,7 @@ private struct DailyMinuteWheel: View {
                 }
 
                 WheelPointer()
-                    .fill(AppColors.accent)
+                    .fill(AppColors.primary)
                     .frame(width: 38, height: 56)
                     .shadow(color: AppColors.wheelLine.opacity(0.22), radius: 4, x: 0, y: 2)
                     .offset(y: max(0, wheelTop - 20))

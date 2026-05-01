@@ -1,48 +1,111 @@
 import SwiftUI
 
-// MARK: - Color Palette
+// MARK: - App Colors
+//
+// Naming convention:
+//   primary = Orange (Sunset) - the brand's main color, CTAs, hero moments
+//   accent  = Purple (Indigo) - supporting accent for streaks, info, secondary brand moments
+//
+// 5-shade scales: 50 (lightest) -> 100 -> 300 -> 500 (base) -> 700 (darkest)
+// Each shade in a scale is the same hue at different lightness/saturation.
+// Skipping odd shade numbers (200/400/600/800) leaves room to add more later.
+//
+// Semantic states use 3 shades each: bg / base / textDark.
+// Difficulty colors are tuned warmer to harmonize with the brand.
+// Wheel colors are kept as a separate multi-hue set for that specific feature.
+//
+// Background: warm-tinted modern grey (#F6F5F2) - cleaner and more tech-product
+// than cream, while still staying warm enough for the orange brand color.
 
 enum AppColors {
-    // Accent
-    static let accent        = Color(hex: "#E8632A")
-    static let accentSubtle  = Color(hex: "#FFF0E8")
-    static let accentMedium  = Color(hex: "#FFDCC8")
 
-    // Backgrounds
-    static let background    = Color(hex: "#EDE9E3") // warm cream
-    static let surface       = Color.white
-    static let surfaceRaised = Color(hex: "#F9F9F9")
+    // MARK: - Backgrounds
+    /// Primary background: warm-tinted modern grey (cleaner than cream).
+    static let background        = Color(hex: "#F6F5F2")
+    /// Alternate slightly deeper grey for layering and variety.
+    static let backgroundAlt     = Color(hex: "#EFEEEA")
+    /// Pure white for cards and surfaces that need to pop.
+    static let surface           = Color.white
+    /// Slightly off-white raised surface (for cards on white sections).
+    static let surfaceRaised     = Color(hex: "#FBFBF9")
     /// Soft halo behind practice-complete mascot (warm peach).
-    static let mascotBackdrop = Color(hex: "#FCE8DE")
+    static let mascotBackdrop    = Color(hex: "#FCE8DE")
 
-    // Text
-    static let textPrimary   = Color(hex: "#1A1A1A")
-    static let textSecondary = Color(hex: "#666666")
-    static let textTertiary  = Color(hex: "#9A9A9A")
+    // MARK: - Greys
+    static let grey50            = Color(hex: "#EFEFEC")
+    static let grey100           = Color(hex: "#E4E3DF")
+    static let grey300           = Color(hex: "#B6B5B0")
+    static let grey500           = Color(hex: "#6A6964")
+    static let grey700           = Color(hex: "#1F1E1B")
 
-    // Difficulty
-    static let easyFg        = Color(hex: "#27AE60")
-    static let easyBg        = Color(hex: "#E8F8EF")
-    static let mediumFg      = Color(hex: "#E8632A")
-    static let mediumBg      = Color(hex: "#FFF0E8")
-    static let hardFg        = Color(hex: "#D93025")
-    static let hardBg        = Color(hex: "#FDE8E7")
+    // MARK: - Text
+    static let textPrimary       = grey700
+    static let textSecondary     = grey500
+    static let textTertiary      = grey300
 
-    // UI
-    static let separator     = Color(hex: "#E8E8E8")
-    static let tabInactive   = Color(hex: "#9E9E9E")
+    // MARK: - Primary (Sunset Orange)
+    static let primary50         = Color(hex: "#FCE6D5")
+    static let primary100        = Color(hex: "#F8B98C")
+    static let primary300        = Color(hex: "#F08C52")
+    static let primary500        = Color(hex: "#E8632A")
+    static let primary700        = Color(hex: "#B14418")
 
+    static let primary           = primary500
+    static let primarySubtle     = primary50
+    static let primaryMedium     = primary100
+
+    // MARK: - Accent (Indigo Purple)
+    static let accent50          = Color(hex: "#F1EEFB")
+    static let accent100         = Color(hex: "#C9BEED")
+    static let accent300         = Color(hex: "#9C8BDF")
+    static let accent500         = Color(hex: "#7B6BD1")
+    static let accent700         = Color(hex: "#3D2F87")
+
+    static let accent            = accent500
+    static let accentSubtle      = accent50
+    static let accentMedium      = accent100
+
+    // MARK: - Semantic States
+    static let successBg         = Color(hex: "#E8F5EC")
+    static let success           = Color(hex: "#2EA868")
+    static let successText       = Color(hex: "#1A5C3A")
+
+    static let warningBg         = Color(hex: "#FFF6E0")
+    static let warning           = Color(hex: "#E8A02E")
+    static let warningText       = Color(hex: "#7A4A00")
+
+    static let errorBg           = Color(hex: "#FCEAE8")
+    static let error             = Color(hex: "#D93D2E")
+    static let errorText         = Color(hex: "#7A1F18")
+
+    static let infoBg            = accent50
+    static let info              = accent500
+    static let infoText          = accent700
+
+    // MARK: - Difficulty
+    static let easyFg            = Color(hex: "#3F6B1A")
+    static let easyBg            = Color(hex: "#E8F2DC")
+    static let mediumFg          = Color(hex: "#C24D17")
+    static let mediumBg          = primary50
+    static let hardFg            = Color(hex: "#A02C20")
+    static let hardBg            = Color(hex: "#FCE6DC")
+
+    // MARK: - UI
+    static let separator         = grey100
+    static let tabInactive       = grey300
+
+    // MARK: - XP / Progress
     /// Level / XP row on skill list cards (readable on white surfaces).
-    static let xpMetricGold = Color(hex: "#C29412")
+    static let xpMetricGold      = Color(hex: "#C29412")
 
     /// Outer stroke on XP progress capsules (faint black).
-    static let xpMeterStroke = Color.black.opacity(0.14)
+    static let xpMeterStroke     = Color.black.opacity(0.14)
 
-    // Daily Minute Wheel
-    static let wheelGold     = Color(hex: "#FFC95F")
-    static let wheelOrange   = Color(hex: "#F47632")
-    static let wheelRim      = Color(hex: "#C9472F")
-    static let wheelLine     = Color(hex: "#8E3428")
+    // MARK: - Daily Minute Wheel
+    static let wheelGold         = Color(hex: "#FFC95F")
+    static let wheelOrange       = Color(hex: "#F47632")
+    static let wheelRim          = Color(hex: "#C9472F")
+    static let wheelLine         = Color(hex: "#8E3428")
 }
 
 // MARK: - Typography

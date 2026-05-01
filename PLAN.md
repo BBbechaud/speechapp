@@ -18,8 +18,8 @@
 Built in this session.
 
 ### Design System (`Shared/DesignSystem/AppTheme.swift`)
-- AppColors — full palette (accent orange #E8632A, backgrounds, difficulty colors)
-- AppFonts — SF Pro Rounded type scale (display, title, body, label)
+- AppColors — full palette (primary orange #E8632A, accent indigo #7B6BD1, backgrounds, semantic states, difficulty colors)
+- AppFonts — DM Sans for display/title/body, rounded system labels
 - AppSpacing + AppRadius — consistent spacing/radius tokens
 - View modifiers: `cardShadow()`, `subtleShadow()`, `pressScale()`
 - Color hex extension
@@ -40,7 +40,7 @@ Built in this session.
 ### Navigation
 - NavigationStack with typed PracticeRoute enum (configure → primer → session)
 - Full practice flow wired end-to-end (session screen is placeholder)
-- RootTabView updated: tabs renamed to Practice / Feedback / Progress, tint set to accent orange
+- RootTabView updated: tabs renamed to Practice / Feedback / Progress, tint set to primary orange
 
 ---
 

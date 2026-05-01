@@ -81,6 +81,12 @@ enum ReviewFeedbackViewModel {
     }
 }
 
+enum ReviewNotesStorage {
+    static func key(for sessionID: UUID) -> String {
+        "practiceReviewNotes.\(sessionID.uuidString)"
+    }
+}
+
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
@@ -105,9 +111,9 @@ enum ReviewHistoryStore {
         loadRecords().map(\.summary)
     }
 
-    static func record(feedback: ReviewFeedback, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+    static func record(id: UUID, feedback: ReviewFeedback, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
         let summary = ReviewSessionSummary(
-            id: UUID(),
+            id: id,
             scenarioTitle: feedback.scenarioTitle,
             personaName: feedback.personaName,
             overallScore: feedback.overallScore,

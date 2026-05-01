@@ -33,8 +33,8 @@ struct RootTabView: View {
             NavigationStack(path: $practiceFlowViewModel.navigationPath) {
                 PracticeHomeScreen(
                     viewModel: practiceFlowViewModel,
-                    onReviewFeedbackClosed: { feedback in
-                        reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
+                    onReviewFeedbackClosed: { sessionID, feedback in
+                        reviewRecords = ReviewHistoryStore.record(id: sessionID, feedback: feedback, in: reviewRecords)
                         selectedTab = .feedback
                     }
                 )

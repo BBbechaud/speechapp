@@ -13,6 +13,7 @@ final class PracticeFlowViewModel {
     var selectedPersona: Persona?
     var initiator: ConversationInitiator = .user
     private var activeReviewFeedback: ReviewFeedback?
+    private var activeReviewSessionID: UUID?
 
     /// Drives session UI (static vs animated waves, status copy). Voice layer updates this.
     var personaSessionPhase: PersonaSessionPhase = .listening
@@ -77,6 +78,7 @@ final class PracticeFlowViewModel {
     }
 
     func showReviewFeedback() {
+        activeReviewSessionID = UUID()
         activeReviewFeedback = makeReviewFeedback()
         navigationPath.append(.reviewFeedback)
     }
@@ -87,6 +89,14 @@ final class PracticeFlowViewModel {
         }
 
         return activeReviewFeedback
+    }
+
+    func currentReviewSessionID() -> UUID {
+        guard let activeReviewSessionID else {
+            preconditionFailure("Cannot show review feedback without an active review session ID.")
+        }
+
+        return activeReviewSessionID
     }
 
     private func makeReviewFeedback() -> ReviewFeedback {
@@ -104,6 +114,8 @@ final class PracticeFlowViewModel {
         navigationPath = []
         selectedScenario = nil
         selectedPersona = nil
+        activeReviewFeedback = nil
+        activeReviewSessionID = nil
         initiator = .user
         personaSessionPhase = .listening
     }

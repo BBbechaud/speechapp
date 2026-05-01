@@ -173,6 +173,6 @@ private func unitText(value: Int, singular: String) -> String {
 
 #Preview {
     NavigationStack {
-        ReviewHistoryScreen(records: ReviewHistoryStore.loadRecords())
+        ReviewHistoryScreen(records: ReviewHistoryStore.previewRecords())
     }
 }

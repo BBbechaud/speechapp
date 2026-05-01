@@ -23,6 +23,11 @@ struct ReviewFeedbackScreen: View {
                     .scaleEffect(appeared ? 1 : 0.92)
                     .animation(.spring(response: 0.52, dampingFraction: 0.78).delay(0.08), value: appeared)
 
+                sessionStatsRow
+                    .opacity(appeared ? 1 : 0)
+                    .offset(y: appeared ? 0 : 8)
+                    .animation(.spring(response: 0.42, dampingFraction: 0.82).delay(0.12), value: appeared)
+
                 skillAnalysisSection
                 overallFeedbackSection
                 PracticeNotesSection(notes: $practiceNotes)
@@ -72,13 +77,40 @@ struct ReviewFeedbackScreen: View {
     }
 
     private var scenarioPill: some View {
-        Text(feedback.scenarioTitle)
-            .font(AppFonts.title(28, weight: .semibold))
-            .foregroundStyle(AppColors.textPrimary)
-            .multilineTextAlignment(.center)
-            .lineLimit(2)
-            .minimumScaleFactor(0.82)
-            .frame(maxWidth: .infinity)
+        VStack(spacing: AppSpacing.xs) {
+            Text(feedback.scenarioTitle)
+                .font(AppFonts.title(28, weight: .semibold))
+                .foregroundStyle(AppColors.textPrimary)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+                .minimumScaleFactor(0.82)
+                .frame(maxWidth: .infinity)
+
+            Text("\(feedback.personaName) (\(feedback.difficulty.rawValue.capitalized))")
+                .font(AppFonts.body(17, weight: .medium))
+                .foregroundStyle(AppColors.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+    }
+
+    private var sessionStatsRow: some View {
+        HStack(spacing: AppSpacing.lg) {
+            SessionStatPill(
+                systemImage: "clock",
+                label: formattedDuration(feedback.durationSeconds)
+            )
+
+            SessionStatPill(
+                systemImage: "person.fill",
+                label: "You \(feedback.userSpeakingPercent)%"
+            )
+
+            SessionStatPill(
+                systemImage: "waveform",
+                label: "\(feedback.personaName) \(100 - feedback.userSpeakingPercent)%"
+            )
+        }
+        .frame(maxWidth: .infinity)
     }
 
     private func formattedDuration(_ seconds: Int) -> String {
@@ -181,6 +213,11 @@ private struct SkillAnalysisCard: View {
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
 
+                Text("+\(xpEarned) XP")
+                    .font(AppFonts.label(13, weight: .bold))
+                    .foregroundStyle(AppColors.xpMetricGold)
+                    .lineLimit(1)
+
                 Spacer(minLength: AppSpacing.sm)
 
                 Text("\(analysis.score)/100")
@@ -230,6 +267,10 @@ private struct SkillAnalysisCard: View {
 
     private var skillColor: Color {
         Color(hex: analysis.skill.colorHex)
+    }
+
+    private var xpEarned: Int {
+        analysis.score / 2
     }
 }
 
@@ -307,6 +348,32 @@ private struct PracticeNotesSection: View {
             RoundedRectangle(cornerRadius: AppRadius.xl)
                 .fill(AppColors.surface)
                 .subtleShadow()
+        }
+    }
+}
+
+private struct SessionStatPill: View {
+    let systemImage: String
+    let label: String
+
+    var body: some View {
+        HStack(spacing: AppSpacing.xs) {
+            Image(systemName: systemImage)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.textSecondary)
+                .accessibilityHidden(true)
+
+            Text(label)
+                .font(AppFonts.label(13, weight: .semibold))
+                .foregroundStyle(AppColors.textSecondary)
+                .lineLimit(1)
+        }
+        .padding(.horizontal, AppSpacing.md)
+        .padding(.vertical, AppSpacing.sm)
+        .background(AppColors.surfaceRaised, in: Capsule())
+        .overlay {
+            Capsule()
+                .strokeBorder(AppColors.separator, lineWidth: 1)
         }
     }
 }

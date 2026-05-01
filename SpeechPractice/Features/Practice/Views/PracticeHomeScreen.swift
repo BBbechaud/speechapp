@@ -9,6 +9,11 @@ struct PracticeHomeScreen: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                Text("Select Scenario")
+                    .font(AppFonts.title(28, weight: .bold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .padding(.top, AppSpacing.sm)
+
                 dailyChallengesSection
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 12)
@@ -21,9 +26,7 @@ struct PracticeHomeScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle("Select Scenario")
-        .navigationBarTitleDisplayMode(.large)
-        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(for: PracticeRoute.self) { route in
             switch route {
             case .dailyChallenges:

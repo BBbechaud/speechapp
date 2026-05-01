@@ -24,7 +24,8 @@ private enum MainTab: Hashable, CaseIterable {
 
 struct RootTabView: View {
     @State private var selectedTab: MainTab = .practice
-    @State private var reviewRecords: [ReviewSessionRecord] = ReviewHistoryStore.loadRecords()
+    @State private var reviewRecords: [ReviewSessionRecord] = []
+    @State private var didLoadReviewRecords: Bool = false
     @State private var practiceFlowViewModel = PracticeFlowViewModel()
 
     var body: some View {
@@ -61,6 +62,13 @@ struct RootTabView: View {
             AppTabBar(selectedTab: $selectedTab)
         }
         .tint(AppColors.primary)
+        .onAppear {
+            guard didLoadReviewRecords == false else {
+                return
+            }
+            didLoadReviewRecords = true
+            reviewRecords = ReviewHistoryStore.loadRecords()
+        }
     }
 }
 

@@ -20,7 +20,7 @@ struct DailyMinutePromptID: Hashable, Sendable {
     let rawValue: String
 }
 
-enum PracticeDifficulty: String, CaseIterable, Hashable, Sendable {
+enum PracticeDifficulty: String, CaseIterable, Codable, Hashable, Sendable {
     case easy
     case medium
     case hard

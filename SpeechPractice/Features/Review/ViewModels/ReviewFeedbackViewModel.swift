@@ -17,6 +17,7 @@ enum ReviewFeedbackViewModel {
         return ReviewFeedback(
             scenarioTitle: scenario.title,
             personaName: persona.name,
+            difficulty: persona.difficulty,
             overallScore: overallScore(from: analyses),
             durationSeconds: 272,
             userSpeakingPercent: 62,
@@ -74,7 +75,7 @@ enum ReviewFeedbackViewModel {
         }
 
         guard analyses.isEmpty == false else {
-            preconditionFailure("Cannot calculate review feedback overall score without skill analyses.")
+            return 0
         }
 
         return totalScore / analyses.count
@@ -91,8 +92,9 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear it and fall through to seeded records.
+                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
+                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
             }
         }
 
@@ -122,12 +124,15 @@ enum ReviewHistoryStore {
     }
 
     private static func save(_ records: [ReviewSessionRecord]) {
-        do {
-            let data: Data = try JSONEncoder().encode(records)
-            UserDefaults.standard.set(data, forKey: recordsStorageKey)
-        } catch {
-            preconditionFailure("Could not encode review session records for UserDefaults key \(recordsStorageKey): \(error)")
+        guard let data = try? JSONEncoder().encode(records) else {
+            return
         }
+        UserDefaults.standard.set(data, forKey: recordsStorageKey)
+    }
+
+    /// Seed rows for SwiftUI previews only — does not read or write `UserDefaults`.
+    static func previewRecords() -> [ReviewSessionRecord] {
+        seededRecords()
     }
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
@@ -206,9 +211,12 @@ enum ReviewHistoryStore {
         let seed: Int = summary.scenarioTitle.count + summary.personaName.count
         let userSpeakingPercent: Int = 50 + (seed % 21)
 
+        let difficulty: PracticeDifficulty = Persona.all.first(where: { $0.name == summary.personaName })?.difficulty ?? .medium
+
         return ReviewFeedback(
             scenarioTitle: summary.scenarioTitle,
             personaName: summary.personaName,
+            difficulty: difficulty,
             overallScore: summary.overallScore,
             durationSeconds: summary.durationSeconds,
             userSpeakingPercent: userSpeakingPercent,

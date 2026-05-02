@@ -27,7 +27,7 @@ struct PracticePrimerScreen: View {
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.sm)
-            .padding(.bottom, 120)
+            .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
         .navigationTitle("")
@@ -44,6 +44,11 @@ struct PracticePrimerScreen: View {
         }
         .safeAreaInset(edge: .bottom) {
             startButton
+                .padding(.horizontal, AppSpacing.base)
+                .padding(.vertical, AppSpacing.md)
+                .background(AppColors.background)
+                .opacity(appeared ? 1 : 0)
+                .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.3), value: appeared)
         }
         .onAppear {
             appeared = true
@@ -155,18 +160,9 @@ struct PracticePrimerScreen: View {
     // MARK: - Start Button
 
     private var startButton: some View {
-        VStack(spacing: 0) {
-            Divider()
-                .background(AppColors.separator)
-
-            PrimaryButton(title: "Start Practice") {
-                viewModel.startPractice()
-            }
-            .padding(.horizontal, AppSpacing.base)
-            .padding(.top, AppSpacing.md)
-            .padding(.bottom, AppSpacing.lg)
+        PrimaryButton(title: "Start Practice") {
+            viewModel.startPractice()
         }
-        .background(.ultraThinMaterial)
     }
 
     // MARK: - Dynamic Copy

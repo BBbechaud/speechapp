@@ -27,7 +27,7 @@ struct PracticeCompleteScreen: View {
                     .padding(.bottom, AppSpacing.xl)
 
                 VStack(spacing: AppSpacing.md) {
-                    Text("Practice complete")
+                    Text("Practice complete!")
                         .font(AppFonts.display(28))
                         .foregroundStyle(AppColors.textPrimary)
                         .multilineTextAlignment(.center)
@@ -49,23 +49,26 @@ struct PracticeCompleteScreen: View {
                 )
 
                 Spacer(minLength: AppSpacing.xxl)
-
-                PrimaryButton(title: "See Conversation Analysis") {
-                    onReviewFeedback()
-                }
-                .padding(.horizontal, AppSpacing.base)
-                .padding(.bottom, AppSpacing.xl)
-                .opacity(appeared ? 1 : 0)
-                .offset(y: appeared ? 0 : 14)
-                .animation(
-                    reduceMotion ? .easeOut(duration: 0.22) : .spring(response: 0.48, dampingFraction: 0.82).delay(0.14),
-                    value: appeared
-                )
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .safeAreaInset(edge: .bottom) {
+            PrimaryButton(title: "See Conversation Analysis") {
+                onReviewFeedback()
+            }
+            .padding(.horizontal, AppSpacing.base)
+            .padding(.top, AppSpacing.sm)
+            .padding(.bottom, AppSpacing.sm)
+            .background(AppColors.background.opacity(0))
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared ? 0 : 14)
+            .animation(
+                reduceMotion ? .easeOut(duration: 0.22) : .spring(response: 0.48, dampingFraction: 0.82).delay(0.14),
+                value: appeared
+            )
+        }
         .onAppear {
             appeared = true
         }

@@ -39,6 +39,8 @@ struct PracticeHomeScreen: View {
                 ScenarioConfigScreen(viewModel: viewModel)
             case .primer:
                 PracticePrimerScreen(viewModel: viewModel)
+            case .prePracticeTransition:
+                PrePracticeTransitionScreen(viewModel: viewModel)
             case .session:
                 PracticeSessionScreen(viewModel: viewModel)
             case .complete:

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Live scenario practice: persona image, listen/speak state, waveform, end control.
 struct PracticeSessionScreen: View {
@@ -8,73 +9,24 @@ struct PracticeSessionScreen: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            topChrome
-
             Spacer(minLength: AppSpacing.lg)
 
             mainSection
 
             Spacer(minLength: AppSpacing.lg)
-
-            endPracticeButton
-                .padding(.horizontal, AppSpacing.base)
-                .padding(.bottom, AppSpacing.xl)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.surface)
+        .background(InteractivePopGestureLocker())
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
-    }
-
-    // MARK: - Top
-
-    private var topChrome: some View {
-        HStack(spacing: AppSpacing.md) {
-            Button {
-                viewModel.leaveSession()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .frame(width: 40, height: 40)
-                    .background(AppColors.surfaceRaised, in: Circle())
-            }
-            .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Back")
-
-            Spacer()
-
-            sessionStatusPill
-
-            Spacer()
-
-            Color.clear
-                .frame(width: 40, height: 40)
-                .accessibilityHidden(true)
+        .safeAreaInset(edge: .bottom) {
+            endPracticeButton
+                .padding(.horizontal, AppSpacing.base)
+                .padding(.top, AppSpacing.sm)
+                .padding(.bottom, AppSpacing.sm)
+                .background(AppColors.surface)
         }
-        .padding(.horizontal, AppSpacing.base)
-        .padding(.top, AppSpacing.sm)
-    }
-
-    private var sessionStatusPill: some View {
-        let phase = viewModel.personaSessionPhase
-        let title = phase == .listening ? "LISTENING" : "SPEAKING"
-
-        return HStack(spacing: AppSpacing.sm) {
-            Circle()
-                .fill(AppColors.primary)
-                .frame(width: 6, height: 6)
-                .accessibilityHidden(true)
-
-            Text(title)
-                .font(AppFonts.label(11, weight: .semibold))
-                .foregroundStyle(AppColors.primary)
-        }
-        .padding(.horizontal, AppSpacing.md)
-        .padding(.vertical, AppSpacing.sm)
-        .background(AppColors.primarySubtle, in: Capsule())
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(title.lowercased().capitalized)
     }
 
     // MARK: - Main
@@ -121,6 +73,28 @@ struct PracticeSessionScreen: View {
         .buttonStyle(PressButtonStyle())
         .accessibilityLabel("End practice")
         .accessibilityHint("Shows practice complete, then you can open conversation analysis")
+    }
+}
+
+// MARK: - Navigation (block edge swipe-back until End Practice)
+
+private struct InteractivePopGestureLocker: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        InteractivePopGestureLockHost()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
+private final class InteractivePopGestureLockHost: UIViewController {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 }
 

@@ -42,7 +42,14 @@ final class PracticeFlowViewModel {
 
     func startPractice() {
         personaSessionPhase = .listening
-        navigationPath.append(.session)
+        navigationPath.append(.prePracticeTransition)
+    }
+
+    /// Called by the pre-practice transition screen once breathe + countdown complete.
+    /// Replaces the transition route with `.session` so back-swipe cannot return to it.
+    func completePrePracticeTransition() {
+        guard navigationPath.last == .prePracticeTransition else { return }
+        navigationPath[navigationPath.count - 1] = .session
     }
 
     func startDailyMinute(prompt: DailyMinutePrompt) {
@@ -56,13 +63,6 @@ final class PracticeFlowViewModel {
 
     func setPersonaSessionPhase(_ phase: PersonaSessionPhase) {
         personaSessionPhase = phase
-    }
-
-    /// Toolbar back: leave session, return to primer.
-    func leaveSession() {
-        guard navigationPath.last == .session else { return }
-        personaSessionPhase = .listening
-        navigationPath.removeLast()
     }
 
     /// End Practice: show completion screen (path becomes only `.complete`).
@@ -123,6 +123,7 @@ enum PracticeRoute: Hashable {
     case dailyMinuteSession(DailyMinutePrompt)
     case configure
     case primer
+    case prePracticeTransition
     case session
     case complete
     case reviewFeedback

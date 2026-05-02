@@ -28,17 +28,18 @@ struct ScenarioConfigScreen: View {
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 10)
                     .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.15), value: appeared)
+
+                continueButton
+                    .opacity(appeared ? 1 : 0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.2), value: appeared)
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.base)
-            .padding(.bottom, 120) // space for sticky button
+            .padding(.bottom, 100)
         }
         .background(AppColors.background)
         .navigationTitle("Configure Scenario")
         .navigationBarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            continueButton
-        }
         .onAppear {
             appeared = true
         }
@@ -159,18 +160,9 @@ struct ScenarioConfigScreen: View {
     // MARK: - Continue Button
 
     private var continueButton: some View {
-        VStack(spacing: 0) {
-            Divider()
-                .background(AppColors.separator)
-
-            PrimaryButton(title: "Continue to Prep") {
-                viewModel.confirmConfig()
-            }
-            .padding(.horizontal, AppSpacing.base)
-            .padding(.top, AppSpacing.md)
-            .padding(.bottom, AppSpacing.lg)
+        PrimaryButton(title: "Continue to Prep") {
+            viewModel.confirmConfig()
         }
-        .background(.ultraThinMaterial)
     }
 }
 

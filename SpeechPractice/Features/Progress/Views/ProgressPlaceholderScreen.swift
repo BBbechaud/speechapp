@@ -23,7 +23,7 @@ struct ProfileScreen: View {
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.sm)
-            .padding(.bottom, AppSpacing.xxxl)
+            .padding(.bottom, AppSpacing.xxl)
             .opacity(appeared ? 1 : 0)
             .offset(y: appeared ? 0 : 12)
             .animation(.spring(response: 0.45, dampingFraction: 0.82), value: appeared)
@@ -51,11 +51,6 @@ struct ProfileScreen: View {
                             .font(.system(size: 18, weight: .semibold))
                             .foregroundStyle(AppColors.textPrimary)
                             .frame(width: 46, height: 46)
-                            .background(AppColors.surfaceRaised, in: Circle())
-                            .overlay {
-                                Circle()
-                                    .strokeBorder(AppColors.separator, lineWidth: 1)
-                            }
                     }
                     .buttonStyle(PressButtonStyle())
                     .accessibilityLabel("Settings")

@@ -28,39 +28,55 @@ struct RootTabView: View {
     @State private var didLoadReviewRecords: Bool = false
     @State private var practiceFlowViewModel = PracticeFlowViewModel()
 
+    /// Hide chrome during the pre-practice transition, the live session, and completion gate
+    /// so tabs cannot steal focus from the countdown, End Practice, or analysis CTA.
+    private var suppressTabBarForPracticeFlow: Bool {
+        switch practiceFlowViewModel.navigationPath.last {
+        case .prePracticeTransition, .session, .complete:
+            return true
+        default:
+            return false
+        }
+    }
+
     var body: some View {
-        ZStack {
-            // Practice tab
-            NavigationStack(path: $practiceFlowViewModel.navigationPath) {
-                PracticeHomeScreen(
-                    viewModel: practiceFlowViewModel,
-                    onReviewFeedbackClosed: { feedback in
-                        reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
-                        selectedTab = .feedback
-                    }
-                )
-            }
-            .opacity(selectedTab == .practice ? 1 : 0)
-            .allowsHitTesting(selectedTab == .practice)
+        VStack(spacing: 0) {
+            ZStack {
+                // Practice tab
+                NavigationStack(path: $practiceFlowViewModel.navigationPath) {
+                    PracticeHomeScreen(
+                        viewModel: practiceFlowViewModel,
+                        onReviewFeedbackClosed: { feedback in
+                            reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
+                            selectedTab = .feedback
+                        }
+                    )
+                }
+                .opacity(selectedTab == .practice ? 1 : 0)
+                .allowsHitTesting(selectedTab == .practice)
 
-            // Feedback tab
-            NavigationStack {
-                ReviewHistoryScreen(records: reviewRecords)
-            }
-            .opacity(selectedTab == .feedback ? 1 : 0)
-            .allowsHitTesting(selectedTab == .feedback)
+                // Feedback tab
+                NavigationStack {
+                    ReviewHistoryScreen(records: reviewRecords)
+                }
+                .opacity(selectedTab == .feedback ? 1 : 0)
+                .allowsHitTesting(selectedTab == .feedback)
 
-            // Profile tab
-            NavigationStack {
-                ProfileScreen()
+                // Profile tab
+                NavigationStack {
+                    ProfileScreen()
+                }
+                .opacity(selectedTab == .profile ? 1 : 0)
+                .allowsHitTesting(selectedTab == .profile)
             }
-            .opacity(selectedTab == .profile ? 1 : 0)
-            .allowsHitTesting(selectedTab == .profile)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            if suppressTabBarForPracticeFlow == false {
+                AppTabBar(selectedTab: $selectedTab)
+            }
         }
         .animation(.easeInOut(duration: 0.18), value: selectedTab)
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            AppTabBar(selectedTab: $selectedTab)
-        }
+        .animation(.easeInOut(duration: 0.22), value: suppressTabBarForPracticeFlow)
         .tint(AppColors.primary)
         .onAppear {
             guard didLoadReviewRecords == false else {
@@ -93,8 +109,9 @@ private struct AppTabBar: View {
                     }
                 }
             }
-            .padding(.top, 10)
+            .padding(.top, 6)
         }
+        .safeAreaPadding(.bottom)
         .background(
             AppColors.surface
                 .ignoresSafeArea(edges: .bottom)
@@ -121,7 +138,7 @@ private struct TabBarItem: View {
                     .animation(.easeInOut(duration: 0.16), value: isSelected)
             }
             .frame(maxWidth: .infinity)
-            .padding(.bottom, 6)
+            .padding(.bottom, 2)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressButtonStyle())

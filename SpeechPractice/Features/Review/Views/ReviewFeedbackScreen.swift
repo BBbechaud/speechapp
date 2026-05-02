@@ -3,9 +3,22 @@ import SwiftUI
 struct ReviewFeedbackScreen: View {
     let feedback: ReviewFeedback
     let onClose: () -> Void
+    let onNotesChange: (String) -> Void
 
-    @AppStorage("latestPracticeReviewNotes") private var practiceNotes: String = ""
+    @State private var practiceNotes: String
     @State private var appeared: Bool = false
+
+    init(
+        feedback: ReviewFeedback,
+        initialNotes: String = "",
+        onClose: @escaping () -> Void,
+        onNotesChange: @escaping (String) -> Void = { _ in }
+    ) {
+        self.feedback = feedback
+        self.onClose = onClose
+        self.onNotesChange = onNotesChange
+        _practiceNotes = State(initialValue: initialNotes)
+    }
 
     var body: some View {
         ScrollView {
@@ -36,6 +49,9 @@ struct ReviewFeedbackScreen: View {
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             appeared = true
+        }
+        .onChange(of: practiceNotes) { _, newValue in
+            onNotesChange(newValue)
         }
     }
 

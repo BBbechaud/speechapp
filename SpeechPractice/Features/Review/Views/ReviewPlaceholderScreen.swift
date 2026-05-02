@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ReviewHistoryScreen: View {
     let records: [ReviewSessionRecord]
+    let onNotesChange: (ReviewSessionRecord.ID, String) -> Void
 
     @State private var appeared: Bool = false
 
@@ -42,7 +43,10 @@ struct ReviewHistoryScreen: View {
             appeared = true
         }
         .navigationDestination(for: ReviewSessionRecord.self) { record in
-            ReviewHistoryFeedbackDestination(feedback: record.feedback)
+            ReviewHistoryFeedbackDestination(
+                record: record,
+                onNotesChange: onNotesChange
+            )
         }
     }
 
@@ -56,15 +60,20 @@ struct ReviewHistoryScreen: View {
 }
 
 private struct ReviewHistoryFeedbackDestination: View {
-    let feedback: ReviewFeedback
+    let record: ReviewSessionRecord
+    let onNotesChange: (ReviewSessionRecord.ID, String) -> Void
 
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         ReviewFeedbackScreen(
-            feedback: feedback,
+            feedback: record.feedback,
+            initialNotes: record.notes,
             onClose: {
                 dismiss()
+            },
+            onNotesChange: { notes in
+                onNotesChange(record.id, notes)
             }
         )
     }
@@ -173,6 +182,6 @@ private func unitText(value: Int, singular: String) -> String {
 
 #Preview {
     NavigationStack {
-        ReviewHistoryScreen(records: ReviewHistoryStore.loadRecords())
+        ReviewHistoryScreen(records: ReviewHistoryStore.loadRecords(), onNotesChange: { _, _ in })
     }
 }

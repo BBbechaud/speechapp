@@ -33,8 +33,8 @@ struct RootTabView: View {
             NavigationStack(path: $practiceFlowViewModel.navigationPath) {
                 PracticeHomeScreen(
                     viewModel: practiceFlowViewModel,
-                    onReviewFeedbackClosed: { feedback in
-                        reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
+                    onReviewFeedbackClosed: { feedback, notes in
+                        reviewRecords = ReviewHistoryStore.record(feedback: feedback, notes: notes, in: reviewRecords)
                         selectedTab = .feedback
                     }
                 )
@@ -44,7 +44,12 @@ struct RootTabView: View {
 
             // Feedback tab
             NavigationStack {
-                ReviewHistoryScreen(records: reviewRecords)
+                ReviewHistoryScreen(
+                    records: reviewRecords,
+                    onNotesChange: { id, notes in
+                        reviewRecords = ReviewHistoryStore.updateNotes(for: id, notes: notes, in: reviewRecords)
+                    }
+                )
             }
             .opacity(selectedTab == .feedback ? 1 : 0)
             .allowsHitTesting(selectedTab == .feedback)

@@ -12,6 +12,7 @@ final class PracticeFlowViewModel {
     var selectedScenario: Scenario?
     var selectedPersona: Persona?
     var initiator: ConversationInitiator = .user
+    var activeReviewNotes: String = ""
     private var activeReviewFeedback: ReviewFeedback?
 
     /// Drives session UI (static vs animated waves, status copy). Voice layer updates this.
@@ -78,6 +79,7 @@ final class PracticeFlowViewModel {
 
     func showReviewFeedback() {
         activeReviewFeedback = makeReviewFeedback()
+        activeReviewNotes = ""
         navigationPath.append(.reviewFeedback)
     }
 
@@ -105,6 +107,8 @@ final class PracticeFlowViewModel {
         selectedScenario = nil
         selectedPersona = nil
         initiator = .user
+        activeReviewFeedback = nil
+        activeReviewNotes = ""
         personaSessionPhase = .listening
     }
 

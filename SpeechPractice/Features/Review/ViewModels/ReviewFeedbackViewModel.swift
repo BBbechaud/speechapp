@@ -105,7 +105,7 @@ enum ReviewHistoryStore {
         loadRecords().map(\.summary)
     }
 
-    static func record(feedback: ReviewFeedback, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+    static func record(feedback: ReviewFeedback, notes: String, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
         let summary = ReviewSessionSummary(
             id: UUID(),
             scenarioTitle: feedback.scenarioTitle,
@@ -114,11 +114,21 @@ enum ReviewHistoryStore {
             durationSeconds: seededDurationSeconds(for: feedback.scenarioTitle, personaName: feedback.personaName),
             completedAt: Date()
         )
-        let record = ReviewSessionRecord(summary: summary, feedback: feedback)
+        let record = ReviewSessionRecord(summary: summary, feedback: feedback, notes: notes)
 
         let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + records)
         save(updatedRecords)
         return updatedRecords
+    }
+
+    static func updateNotes(for id: ReviewSessionRecord.ID, notes: String, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+        let updatedRecords = records.map { record in
+            guard record.id == id else { return record }
+            return ReviewSessionRecord(summary: record.summary, feedback: record.feedback, notes: notes)
+        }
+
+        save(updatedRecords)
+        return sortedByMostRecent(updatedRecords)
     }
 
     private static func save(_ records: [ReviewSessionRecord]) {

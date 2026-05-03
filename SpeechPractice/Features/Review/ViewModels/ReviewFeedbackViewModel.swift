@@ -84,6 +84,8 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let unreadableRecordsBackupKey: String = "reviewSessionRecordsUnreadableBackup"
+    private static let unreadableLegacySummariesBackupKey: String = "reviewSessionSummariesUnreadableBackup"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
@@ -91,8 +93,8 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear it and fall through to seeded records.
-                UserDefaults.standard.removeObject(forKey: recordsStorageKey)
+                preserveUnreadableData(recordsData, backupKey: unreadableRecordsBackupKey)
+                return loadLegacyRecords()
             }
         }
 
@@ -142,10 +144,13 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
-            UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+            preserveUnreadableData(data, backupKey: unreadableLegacySummariesBackupKey)
             return seededRecords()
         }
+    }
+
+    private static func preserveUnreadableData(_ data: Data, backupKey: String) {
+        UserDefaults.standard.set(data, forKey: backupKey)
     }
 
     private static func sortedByMostRecent(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {

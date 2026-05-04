@@ -84,6 +84,7 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let unreadableBackupSuffix: String = ".unreadableBackup"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
@@ -91,14 +92,18 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear it and fall through to seeded records.
-                UserDefaults.standard.removeObject(forKey: recordsStorageKey)
+                preserveUnreadableData(recordsData, fromKey: recordsStorageKey)
+                return loadLegacyRecords().records
             }
         }
 
-        let records: [ReviewSessionRecord] = loadLegacyRecords()
-        save(records)
-        return records
+        let legacyLoadResult: LegacyLoadResult = loadLegacyRecords()
+
+        if legacyLoadResult.shouldPersistToCurrentStorage {
+            save(legacyLoadResult.records)
+        }
+
+        return legacyLoadResult.records
     }
 
     static func loadSummaries() -> [ReviewSessionSummary] {
@@ -130,9 +135,9 @@ enum ReviewHistoryStore {
         }
     }
 
-    private static func loadLegacyRecords() -> [ReviewSessionRecord] {
+    private static func loadLegacyRecords() -> LegacyLoadResult {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return LegacyLoadResult(records: seededRecords(), shouldPersistToCurrentStorage: true)
         }
 
         do {
@@ -140,12 +145,26 @@ enum ReviewHistoryStore {
             let records: [ReviewSessionRecord] = summaries.map { summary in
                 ReviewSessionRecord(summary: summary, feedback: feedback(for: summary))
             }
-            return sortedByMostRecent(records)
+            return LegacyLoadResult(records: sortedByMostRecent(records), shouldPersistToCurrentStorage: true)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
-            UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            preserveUnreadableData(data, fromKey: legacySummariesStorageKey)
+            return LegacyLoadResult(records: seededRecords(), shouldPersistToCurrentStorage: false)
         }
+    }
+
+    private static func preserveUnreadableData(_ data: Data, fromKey key: String) {
+        let backupKey: String = key + unreadableBackupSuffix
+
+        guard UserDefaults.standard.data(forKey: backupKey) == nil else {
+            return
+        }
+
+        UserDefaults.standard.set(data, forKey: backupKey)
+    }
+
+    private struct LegacyLoadResult {
+        let records: [ReviewSessionRecord]
+        let shouldPersistToCurrentStorage: Bool
     }
 
     private static func sortedByMostRecent(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {

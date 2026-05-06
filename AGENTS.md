@@ -13,7 +13,7 @@ The MVP is iOS-first, SwiftUI-based, and aimed at young adults practicing real i
 ```text
 SpeechPractice/
   App/                  App entry point, RootTabView, configuration loading
-  Configuration/        xcconfig templates and local secret config
+  Configuration/        Base.xcconfig (shared); Secrets.local.xcconfig (local, gitignored)
   Features/
     Onboarding/         Placeholder onboarding flow
     Practice/           Scenario selection, configuration, primer, session, completion
@@ -111,13 +111,16 @@ Prioritize the next phases in this order unless the user redirects:
 
 ## Configuration And Secrets
 
-Before building locally, create a local secrets config:
+`Base.xcconfig` holds shared, non-secret build settings and `#include?`s `Secrets.local.xcconfig`. That local file is gitignored and must not be committed.
 
-```sh
-cp SpeechPractice/Configuration/Secrets.example.xcconfig SpeechPractice/Configuration/Secrets.local.xcconfig
-```
+Before the first local build, add `SpeechPractice/Configuration/Secrets.local.xcconfig` with at least:
 
-Fill in `BUNDLE_ID`, `DEVELOPMENT_TEAM`, Supabase values, and PostHog values. `Secrets.local.xcconfig` is gitignored and must not be committed.
+- `PRODUCT_BUNDLE_IDENTIFIER`, `DEVELOPMENT_TEAM`
+- `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+- `POSTHOG_HOST`, `POSTHOG_PROJECT_TOKEN`
+- `POSTHOG_CAPTURE_ENABLED`, `POSTHOG_AUTOCAPTURE_ENABLED`, `POSTHOG_SESSION_REPLAY_ENABLED` (use `YES` / `NO`)
+
+Replace placeholder tokens such as `__SUPABASE_URL__` with real values before shipping; `AppConfiguration` rejects `__…__` style placeholders at runtime.
 
 Adding a new configuration value requires:
 

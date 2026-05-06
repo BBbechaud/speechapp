@@ -8,12 +8,7 @@ struct PracticeHomeScreen: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                Text("Select Scenario")
-                    .font(AppFonts.title(28, weight: .bold))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .padding(.top, AppSpacing.sm)
-
+            VStack(alignment: .leading, spacing: AppSpacing.base) {
                 dailyChallengesSection
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 12)
@@ -22,7 +17,6 @@ struct PracticeHomeScreen: View {
                 scenarioListSection
             }
             .padding(.horizontal, AppSpacing.base)
-            .padding(.top, AppSpacing.xs)
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
@@ -68,7 +62,7 @@ struct PracticeHomeScreen: View {
     private var dailyChallengesSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.md) {
             Text("Daily Challenges")
-                .font(AppFonts.label(15, weight: .bold))
+                .font(AppFonts.label(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
             Button {
@@ -179,9 +173,9 @@ struct PracticeHomeScreen: View {
     // MARK: - Scenario List
 
     private var scenarioListSection: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
+        VStack(alignment: .leading, spacing: AppSpacing.base) {
             Text("Scenarios")
-                .font(AppFonts.label(15, weight: .bold))
+                .font(AppFonts.label(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
             ForEach(Array(Scenario.all.enumerated()), id: \.element.id) { index, scenario in
@@ -208,32 +202,9 @@ private struct DailyChallengesScreen: View {
 
     @State private var appeared = false
 
-    private static let dateFormatter: DateFormatter = {
-        let f = DateFormatter()
-        f.dateFormat = "EEEE, MMMM d"
-        return f
-    }()
-
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.lg) {
-                // Subtitle header
-                VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                    Text(Self.dateFormatter.string(from: Date()))
-                        .font(AppFonts.label(12, weight: .bold))
-                        .foregroundStyle(AppColors.textTertiary)
-                        .textCase(.uppercase)
-                        .tracking(0.5)
-
-                    Text("\(DailyChallenge.all.count) challenges ready for you")
-                        .font(AppFonts.body(15, weight: .regular))
-                        .foregroundStyle(AppColors.textSecondary)
-                }
-                .padding(.horizontal, AppSpacing.base)
-                .opacity(appeared ? 1 : 0)
-                .offset(y: appeared ? 0 : 8)
-                .animation(.easeOut(duration: 0.3), value: appeared)
-
                 ForEach(Array(DailyChallenge.all.enumerated()), id: \.element.id) { index, challenge in
                     Button {
                         if challenge.isDailyMinute {
@@ -255,12 +226,12 @@ private struct DailyChallengesScreen: View {
                 }
             }
             .padding(.horizontal, AppSpacing.base)
-            .padding(.top, AppSpacing.lg)
+            .padding(.top, AppSpacing.md)
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
         .navigationTitle("Daily Challenges")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .onAppear {
             appeared = true

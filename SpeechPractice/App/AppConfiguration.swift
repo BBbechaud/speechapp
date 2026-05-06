@@ -1,5 +1,7 @@
 import Foundation
 
+/// Full product configuration (Supabase, PostHog, etc.). Nothing in the app calls `load` yet; integrations are not wired.
+/// `RuntimeSecretsInfo.plist` ships non-secret stubs so targets build without local secrets; replace with real values before shipping.
 struct AppConfiguration: Equatable, Sendable {
     let supabaseURL: URL
     let supabaseAnonKey: String

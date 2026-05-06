@@ -8,13 +8,7 @@ This is a native iOS app. There is no CLI build command — open `SpeechPractice
 
 ### Local Secrets Setup
 
-Before building, copy the secrets template and fill in real values:
-
-```
-cp SpeechPractice/Configuration/Secrets.example.xcconfig SpeechPractice/Configuration/Secrets.local.xcconfig
-```
-
-Edit `Secrets.local.xcconfig` with your `BUNDLE_ID`, `DEVELOPMENT_TEAM`, Supabase URL/key, and PostHog credentials. `Secrets.local.xcconfig` is gitignored — never commit it.
+Add `SpeechPractice/Configuration/Secrets.local.xcconfig` (gitignored). It must define bundle ID, Apple team ID, Supabase URL/key, PostHog host/token, and the three PostHog `YES`/`NO` flags. See **Configuration And Secrets** in `AGENTS.md` for the key list. `Base.xcconfig` only includes this file and shared version/deployment settings — never commit secrets to `Base.xcconfig`.
 
 ### Adding New Files to the Project
 

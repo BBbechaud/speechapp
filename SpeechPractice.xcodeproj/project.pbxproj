@@ -22,27 +22,30 @@
 		8F5528072BDADC0000A00001 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 8F5528062BDADC0000A00001 /* PostHog */; };
 		8F5528092BDADC0000A00001 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 8F5528082BDADC0000A00001 /* GoogleSignIn */; };
 		8F55280B2BDADC0000A00001 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8F55280A2BDADC0000A00001 /* GoogleSignInSwift */; };
+		8F55280C2BDADC0000A00001 /* Hume in Frameworks */ = {isa = PBXBuildFile; productRef = 8F55280D2BDADC0000A00001 /* Hume */; };
 		8F5529012BDADD0100A00001 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529002BDADD0100A00001 /* AppTheme.swift */; };
 		8F5529032BDADD0100A00001 /* PracticeHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */; };
 		8F5529052BDADD0100A00001 /* PracticePrimerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */; };
-		8F5529132BDADD0100A00001 /* PracticeSessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */; };
-		8F5529172BDADD0100A00001 /* PracticeCompleteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */; };
-		8F55291B2BDADD0100A00001 /* PrePracticeTransitionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */; };
-		8F55291D2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */; };
 		8F5529072BDADD0100A00001 /* ScenarioConfigScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */; };
 		8F5529092BDADD0100A00001 /* PracticeFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */; };
 		8F55290B2BDADD0100A00001 /* ScenarioData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290A2BDADD0100A00001 /* ScenarioData.swift */; };
 		8F55290D2BDADD0100A00001 /* PersonaAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290C2BDADD0100A00001 /* PersonaAvatarView.swift */; };
 		8F55290F2BDADD0100A00001 /* DifficultyBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55290E2BDADD0100A00001 /* DifficultyBadge.swift */; };
 		8F5529112BDADD0100A00001 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529102BDADD0100A00001 /* PrimaryButton.swift */; };
-		8F552B012BDCA0000A00001 /* DailyMinuteWheelScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552B002BDCA0000A00001 /* DailyMinuteWheelScreen.swift */; };
-		8F552B032BDCA0000A00001 /* DailyMinuteSessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552B022BDCA0000A00001 /* DailyMinuteSessionScreen.swift */; };
+		8F5529132BDADD0100A00001 /* PracticeSessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */; };
+		8F5529172BDADD0100A00001 /* PracticeCompleteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */; };
+		8F55291B2BDADD0100A00001 /* PrePracticeTransitionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */; };
+		8F55291D2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */; };
 		8F552A102BDADF0000A00001 /* CommunicationSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A002BDADF0000A00001 /* CommunicationSkill.swift */; };
 		8F552A112BDADF0000A00001 /* ReviewFeedbackModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A012BDADF0000A00001 /* ReviewFeedbackModels.swift */; };
 		8F552A122BDADF0000A00001 /* ReviewFeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A022BDADF0000A00001 /* ReviewFeedbackViewModel.swift */; };
 		8F552A132BDADF0000A00001 /* ReviewFeedbackScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A032BDADF0000A00001 /* ReviewFeedbackScreen.swift */; };
+		8F552B012BDCA0000A00001 /* DailyMinuteWheelScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552B002BDCA0000A00001 /* DailyMinuteWheelScreen.swift */; };
+		8F552B032BDCA0000A00001 /* DailyMinuteSessionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552B022BDCA0000A00001 /* DailyMinuteSessionScreen.swift */; };
 		8F552C012BDADF1000A00001 /* AppFontRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552C002BDADF1000A00001 /* AppFontRegistry.swift */; };
 		8F552C032BDADF1000A00001 /* DM Sans in Resources */ = {isa = PBXBuildFile; fileRef = 8F552C022BDADF1000A00001 /* DM Sans */; };
+		8F552D032BDADF2000A00001 /* DevConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552D022BDADF2000A00001 /* DevConfig.swift */; };
+		8F552D042BDADF2000A00002 /* VoiceSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552D052BDADF2000A00002 /* VoiceSessionManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,7 +54,6 @@
 		8F5526182BDADA7E00A00001 /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		8F55261A2BDADA7E00A00001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F55261C2BDADA7E00A00001 /* Base.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Base.xcconfig; sourceTree = "<group>"; };
-		8F55261D2BDADA7E00A00001 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
 		8F5526202BDADA7E00A00001 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		8F5526222BDADA7E00A00001 /* FeaturePlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturePlaceholderScreen.swift; sourceTree = "<group>"; };
 		8F5526242BDADA7E00A00001 /* PracticePlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePlaceholderScreen.swift; sourceTree = "<group>"; };
@@ -63,24 +65,28 @@
 		8F5529002BDADD0100A00001 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		8F5529022BDADD0100A00001 /* PracticeHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeHomeScreen.swift; sourceTree = "<group>"; };
 		8F5529042BDADD0100A00001 /* PracticePrimerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticePrimerScreen.swift; sourceTree = "<group>"; };
-		8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionScreen.swift; sourceTree = "<group>"; };
-		8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCompleteScreen.swift; sourceTree = "<group>"; };
-		8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionScreen.swift; sourceTree = "<group>"; };
-		8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionViewModel.swift; sourceTree = "<group>"; };
 		8F5529062BDADD0100A00001 /* ScenarioConfigScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioConfigScreen.swift; sourceTree = "<group>"; };
 		8F5529082BDADD0100A00001 /* PracticeFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeFlowViewModel.swift; sourceTree = "<group>"; };
 		8F55290A2BDADD0100A00001 /* ScenarioData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenarioData.swift; sourceTree = "<group>"; };
 		8F55290C2BDADD0100A00001 /* PersonaAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonaAvatarView.swift; sourceTree = "<group>"; };
 		8F55290E2BDADD0100A00001 /* DifficultyBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifficultyBadge.swift; sourceTree = "<group>"; };
 		8F5529102BDADD0100A00001 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
-		8F552B002BDCA0000A00001 /* DailyMinuteWheelScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteWheelScreen.swift; sourceTree = "<group>"; };
-		8F552B022BDCA0000A00001 /* DailyMinuteSessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteSessionScreen.swift; sourceTree = "<group>"; };
+		8F5529122BDADD0100A00001 /* PracticeSessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeSessionScreen.swift; sourceTree = "<group>"; };
+		8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCompleteScreen.swift; sourceTree = "<group>"; };
+		8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionScreen.swift; sourceTree = "<group>"; };
+		8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionViewModel.swift; sourceTree = "<group>"; };
 		8F552A002BDADF0000A00001 /* CommunicationSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationSkill.swift; sourceTree = "<group>"; };
 		8F552A012BDADF0000A00001 /* ReviewFeedbackModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFeedbackModels.swift; sourceTree = "<group>"; };
 		8F552A022BDADF0000A00001 /* ReviewFeedbackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFeedbackViewModel.swift; sourceTree = "<group>"; };
 		8F552A032BDADF0000A00001 /* ReviewFeedbackScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFeedbackScreen.swift; sourceTree = "<group>"; };
+		8F552B002BDCA0000A00001 /* DailyMinuteWheelScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteWheelScreen.swift; sourceTree = "<group>"; };
+		8F552B022BDCA0000A00001 /* DailyMinuteSessionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMinuteSessionScreen.swift; sourceTree = "<group>"; };
 		8F552C002BDADF1000A00001 /* AppFontRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppFontRegistry.swift; sourceTree = "<group>"; };
 		8F552C022BDADF1000A00001 /* DM Sans */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "DM Sans"; sourceTree = "<group>"; };
+		8F552D022BDADF2000A00001 /* DevConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DevConfig.swift; sourceTree = "<group>"; };
+		8F552D052BDADF2000A00002 /* VoiceSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSessionManager.swift; sourceTree = "<group>"; };
+		8F552E012BDADF7000B00002 /* Secrets.example.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.example.xcconfig; sourceTree = "<group>"; };
+		8F552E022BDADF7000B00002 /* RuntimeSecretsInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = RuntimeSecretsInfo.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +98,7 @@
 				8F5528072BDADC0000A00001 /* PostHog in Frameworks */,
 				8F5528092BDADC0000A00001 /* GoogleSignIn in Frameworks */,
 				8F55280B2BDADC0000A00001 /* GoogleSignInSwift in Frameworks */,
+				8F55280C2BDADC0000A00001 /* Hume in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +157,9 @@
 			isa = PBXGroup;
 			children = (
 				8F55261C2BDADA7E00A00001 /* Base.xcconfig */,
-				8F55261D2BDADA7E00A00001 /* Secrets.example.xcconfig */,
+				8F552E012BDADF7000B00002 /* Secrets.example.xcconfig */,
+				8F552E022BDADF7000B00002 /* RuntimeSecretsInfo.plist */,
+				8F552D022BDADF2000A00001 /* DevConfig.swift */,
 			);
 			path = Configuration;
 			sourceTree = "<group>";
@@ -405,6 +414,7 @@
 		8F5527172BDADB0000A00001 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
+				8F552D052BDADF2000A00002 /* VoiceSessionManager.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -480,6 +490,7 @@
 				8F5528062BDADC0000A00001 /* PostHog */,
 				8F5528082BDADC0000A00001 /* GoogleSignIn */,
 				8F55280A2BDADC0000A00001 /* GoogleSignInSwift */,
+				8F55280D2BDADC0000A00001 /* Hume */,
 			);
 			productName = SpeechPractice;
 			productReference = 8F5526042BDADA7E00A00001 /* SpeechPractice.app */;
@@ -513,6 +524,7 @@
 				8F5528002BDADC0000A00001 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				8F5528012BDADC0000A00001 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				8F5528032BDADC0000A00001 /* XCRemoteSwiftPackageReference "hume-swift-sdk" */,
 			);
 			productRefGroup = 8F5526052BDADA7E00A00001 /* Products */;
 			projectDirPath = "";
@@ -557,6 +569,7 @@
 				8F5526292BDADA7E00A00001 /* ProgressPlaceholderScreen.swift in Sources */,
 				8F55262B2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift in Sources */,
 				8F5526192BDADA7E00A00001 /* AppConfiguration.swift in Sources */,
+				8F552D032BDADF2000A00001 /* DevConfig.swift in Sources */,
 				8F5529012BDADD0100A00001 /* AppTheme.swift in Sources */,
 				8F55290D2BDADD0100A00001 /* PersonaAvatarView.swift in Sources */,
 				8F55290F2BDADD0100A00001 /* DifficultyBadge.swift in Sources */,
@@ -567,6 +580,7 @@
 				8F55290B2BDADD0100A00001 /* ScenarioData.swift in Sources */,
 				8F5529092BDADD0100A00001 /* PracticeFlowViewModel.swift in Sources */,
 				8F5527012BDADB0000A00001 /* VoiceConversationContracts.swift in Sources */,
+				8F552D042BDADF2000A00002 /* VoiceSessionManager.swift in Sources */,
 				8F552A112BDADF0000A00001 /* ReviewFeedbackModels.swift in Sources */,
 				8F552A122BDADF0000A00001 /* ReviewFeedbackViewModel.swift in Sources */,
 				8F552A132BDADF0000A00001 /* ReviewFeedbackScreen.swift in Sources */,
@@ -700,22 +714,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XWVQQ2Q23M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpeechPractice/Configuration/RuntimeSecretsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_POSTHOG_AUTOCAPTURE_ENABLED = "$(POSTHOG_AUTOCAPTURE_ENABLED)";
-				INFOPLIST_KEY_POSTHOG_CAPTURE_ENABLED = "$(POSTHOG_CAPTURE_ENABLED)";
-				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
-				INFOPLIST_KEY_POSTHOG_PROJECT_TOKEN = "$(POSTHOG_PROJECT_TOKEN)";
-				INFOPLIST_KEY_POSTHOG_SESSION_REPLAY_ENABLED = "$(POSTHOG_SESSION_REPLAY_ENABLED)";
-				INFOPLIST_KEY_SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
-				INFOPLIST_KEY_SUPABASE_URL = "$(SUPABASE_URL)";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "People Skills needs microphone access to practice conversations";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_HUME_API_KEY = "$(HUME_API_KEY)";
+				INFOPLIST_KEY_HUME_CONFIG_ID = "$(HUME_CONFIG_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -734,22 +746,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = XWVQQ2Q23M;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = SpeechPractice/Configuration/RuntimeSecretsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
-				INFOPLIST_KEY_POSTHOG_AUTOCAPTURE_ENABLED = "$(POSTHOG_AUTOCAPTURE_ENABLED)";
-				INFOPLIST_KEY_POSTHOG_CAPTURE_ENABLED = "$(POSTHOG_CAPTURE_ENABLED)";
-				INFOPLIST_KEY_POSTHOG_HOST = "$(POSTHOG_HOST)";
-				INFOPLIST_KEY_POSTHOG_PROJECT_TOKEN = "$(POSTHOG_PROJECT_TOKEN)";
-				INFOPLIST_KEY_POSTHOG_SESSION_REPLAY_ENABLED = "$(POSTHOG_SESSION_REPLAY_ENABLED)";
-				INFOPLIST_KEY_SUPABASE_ANON_KEY = "$(SUPABASE_ANON_KEY)";
-				INFOPLIST_KEY_SUPABASE_URL = "$(SUPABASE_URL)";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "People Skills needs microphone access to practice conversations";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_HUME_API_KEY = "$(HUME_API_KEY)";
+				INFOPLIST_KEY_HUME_CONFIG_ID = "$(HUME_CONFIG_ID)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -809,6 +819,14 @@
 				version = 9.1.0;
 			};
 		};
+		8F5528032BDADC0000A00001 /* XCRemoteSwiftPackageReference "hume-swift-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HumeAI/hume-swift-sdk.git";
+			requirement = {
+				kind = exactVersion;
+				version = "0.0.1-beta9";
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -831,6 +849,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8F5528022BDADC0000A00001 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		8F55280D2BDADC0000A00001 /* Hume */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F5528032BDADC0000A00001 /* XCRemoteSwiftPackageReference "hume-swift-sdk" */;
+			productName = Hume;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -3,9 +3,16 @@ import UIKit
 
 /// Live scenario practice: persona image, listen/speak state, waveform, end control.
 struct PracticeSessionScreen: View {
+    @StateObject private var voiceSession = VoiceSessionManager()
     @Bindable var viewModel: PracticeFlowViewModel
 
     private var persona: Persona { viewModel.selectedPersona ?? Persona.all[0] }
+    private var scenario: Scenario {
+        guard let selected = viewModel.selectedScenario else {
+            preconditionFailure("Practice session requires a selected scenario.")
+        }
+        return selected
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,27 +28,45 @@ struct PracticeSessionScreen: View {
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
         .safeAreaInset(edge: .bottom) {
-            endPracticeButton
+            footerControls
                 .padding(.horizontal, AppSpacing.base)
                 .padding(.top, AppSpacing.sm)
                 .padding(.bottom, AppSpacing.sm)
                 .background(AppColors.surface)
+        }
+        .onDisappear {
+            voiceSession.endSession()
         }
     }
 
     // MARK: - Main
 
     private var mainSection: some View {
-        let phase = viewModel.personaSessionPhase
-        let statusLine = "\(persona.name) is \(phase == .listening ? "listening" : "speaking")..."
+        let waveformSpeaking: Bool =
+            if voiceSession.isConnected {
+                voiceSession.isAISpeaking || voiceSession.isUserSpeaking
+            } else {
+                viewModel.personaSessionPhase == .speaking
+            }
+
+        let statusLine: String =
+            if voiceSession.isConnected {
+                if voiceSession.isAISpeaking {
+                    "\(persona.name) is speaking..."
+                } else {
+                    "\(persona.name) is listening..."
+                }
+            } else {
+                "\(persona.name) is ready when you are."
+            }
 
         return VStack(spacing: AppSpacing.lg) {
             PersonaAvatarView(name: persona.name, size: 200)
                 .accessibilityLabel("\(persona.name), practice partner")
 
-            SessionAudioWaveBars(isAnimating: phase == .speaking)
+            SessionAudioWaveBars(isAnimating: waveformSpeaking)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(phase == .speaking ? "Voice activity" : "Waiting, waveform still")
+                .accessibilityLabel(waveformSpeaking ? "Voice activity" : "Waiting, waveform still")
 
             Text(statusLine)
                 .font(AppFonts.title(20, weight: .bold))
@@ -52,10 +77,56 @@ struct PracticeSessionScreen: View {
         .padding(.horizontal, AppSpacing.xl)
     }
 
-    // MARK: - End
+    // MARK: - Footer
+
+    private var footerControls: some View {
+        VStack(spacing: AppSpacing.sm) {
+            sessionControlRow
+            endPracticeButton
+        }
+    }
+
+    @ViewBuilder
+    private var sessionControlRow: some View {
+        if !voiceSession.isConnected {
+            Button {
+                Task {
+                    let prompt = buildSystemPrompt(persona: persona, scenario: scenario)
+                    await voiceSession.startSession(systemPrompt: prompt)
+                }
+            } label: {
+                Text("Start Session")
+                    .font(AppFonts.label(17, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(AppColors.primary, in: RoundedRectangle(cornerRadius: AppRadius.xxl))
+            }
+            .buttonStyle(PressButtonStyle())
+            .accessibilityLabel("Start voice session")
+        } else {
+            Button {
+                voiceSession.endSession()
+            } label: {
+                Text("End Session")
+                    .font(AppFonts.label(17, weight: .medium))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 52)
+                    .background(AppColors.surface, in: RoundedRectangle(cornerRadius: AppRadius.xxl))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppRadius.xxl)
+                            .stroke(AppColors.separator, lineWidth: 1)
+                    )
+            }
+            .buttonStyle(PressButtonStyle())
+            .accessibilityLabel("End voice session")
+        }
+    }
 
     private var endPracticeButton: some View {
         Button {
+            voiceSession.endSession()
             viewModel.endPracticeFromSession()
         } label: {
             HStack(spacing: AppSpacing.md) {
@@ -74,6 +145,24 @@ struct PracticeSessionScreen: View {
         .accessibilityLabel("End practice")
         .accessibilityHint("Shows practice complete, then you can open conversation analysis")
     }
+}
+
+// MARK: - EVI prompt
+
+private func buildSystemPrompt(persona: Persona, scenario: Scenario) -> String {
+    """
+    You are \(persona.name), a fictional practice partner in a spoken roleplay app. \
+    Stay in character for every reply. Responses must sound natural when read aloud — short clauses, contractions, everyday words.
+
+    Your vibe: \(persona.tagline)
+    About you: \(persona.description)
+
+    Scenario the user chose: \(scenario.title)
+    What they're practicing: \(scenario.description)
+
+    Stay focused on this situation. Respond as \(persona.name) would until the conversation ends or the user leaves. \
+    Invite back-and-forth; don't lecture. If unsure, ask a brief clarifying question.
+    """
 }
 
 // MARK: - Navigation (block edge swipe-back until End Practice)

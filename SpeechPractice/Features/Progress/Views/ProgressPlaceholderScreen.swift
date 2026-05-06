@@ -565,15 +565,15 @@ private struct ProfileSkillRow: View {
     }
 
     var body: some View {
-        HStack(spacing: AppSpacing.base) {
+        HStack(alignment: .center, spacing: AppSpacing.sm) {
             Image(systemName: skill.systemImage)
-                .font(.system(size: 30, weight: .semibold))
+                .font(.system(size: 36, weight: .semibold))
                 .foregroundStyle(skill.color)
-                .frame(width: 56, height: 56)
+                .frame(width: 64, height: 64)
                 .accessibilityHidden(true)
 
-            VStack(alignment: .leading, spacing: AppSpacing.sm) {
-                VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            VStack(alignment: .leading, spacing: 0) {
+                VStack(alignment: .leading, spacing: 0) {
                     Text(skill.title)
                         .font(AppFonts.title(19, weight: .bold))
                         .foregroundStyle(AppColors.textPrimary)
@@ -595,6 +595,7 @@ private struct ProfileSkillRow: View {
                             .lineLimit(1)
                             .minimumScaleFactor(0.8)
                     }
+                    .padding(.top, -AppSpacing.xs)
                 }
 
                 SkillXPBarWithEndCap(
@@ -602,9 +603,12 @@ private struct ProfileSkillRow: View {
                     tint: skill.color,
                     progress: levelProgressToNext
                 )
+                .padding(.top, -AppSpacing.xs / 2)
             }
         }
-        .padding(AppSpacing.base)
+        .padding(.vertical, AppSpacing.base)
+        .padding(.leading, AppSpacing.sm)
+        .padding(.trailing, AppSpacing.base)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .fill(AppColors.surface)
@@ -682,13 +686,12 @@ private struct ProfileSkillDetailScreen: View {
     }
 
     private var masteryCard: some View {
-        VStack(alignment: .leading, spacing: AppSpacing.xl) {
-            HStack(spacing: AppSpacing.base) {
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            HStack(alignment: .center, spacing: AppSpacing.sm) {
                 Image(systemName: detail.systemImage)
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(AppColors.primary)
-                    .frame(width: 72, height: 72)
-                    .background(AppColors.primarySubtle, in: Circle())
+                    .font(.system(size: 44, weight: .semibold))
+                    .foregroundStyle(detail.color)
+                    .frame(width: 76, height: 76)
                     .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: AppSpacing.xs) {
@@ -696,35 +699,41 @@ private struct ProfileSkillDetailScreen: View {
                         .font(AppFonts.title(22, weight: .bold))
                         .foregroundStyle(AppColors.textPrimary)
 
-                    Text("Total XP: \(formattedWholeNumber(detail.totalXP))")
+                    Text("\(formattedWholeNumber(detail.totalXP)) Total XP")
                         .font(AppFonts.body(17, weight: .medium))
-                        .foregroundStyle(AppColors.textSecondary)
+                        .foregroundStyle(AppColors.xpMetricGold)
                         .monospacedDigit()
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
 
-            VStack(spacing: AppSpacing.md) {
+            VStack(spacing: 0) {
                 HStack(alignment: .firstTextBaseline) {
                     Text("Level \(detail.level)")
                         .font(AppFonts.label(14, weight: .bold))
-                        .foregroundStyle(AppColors.primary)
+                        .foregroundStyle(AppColors.xpMetricGold)
                         .textCase(.uppercase)
 
                     Spacer(minLength: AppSpacing.md)
 
                     Text("\(detail.currentLevelXP) / \(detail.nextLevelXP) XP")
                         .font(AppFonts.label(14, weight: .bold))
-                        .foregroundStyle(AppColors.textSecondary)
+                        .foregroundStyle(AppColors.xpMetricGold)
                         .monospacedDigit()
                         .lineLimit(1)
                         .minimumScaleFactor(0.8)
                 }
 
-                ProgressCapsule(progress: levelProgress, foregroundColor: AppColors.primary, backgroundColor: AppColors.primarySubtle)
-                    .frame(height: 13)
+                SkillXPBarWithEndCap(
+                    systemImage: detail.systemImage,
+                    tint: detail.color,
+                    progress: levelProgress
+                )
+                .padding(.top, -AppSpacing.xs / 2)
             }
         }
-        .padding(AppSpacing.xl)
+        .padding(.vertical, AppSpacing.lg)
+        .padding(.horizontal, AppSpacing.lg)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xxl)
                 .fill(AppColors.surface)
@@ -735,7 +744,7 @@ private struct ProfileSkillDetailScreen: View {
                 .strokeBorder(AppColors.separator.opacity(0.72), lineWidth: 1)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(detail.title). Total XP \(detail.totalXP). Level \(detail.level). \(detail.currentLevelXP) of \(detail.nextLevelXP) XP until next level.")
+        .accessibilityLabel("\(detail.title). \(formattedWholeNumber(detail.totalXP)) Total XP. Level \(detail.level). \(detail.currentLevelXP) of \(detail.nextLevelXP) XP until next level.")
     }
 
     private var descriptionSection: some View {
@@ -829,25 +838,6 @@ private struct ProfileSkillDetailScreen: View {
         }
 
         return formattedValue
-    }
-}
-
-private struct ProgressCapsule: View {
-    let progress: CGFloat
-    let foregroundColor: Color
-    let backgroundColor: Color
-
-    var body: some View {
-        GeometryReader { proxy in
-            ZStack(alignment: .leading) {
-                Capsule()
-                    .fill(backgroundColor)
-
-                Capsule()
-                    .fill(foregroundColor)
-                    .frame(width: max(0, proxy.size.width * progress))
-            }
-        }
     }
 }
 

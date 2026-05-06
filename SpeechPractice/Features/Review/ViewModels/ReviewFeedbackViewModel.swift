@@ -83,20 +83,28 @@ enum ReviewFeedbackViewModel {
 
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
+    private static let recordsRecoveryStorageKey: String = "reviewSessionRecordsUnreadableBackup"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let legacyNotesStorageKey: String = "latestPracticeReviewNotes"
+    private static let notesStorageKeyPrefix: String = "reviewSessionNotes"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
             do {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
-                return sortedByMostRecent(records)
+                let sortedRecords = sortedByMostRecent(records)
+                migrateLegacyPracticeNotes(toMostRecentOf: sortedRecords)
+                return sortedRecords
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear it and fall through to seeded records.
-                UserDefaults.standard.removeObject(forKey: recordsStorageKey)
+                preserveUnreadableRecordsData(recordsData)
+                let records: [ReviewSessionRecord] = loadLegacyRecords()
+                migrateLegacyPracticeNotes(toMostRecentOf: records)
+                return records
             }
         }
 
         let records: [ReviewSessionRecord] = loadLegacyRecords()
+        migrateLegacyPracticeNotes(toMostRecentOf: records)
         save(records)
         return records
     }
@@ -105,7 +113,7 @@ enum ReviewHistoryStore {
         loadRecords().map(\.summary)
     }
 
-    static func record(feedback: ReviewFeedback, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+    static func makeRecord(feedback: ReviewFeedback) -> ReviewSessionRecord {
         let summary = ReviewSessionSummary(
             id: UUID(),
             scenarioTitle: feedback.scenarioTitle,
@@ -114,11 +122,43 @@ enum ReviewHistoryStore {
             durationSeconds: seededDurationSeconds(for: feedback.scenarioTitle, personaName: feedback.personaName),
             completedAt: Date()
         )
-        let record = ReviewSessionRecord(summary: summary, feedback: feedback)
 
-        let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + records)
+        return ReviewSessionRecord(summary: summary, feedback: feedback)
+    }
+
+    static func record(_ record: ReviewSessionRecord, in records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+        let recordsWithoutDuplicate = records.filter { $0.id != record.id }
+        let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + recordsWithoutDuplicate)
         save(updatedRecords)
         return updatedRecords
+    }
+
+    static func notesStorageKey(for recordID: UUID) -> String {
+        "\(notesStorageKeyPrefix).\(recordID.uuidString)"
+    }
+
+    private static func preserveUnreadableRecordsData(_ data: Data) {
+        guard UserDefaults.standard.data(forKey: recordsRecoveryStorageKey) == nil else {
+            return
+        }
+
+        UserDefaults.standard.set(data, forKey: recordsRecoveryStorageKey)
+    }
+
+    private static func migrateLegacyPracticeNotes(toMostRecentOf records: [ReviewSessionRecord]) {
+        guard let legacyNotes = UserDefaults.standard.string(forKey: legacyNotesStorageKey),
+              legacyNotes.isEmpty == false,
+              let mostRecentRecord = records.first
+        else {
+            return
+        }
+
+        let scopedNotesKey = notesStorageKey(for: mostRecentRecord.id)
+        if UserDefaults.standard.string(forKey: scopedNotesKey) == nil {
+            UserDefaults.standard.set(legacyNotes, forKey: scopedNotesKey)
+        }
+
+        UserDefaults.standard.removeObject(forKey: legacyNotesStorageKey)
     }
 
     private static func save(_ records: [ReviewSessionRecord]) {

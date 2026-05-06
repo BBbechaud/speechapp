@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PracticeHomeScreen: View {
     var viewModel: PracticeFlowViewModel
-    let onReviewFeedbackClosed: (ReviewFeedback) -> Void
+    let onReviewFeedbackClosed: (ReviewSessionRecord) -> Void
 
     @State private var appeared = false
 
@@ -43,11 +43,12 @@ struct PracticeHomeScreen: View {
                     viewModel.showReviewFeedback()
                 })
             case .reviewFeedback:
-                let feedback = viewModel.currentReviewFeedback()
+                let record = viewModel.currentReviewRecord()
                 ReviewFeedbackScreen(
-                    feedback: feedback,
+                    feedback: record.feedback,
+                    notesStorageKey: ReviewHistoryStore.notesStorageKey(for: record.id),
                     onClose: {
-                        onReviewFeedbackClosed(feedback)
+                        onReviewFeedbackClosed(record)
                         viewModel.reset()
                     }
                 )

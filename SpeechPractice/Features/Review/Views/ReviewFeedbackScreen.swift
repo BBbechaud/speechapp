@@ -2,10 +2,12 @@ import SwiftUI
 
 struct ReviewFeedbackScreen: View {
     let feedback: ReviewFeedback
+    let notesStorageKey: String
     let onClose: () -> Void
 
-    @AppStorage("latestPracticeReviewNotes") private var practiceNotes: String = ""
     @State private var appeared: Bool = false
+    @State private var practiceNotes: String = ""
+    @State private var loadedNotesStorageKey: String?
 
     var body: some View {
         ScrollView {
@@ -36,7 +38,18 @@ struct ReviewFeedbackScreen: View {
         .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             appeared = true
+            loadPracticeNotesIfNeeded()
         }
+        .onChange(of: practiceNotes) { _, newValue in
+            UserDefaults.standard.set(newValue, forKey: notesStorageKey)
+        }
+    }
+
+    private func loadPracticeNotesIfNeeded() {
+        guard loadedNotesStorageKey != notesStorageKey else { return }
+
+        practiceNotes = UserDefaults.standard.string(forKey: notesStorageKey) ?? ""
+        loadedNotesStorageKey = notesStorageKey
     }
 
     private var header: some View {
@@ -318,6 +331,7 @@ private struct PracticeNotesSection: View {
                 scenario: Scenario.all[3],
                 persona: Persona.all[1]
             ),
+            notesStorageKey: ReviewHistoryStore.notesStorageKey(for: UUID()),
             onClose: {}
         )
     }

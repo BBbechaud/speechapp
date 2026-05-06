@@ -12,7 +12,7 @@ final class PracticeFlowViewModel {
     var selectedScenario: Scenario?
     var selectedPersona: Persona?
     var initiator: ConversationInitiator = .user
-    private var activeReviewFeedback: ReviewFeedback?
+    private var activeReviewRecord: ReviewSessionRecord?
 
     /// Drives session UI (static vs animated waves, status copy). Voice layer updates this.
     var personaSessionPhase: PersonaSessionPhase = .listening
@@ -28,7 +28,7 @@ final class PracticeFlowViewModel {
     }
 
     func select(scenario: Scenario) {
-        activeReviewFeedback = nil
+        activeReviewRecord = nil
         selectedScenario = scenario
         selectedPersona = defaultPersona()
         initiator = .user
@@ -46,7 +46,7 @@ final class PracticeFlowViewModel {
     }
 
     func startDailyMinute(prompt: DailyMinutePrompt) {
-        activeReviewFeedback = nil
+        activeReviewRecord = nil
         selectedScenario = prompt.scenario
         selectedPersona = defaultPersona()
         initiator = .user
@@ -77,16 +77,16 @@ final class PracticeFlowViewModel {
     }
 
     func showReviewFeedback() {
-        activeReviewFeedback = makeReviewFeedback()
+        activeReviewRecord = ReviewHistoryStore.makeRecord(feedback: makeReviewFeedback())
         navigationPath.append(.reviewFeedback)
     }
 
-    func currentReviewFeedback() -> ReviewFeedback {
-        guard let activeReviewFeedback else {
-            preconditionFailure("Cannot show review feedback without active review feedback.")
+    func currentReviewRecord() -> ReviewSessionRecord {
+        guard let activeReviewRecord else {
+            preconditionFailure("Cannot show review feedback without active review record.")
         }
 
-        return activeReviewFeedback
+        return activeReviewRecord
     }
 
     private func makeReviewFeedback() -> ReviewFeedback {
@@ -104,6 +104,7 @@ final class PracticeFlowViewModel {
         navigationPath = []
         selectedScenario = nil
         selectedPersona = nil
+        activeReviewRecord = nil
         initiator = .user
         personaSessionPhase = .listening
     }

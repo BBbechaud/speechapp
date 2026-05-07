@@ -41,41 +41,25 @@ struct ProgressScreen: View {
     }
 
     private var header: some View {
-        VStack(spacing: AppSpacing.lg) {
-            ZStack {
-                Text("Progress")
-                    .font(AppFonts.title(20, weight: .bold))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .frame(maxWidth: .infinity)
+        ZStack {
+            Text("Your Progress")
+                .font(AppFonts.title(20, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+                .frame(maxWidth: .infinity)
 
-                HStack {
-                    Spacer()
+            HStack {
+                Spacer()
 
-                    Button {} label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 18, weight: .semibold))
-                            .foregroundStyle(AppColors.textPrimary)
-                            .frame(width: 46, height: 46)
-                    }
-                    .buttonStyle(PressButtonStyle())
-                    .accessibilityLabel("Settings")
-                }
-            }
-
-            VStack(spacing: AppSpacing.md) {
-                ProfileAvatar()
-
-                VStack(spacing: AppSpacing.xs) {
-                    Text("Brian Bechaud")
-                        .font(AppFonts.title(28, weight: .semibold))
+                NavigationLink {
+                    SettingsScreen()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 18, weight: .semibold))
                         .foregroundStyle(AppColors.textPrimary)
-                        .multilineTextAlignment(.center)
-
-                    Text("Communication Enthusiast")
-                        .font(AppFonts.body(16))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .multilineTextAlignment(.center)
+                        .frame(width: 46, height: 46)
                 }
+                .buttonStyle(PressButtonStyle())
+                .accessibilityLabel("Settings")
             }
         }
     }
@@ -261,6 +245,66 @@ enum ProgressInnerTab: String, CaseIterable, Identifiable {
         case .skills:  return "Skills"
         case .badges:  return "Badges"
         }
+    }
+}
+
+private struct SettingsScreen: View {
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: AppSpacing.xl) {
+                ZStack {
+                    Text("Settings")
+                        .font(AppFonts.title(20, weight: .bold))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .frame(maxWidth: .infinity)
+
+                    HStack {
+                        Button {
+                            dismiss()
+                        } label: {
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(AppColors.textPrimary)
+                                .frame(width: 46, height: 46)
+                        }
+                        .buttonStyle(PressButtonStyle())
+                        .accessibilityLabel("Back")
+
+                        Spacer()
+                    }
+                }
+
+                ProfileIdentitySection()
+            }
+            .padding(.horizontal, AppSpacing.base)
+            .padding(.top, AppSpacing.sm)
+            .padding(.bottom, AppSpacing.xxl)
+        }
+        .background(AppColors.background)
+        .toolbar(.hidden, for: .navigationBar)
+    }
+}
+
+private struct ProfileIdentitySection: View {
+    var body: some View {
+        VStack(spacing: AppSpacing.md) {
+            ProfileAvatar()
+
+            VStack(spacing: AppSpacing.xs) {
+                Text("Brian Bechaud")
+                    .font(AppFonts.title(28, weight: .semibold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .multilineTextAlignment(.center)
+
+                Text("Communication Enthusiast")
+                    .font(AppFonts.body(16))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 

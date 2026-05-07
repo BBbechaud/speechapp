@@ -108,11 +108,11 @@ private struct AppTabBar: View {
                     }
                 }
             }
-            .padding(.top, 6)
+            .padding(.top, 10)
         }
-        .safeAreaPadding(.bottom)
+        .safeAreaPadding(.bottom, 6)
         .background(
-            AppColors.surface
+            AppColors.background
                 .ignoresSafeArea(edges: .bottom)
         )
     }
@@ -127,17 +127,17 @@ private struct TabBarItem: View {
         Button(action: action) {
             VStack(spacing: 4) {
                 Image(systemName: tab.icon)
-                    .font(.system(size: 22, weight: isSelected ? .semibold : .regular))
+                    .font(.system(size: 24, weight: isSelected ? .semibold : .regular))
                     .foregroundStyle(isSelected ? AppColors.primary : AppColors.tabInactive)
                     .animation(.easeInOut(duration: 0.16), value: isSelected)
 
                 Text(tab.label)
-                    .font(AppFonts.label(10, weight: isSelected ? .bold : .medium))
+                    .font(AppFonts.label(11, weight: isSelected ? .bold : .medium))
                     .foregroundStyle(isSelected ? AppColors.primary : AppColors.tabInactive)
                     .animation(.easeInOut(duration: 0.16), value: isSelected)
             }
             .frame(maxWidth: .infinity)
-            .padding(.bottom, 2)
+            .padding(.bottom, 0)
             .contentShape(Rectangle())
         }
         .buttonStyle(PressButtonStyle())

@@ -41,6 +41,19 @@ struct PracticePrimerScreen: View {
                     .minimumScaleFactor(0.85)
                     .multilineTextAlignment(.center)
             }
+
+            if let activeCustomScenario = viewModel.activeCustomScenario {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        viewModel.presentCustomScenarioEdit(activeCustomScenario)
+                    } label: {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(AppColors.primary)
+                    }
+                    .accessibilityLabel("Edit custom scenario")
+                }
+            }
         }
         .safeAreaInset(edge: .bottom) {
             startButton

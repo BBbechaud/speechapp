@@ -31,6 +31,8 @@ struct PracticeHomeScreen: View {
                 DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
             case .configure:
                 ScenarioConfigScreen(viewModel: viewModel)
+            case .customScenarioEditor:
+                CustomScenarioEditorScreen(viewModel: viewModel)
             case .primer:
                 PracticePrimerScreen(viewModel: viewModel)
             case .prePracticeTransition:
@@ -178,6 +180,8 @@ struct PracticeHomeScreen: View {
                 .font(AppFonts.label(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
+            customScenariosBlock
+
             ForEach(Array(Scenario.all.enumerated()), id: \.element.id) { index, scenario in
                 Button { viewModel.select(scenario: scenario) } label: {
                     ScenarioRow(scenario: scenario)
@@ -187,11 +191,67 @@ struct PracticeHomeScreen: View {
                 .offset(y: appeared ? 0 : 10)
                 .animation(
                     .spring(response: 0.45, dampingFraction: 0.8)
-                        .delay(0.1 + Double(index) * 0.05),
+                        .delay(scenarioDelay(forBuiltInIndex: index)),
                     value: appeared
                 )
             }
         }
+    }
+
+    // MARK: - Custom Scenarios
+
+    private var customScenariosBlock: some View {
+        let savedCustomScenarios = viewModel.customScenarioStore.scenarios
+
+        return VStack(spacing: AppSpacing.base) {
+            Button {
+                viewModel.presentCustomScenarioCreate()
+            } label: {
+                CustomScenarioCreateRow()
+            }
+            .buttonStyle(PressButtonStyle())
+            .accessibilityLabel("Create a custom scenario")
+            .opacity(appeared ? 1 : 0)
+            .offset(y: appeared ? 0 : 10)
+            .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.1), value: appeared)
+
+            ForEach(Array(savedCustomScenarios.enumerated()), id: \.element.id) { index, custom in
+                Button {
+                    viewModel.selectCustomScenario(custom)
+                } label: {
+                    CustomScenarioRow(scenario: custom)
+                }
+                .buttonStyle(PressButtonStyle())
+                .contextMenu {
+                    Button {
+                        viewModel.presentCustomScenarioEdit(custom)
+                    } label: {
+                        Label("Edit", systemImage: "pencil")
+                    }
+
+                    Button(role: .destructive) {
+                        viewModel.deleteCustomScenario(id: custom.id)
+                    } label: {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
+                .opacity(appeared ? 1 : 0)
+                .offset(y: appeared ? 0 : 10)
+                .animation(
+                    .spring(response: 0.45, dampingFraction: 0.8)
+                        .delay(0.12 + Double(index) * 0.05),
+                    value: appeared
+                )
+            }
+        }
+    }
+
+    /// Delay built-in scenarios so they animate after the create tile and any
+    /// saved custom rows above them, preserving the staggered cascade feel.
+    private func scenarioDelay(forBuiltInIndex index: Int) -> Double {
+        let savedCount = viewModel.customScenarioStore.scenarios.count
+        let baseDelay = 0.12 + Double(savedCount + 1) * 0.05
+        return baseDelay + Double(index) * 0.05
     }
 }
 
@@ -341,6 +401,111 @@ private struct DailyChallengeCard: View {
             RoundedRectangle(cornerRadius: AppRadius.xxl)
                 .fill(AppColors.surface)
                 .cardShadow()
+        }
+    }
+}
+
+// MARK: - Custom Scenario Rows
+
+private struct CustomScenarioCreateRow: View {
+    var body: some View {
+        HStack(spacing: AppSpacing.sm) {
+            ZStack {
+                Circle()
+                    .fill(AppColors.primarySubtle)
+                    .frame(width: 44, height: 44)
+
+                Image(systemName: "plus")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundStyle(AppColors.primary)
+            }
+            .frame(width: 44, height: 48, alignment: .center)
+            .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                HStack(alignment: .center, spacing: AppSpacing.sm) {
+                    Text("Create Custom Scenario")
+                        .font(AppFonts.title(15))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .lineLimit(1)
+
+                    Text("Yours")
+                        .font(AppFonts.label(11, weight: .semibold))
+                        .foregroundStyle(AppColors.primary)
+                        .padding(.horizontal, AppSpacing.sm)
+                        .padding(.vertical, 3)
+                        .background(AppColors.primarySubtle, in: Capsule())
+                }
+
+                Text("Tailor a practice scenario to a specific situation you have in mind.")
+                    .font(AppFonts.body(13))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(AppSpacing.base)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(AppColors.surface)
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .strokeBorder(
+                    AppColors.primaryMedium,
+                    style: StrokeStyle(lineWidth: 1.5, dash: [6, 4])
+                )
+        }
+    }
+}
+
+private struct CustomScenarioRow: View {
+    let scenario: CustomScenario
+
+    private var displayTitle: String {
+        let trimmed = scenario.trimmedName
+        return trimmed.isEmpty ? "Custom Scenario" : trimmed
+    }
+
+    var body: some View {
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(AppColors.primary)
+                .frame(width: 44, height: 48, alignment: .center)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                HStack(alignment: .center, spacing: AppSpacing.sm) {
+                    Text(displayTitle)
+                        .font(AppFonts.title(15))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .lineLimit(1)
+
+                    Text("Custom")
+                        .font(AppFonts.label(11, weight: .semibold))
+                        .foregroundStyle(AppColors.accent)
+                        .padding(.horizontal, AppSpacing.sm)
+                        .padding(.vertical, 3)
+                        .background(AppColors.accentSubtle, in: Capsule())
+                }
+
+                Text(scenario.trimmedPrompt)
+                    .font(AppFonts.body(13))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(AppSpacing.base)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(AppColors.surface)
+                .subtleShadow()
         }
     }
 }

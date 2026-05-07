@@ -5,6 +5,7 @@ import UIKit
 struct PracticeSessionScreen: View {
     @StateObject private var voiceSession = VoiceSessionManager()
     @Bindable var viewModel: PracticeFlowViewModel
+    @State private var hasStartedSession = false
 
     private var persona: Persona { viewModel.selectedPersona ?? Persona.all[0] }
     private var scenario: Scenario {
@@ -33,6 +34,14 @@ struct PracticeSessionScreen: View {
                 .padding(.top, AppSpacing.sm)
                 .padding(.bottom, AppSpacing.sm)
                 .background(AppColors.surface)
+        }
+        .onAppear {
+            guard !hasStartedSession else { return }
+            hasStartedSession = true
+            Task {
+                let prompt = buildSystemPrompt(persona: persona, scenario: scenario)
+                await voiceSession.startSession(systemPrompt: prompt)
+            }
         }
         .onDisappear {
             voiceSession.endSession()
@@ -88,23 +97,7 @@ struct PracticeSessionScreen: View {
 
     @ViewBuilder
     private var sessionControlRow: some View {
-        if !voiceSession.isConnected {
-            Button {
-                Task {
-                    let prompt = buildSystemPrompt(persona: persona, scenario: scenario)
-                    await voiceSession.startSession(systemPrompt: prompt)
-                }
-            } label: {
-                Text("Start Session")
-                    .font(AppFonts.label(17, weight: .semibold))
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 52)
-                    .background(AppColors.primary, in: RoundedRectangle(cornerRadius: AppRadius.xxl))
-            }
-            .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Start voice session")
-        } else {
+        if voiceSession.isConnected {
             Button {
                 voiceSession.endSession()
             } label: {
@@ -121,6 +114,16 @@ struct PracticeSessionScreen: View {
             }
             .buttonStyle(PressButtonStyle())
             .accessibilityLabel("End voice session")
+        } else {
+            HStack(spacing: AppSpacing.sm) {
+                ProgressView()
+                    .tint(AppColors.primary)
+                Text("Connecting...")
+                    .font(AppFonts.label(16, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 52)
         }
     }
 

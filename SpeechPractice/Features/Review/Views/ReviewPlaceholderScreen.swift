@@ -1,76 +1,6 @@
 import SwiftUI
 
-struct ReviewHistoryScreen: View {
-    let records: [ReviewSessionRecord]
-
-    @State private var appeared: Bool = false
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: AppSpacing.xl) {
-                header
-
-                VStack(alignment: .leading, spacing: AppSpacing.md) {
-                    Text("All sessions")
-                        .font(AppFonts.label(14, weight: .bold))
-                        .foregroundStyle(AppColors.textSecondary)
-
-                    VStack(spacing: AppSpacing.md) {
-                        ForEach(Array(records.enumerated()), id: \.element.id) { index, record in
-                            NavigationLink(value: record) {
-                                ReviewSessionSummaryCard(summary: record.summary)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .opacity(appeared ? 1 : 0)
-                            .offset(y: appeared ? 0 : 12)
-                            .animation(
-                                .spring(response: 0.42, dampingFraction: 0.84)
-                                    .delay(Double(index) * 0.04),
-                                value: appeared
-                            )
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, AppSpacing.base)
-            .padding(.top, AppSpacing.xxl)
-            .padding(.bottom, AppSpacing.xxxl)
-        }
-        .background(AppColors.background)
-        .toolbar(.hidden, for: .navigationBar)
-        .onAppear {
-            appeared = true
-        }
-        .navigationDestination(for: ReviewSessionRecord.self) { record in
-            ReviewHistoryFeedbackDestination(feedback: record.feedback)
-        }
-    }
-
-    private var header: some View {
-        Text("Feedback")
-            .font(AppFonts.display(34))
-            .foregroundStyle(AppColors.textPrimary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .accessibilityAddTraits(.isHeader)
-    }
-}
-
-private struct ReviewHistoryFeedbackDestination: View {
-    let feedback: ReviewFeedback
-
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ReviewFeedbackScreen(
-            feedback: feedback,
-            onClose: {
-                dismiss()
-            }
-        )
-    }
-}
-
-private struct ReviewSessionSummaryCard: View {
+struct ReviewSessionSummaryCard: View {
     let summary: ReviewSessionSummary
 
     var body: some View {
@@ -84,7 +14,7 @@ private struct ReviewSessionSummaryCard: View {
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Text(relativeCompletionText(summary.completedAt))
+                Text(reviewRelativeCompletionText(summary.completedAt))
                     .font(AppFonts.label(13, weight: .medium))
                     .foregroundStyle(AppColors.textSecondary)
                     .lineLimit(1)
@@ -110,7 +40,7 @@ private struct ReviewSessionSummaryCard: View {
                 .strokeBorder(AppColors.separator.opacity(0.55), lineWidth: 1)
         }
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(summary.scenarioTitle), with \(summary.personaName), score \(summary.overallScore), \(formattedDuration(summary.durationSeconds)), completed \(relativeCompletionText(summary.completedAt))")
+        .accessibilityLabel("\(summary.scenarioTitle), with \(summary.personaName), score \(summary.overallScore), \(reviewFormattedDuration(summary.durationSeconds)), completed \(reviewRelativeCompletionText(summary.completedAt))")
     }
 
     private var scoreView: some View {
@@ -129,14 +59,29 @@ private struct ReviewSessionSummaryCard: View {
     }
 }
 
-private func formattedDuration(_ durationSeconds: Int) -> String {
+struct ReviewHistoryFeedbackDestination: View {
+    let feedback: ReviewFeedback
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ReviewFeedbackScreen(
+            feedback: feedback,
+            onClose: {
+                dismiss()
+            }
+        )
+    }
+}
+
+func reviewFormattedDuration(_ durationSeconds: Int) -> String {
     let minutes: Int = durationSeconds / 60
     let seconds: Int = durationSeconds % 60
 
     return "\(minutes)m \(seconds)s"
 }
 
-private func relativeCompletionText(_ completedAt: Date) -> String {
+func reviewRelativeCompletionText(_ completedAt: Date) -> String {
     let elapsedSeconds: TimeInterval = Date().timeIntervalSince(completedAt)
     let minute: TimeInterval = 60
     let hour: TimeInterval = 60 * minute
@@ -149,30 +94,38 @@ private func relativeCompletionText(_ completedAt: Date) -> String {
 
     if elapsedSeconds < hour {
         let minutes: Int = max(1, Int(elapsedSeconds / minute))
-        return unitText(value: minutes, singular: "minute")
+        return reviewUnitText(value: minutes, singular: "minute")
     }
 
     if elapsedSeconds < day {
         let hours: Int = max(1, Int(elapsedSeconds / hour))
-        return unitText(value: hours, singular: "hour")
+        return reviewUnitText(value: hours, singular: "hour")
     }
 
     if elapsedSeconds < week {
         let days: Int = max(1, Int(elapsedSeconds / day))
-        return unitText(value: days, singular: "day")
+        return reviewUnitText(value: days, singular: "day")
     }
 
     let weeks: Int = max(1, Int(elapsedSeconds / week))
-    return unitText(value: weeks, singular: "week")
+    return reviewUnitText(value: weeks, singular: "week")
 }
 
-private func unitText(value: Int, singular: String) -> String {
+private func reviewUnitText(value: Int, singular: String) -> String {
     let unit: String = value == 1 ? singular : "\(singular)s"
     return "\(value) \(unit) ago"
 }
 
 #Preview {
     NavigationStack {
-        ReviewHistoryScreen(records: ReviewHistoryStore.previewRecords())
+        ScrollView {
+            VStack(spacing: AppSpacing.md) {
+                ForEach(ReviewHistoryStore.previewRecords()) { record in
+                    ReviewSessionSummaryCard(summary: record.summary)
+                }
+            }
+            .padding(AppSpacing.base)
+        }
+        .background(AppColors.background)
     }
 }

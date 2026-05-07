@@ -36,6 +36,7 @@
 		8F5529172BDADD0100A00001 /* PracticeCompleteScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */; };
 		8F55291B2BDADD0100A00001 /* PrePracticeTransitionScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */; };
 		8F55291D2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */; };
+		8F5529F02BDADD0100A00001 /* LearnPlaceholderScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F5529EF2BDADD0100A00001 /* LearnPlaceholderScreen.swift */; };
 		8F552A102BDADF0000A00001 /* CommunicationSkill.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A002BDADF0000A00001 /* CommunicationSkill.swift */; };
 		8F552A112BDADF0000A00001 /* ReviewFeedbackModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A012BDADF0000A00001 /* ReviewFeedbackModels.swift */; };
 		8F552A122BDADF0000A00001 /* ReviewFeedbackViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F552A022BDADF0000A00001 /* ReviewFeedbackViewModel.swift */; };
@@ -75,6 +76,7 @@
 		8F5529162BDADD0100A00001 /* PracticeCompleteScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeCompleteScreen.swift; sourceTree = "<group>"; };
 		8F55291A2BDADD0100A00001 /* PrePracticeTransitionScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionScreen.swift; sourceTree = "<group>"; };
 		8F55291C2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrePracticeTransitionViewModel.swift; sourceTree = "<group>"; };
+		8F5529EF2BDADD0100A00001 /* LearnPlaceholderScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnPlaceholderScreen.swift; sourceTree = "<group>"; };
 		8F552A002BDADF0000A00001 /* CommunicationSkill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunicationSkill.swift; sourceTree = "<group>"; };
 		8F552A012BDADF0000A00001 /* ReviewFeedbackModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFeedbackModels.swift; sourceTree = "<group>"; };
 		8F552A022BDADF0000A00001 /* ReviewFeedbackViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewFeedbackViewModel.swift; sourceTree = "<group>"; };
@@ -170,9 +172,26 @@
 				8F5526312BDADA7E00A00001 /* Practice */,
 				8F5526362BDADA7E00A00001 /* Review */,
 				8F55263B2BDADA7E00A00001 /* Progress */,
+				8F5526452BDADA7E00A00001 /* Learn */,
 				8F5526402BDADA7E00A00001 /* Onboarding */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		8F5526452BDADA7E00A00001 /* Learn */ = {
+			isa = PBXGroup;
+			children = (
+				8F5526462BDADA7E00A00001 /* Views */,
+			);
+			path = Learn;
+			sourceTree = "<group>";
+		};
+		8F5526462BDADA7E00A00001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F5529EF2BDADD0100A00001 /* LearnPlaceholderScreen.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		8F5526312BDADA7E00A00001 /* Practice */ = {
@@ -565,6 +584,7 @@
 				8F5529172BDADD0100A00001 /* PracticeCompleteScreen.swift in Sources */,
 				8F55291B2BDADD0100A00001 /* PrePracticeTransitionScreen.swift in Sources */,
 				8F55291D2BDADD0100A00001 /* PrePracticeTransitionViewModel.swift in Sources */,
+				8F5529F02BDADD0100A00001 /* LearnPlaceholderScreen.swift in Sources */,
 				8F5526272BDADA7E00A00001 /* ReviewPlaceholderScreen.swift in Sources */,
 				8F5526292BDADA7E00A00001 /* ProgressPlaceholderScreen.swift in Sources */,
 				8F55262B2BDADA7E00A00001 /* OnboardingPlaceholderScreen.swift in Sources */,

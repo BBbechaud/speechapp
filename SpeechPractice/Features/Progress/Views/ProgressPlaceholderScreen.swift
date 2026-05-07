@@ -1,7 +1,9 @@
 import SwiftUI
 
-struct ProfileScreen: View {
-    @State private var selectedTab: ProfileTab = .skills
+struct ProgressScreen: View {
+    let records: [ReviewSessionRecord]
+    @Binding var innerTab: ProgressInnerTab
+
     @State private var appeared = false
 
     private let overview = ProfileOverview(
@@ -30,6 +32,9 @@ struct ProfileScreen: View {
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
+        .navigationDestination(for: ReviewSessionRecord.self) { record in
+            ReviewHistoryFeedbackDestination(feedback: record.feedback)
+        }
         .onAppear {
             appeared = true
         }
@@ -38,7 +43,7 @@ struct ProfileScreen: View {
     private var header: some View {
         VStack(spacing: AppSpacing.lg) {
             ZStack {
-                Text("Profile")
+                Text("Progress")
                     .font(AppFonts.title(20, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
                     .frame(maxWidth: .infinity)
@@ -152,21 +157,21 @@ struct ProfileScreen: View {
 
     private var profileTabs: some View {
         HStack(spacing: AppSpacing.xs) {
-            ForEach(ProfileTab.allCases) { tab in
+            ForEach(ProgressInnerTab.allCases) { tab in
                 Button {
                     withAnimation(.spring(response: 0.28, dampingFraction: 0.82)) {
-                        selectedTab = tab
+                        innerTab = tab
                     }
                 } label: {
                     Text(tab.title)
-                        .font(AppFonts.title(17, weight: selectedTab == tab ? .bold : .semibold))
-                        .foregroundStyle(selectedTab == tab ? AppColors.primary : AppColors.textTertiary)
+                        .font(AppFonts.title(17, weight: innerTab == tab ? .bold : .semibold))
+                        .foregroundStyle(innerTab == tab ? AppColors.primary : AppColors.textTertiary)
                         .lineLimit(1)
                         .minimumScaleFactor(0.82)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .background {
-                            if selectedTab == tab {
+                            if innerTab == tab {
                                 Capsule()
                                     .fill(AppColors.surface)
                                     .subtleShadow()
@@ -180,7 +185,7 @@ struct ProfileScreen: View {
                     }
                 .buttonStyle(PressButtonStyle())
                 .accessibilityLabel(tab.title)
-                .accessibilityAddTraits(selectedTab == tab ? .isSelected : [])
+                .accessibilityAddTraits(innerTab == tab ? .isSelected : [])
             }
         }
         .padding(AppSpacing.xs)
@@ -197,13 +202,9 @@ struct ProfileScreen: View {
 
     @ViewBuilder
     private var selectedTabContent: some View {
-        switch selectedTab {
-        case .progress:
-            ProfileEmptyTabView(
-                systemImage: "chart.line.uptrend.xyaxis",
-                title: "Progress snapshots are coming soon",
-                detail: "Your strongest trends will live here after more practice sessions."
-            )
+        switch innerTab {
+        case .history:
+            historyContent
         case .skills:
             VStack(spacing: AppSpacing.md) {
                 ForEach(skills) { skill in
@@ -223,10 +224,30 @@ struct ProfileScreen: View {
             )
         }
     }
+
+    @ViewBuilder
+    private var historyContent: some View {
+        if records.isEmpty {
+            ProfileEmptyTabView(
+                systemImage: "clock.arrow.circlepath",
+                title: "No sessions yet",
+                detail: "Your completed practice sessions will show up here."
+            )
+        } else {
+            VStack(spacing: AppSpacing.md) {
+                ForEach(records) { record in
+                    NavigationLink(value: record) {
+                        ReviewSessionSummaryCard(summary: record.summary)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+        }
+    }
 }
 
-private enum ProfileTab: String, CaseIterable, Identifiable {
-    case progress
+enum ProgressInnerTab: String, CaseIterable, Identifiable {
+    case history
     case skills
     case badges
 
@@ -236,9 +257,9 @@ private enum ProfileTab: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .progress: return "Progress"
-        case .skills: return "Skills"
-        case .badges: return "Badges"
+        case .history: return "History"
+        case .skills:  return "Skills"
+        case .badges:  return "Badges"
         }
     }
 }
@@ -1041,7 +1062,18 @@ private struct ProfileEmptyTabView: View {
 }
 
 #Preview {
-    NavigationStack {
-        ProfileScreen()
+    ProgressScreenPreview()
+}
+
+private struct ProgressScreenPreview: View {
+    @State private var innerTab: ProgressInnerTab = .skills
+
+    var body: some View {
+        NavigationStack {
+            ProgressScreen(
+                records: ReviewHistoryStore.previewRecords(),
+                innerTab: $innerTab
+            )
+        }
     }
 }

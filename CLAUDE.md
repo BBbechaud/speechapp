@@ -67,4 +67,4 @@ App secrets are injected via xcconfig → `Info.plist` → `AppConfiguration.loa
 - Views are structs; state lives in ViewModels or local `@State`
 - Persona avatar images are placeholder `PersonaAvatarView` (initials) — real assets replace them without API changes
 - Entrance animations follow the stagger pattern in existing screens: `appeared` bool flipped in `.onAppear`, each element gets `.delay(0.05 * index)`
-- Tab labels: **Practice**, **Feedback**, **Progress** (not "Review")
+- Tab labels: **Learn**, **Practice**, **Progress** (Feedback session history now lives inside the Progress tab as the **History** inner segmented tab)

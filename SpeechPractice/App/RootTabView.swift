@@ -1,29 +1,30 @@
 import SwiftUI
 
 private enum MainTab: Hashable, CaseIterable {
+    case learn
     case practice
-    case feedback
-    case profile
+    case progress
 
     var label: String {
         switch self {
+        case .learn:    return "Learn"
         case .practice: return "Practice"
-        case .feedback: return "Feedback"
-        case .profile:  return "Profile"
+        case .progress: return "Progress"
         }
     }
 
     var icon: String {
         switch self {
+        case .learn:    return "book.fill"
         case .practice: return "mic.circle.fill"
-        case .feedback: return "text.bubble.fill"
-        case .profile:  return "person.fill"
+        case .progress: return "chart.line.uptrend.xyaxis"
         }
     }
 }
 
 struct RootTabView: View {
     @State private var selectedTab: MainTab = .practice
+    @State private var progressInnerTab: ProgressInnerTab = .skills
     @State private var reviewRecords: [ReviewSessionRecord] = []
     @State private var didLoadReviewRecords: Bool = false
     @State private var practiceFlowViewModel = PracticeFlowViewModel()
@@ -42,32 +43,30 @@ struct RootTabView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
-                // Practice tab
+                NavigationStack {
+                    LearnScreen()
+                }
+                .opacity(selectedTab == .learn ? 1 : 0)
+                .allowsHitTesting(selectedTab == .learn)
+
                 NavigationStack(path: $practiceFlowViewModel.navigationPath) {
                     PracticeHomeScreen(
                         viewModel: practiceFlowViewModel,
                         onReviewFeedbackClosed: { feedback in
                             reviewRecords = ReviewHistoryStore.record(feedback: feedback, in: reviewRecords)
-                            selectedTab = .feedback
+                            progressInnerTab = .history
+                            selectedTab = .progress
                         }
                     )
                 }
                 .opacity(selectedTab == .practice ? 1 : 0)
                 .allowsHitTesting(selectedTab == .practice)
 
-                // Feedback tab
                 NavigationStack {
-                    ReviewHistoryScreen(records: reviewRecords)
+                    ProgressScreen(records: reviewRecords, innerTab: $progressInnerTab)
                 }
-                .opacity(selectedTab == .feedback ? 1 : 0)
-                .allowsHitTesting(selectedTab == .feedback)
-
-                // Profile tab
-                NavigationStack {
-                    ProfileScreen()
-                }
-                .opacity(selectedTab == .profile ? 1 : 0)
-                .allowsHitTesting(selectedTab == .profile)
+                .opacity(selectedTab == .progress ? 1 : 0)
+                .allowsHitTesting(selectedTab == .progress)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
 

@@ -15,10 +15,11 @@ SpeechPractice/
   App/                  App entry point, RootTabView, configuration loading
   Configuration/        Base.xcconfig (shared); Secrets.local.xcconfig (local, gitignored)
   Features/
+    Learn/              Placeholder Learn tab (lessons coming soon)
     Onboarding/         Placeholder onboarding flow
     Practice/           Scenario selection, configuration, primer, session, completion
-    Progress/           Currently contains ProfileScreen placeholder implementation
-    Review/             Feedback domain models, seeded view model, feedback UI
+    Progress/           ProgressScreen with inner History / Skills / Badges tabs
+    Review/             Feedback domain models, seeded view model, feedback UI, session card
   Resources/            Asset catalogs
   Shared/
     Components/         Reusable SwiftUI components
@@ -30,7 +31,7 @@ SpeechPractice/
 ## Current Implementation State
 
 - The app target is `SpeechPractice`, deployment target iOS 17.0.
-- Root tabs in code are `Practice`, `Feedback`, and `Profile`. Older planning docs may still refer to `Progress`; treat code as current unless the user says otherwise.
+- Root tabs in code are `Learn` (placeholder), `Practice`, and `Progress`. The `Progress` tab hosts an inner segmented control with `History`, `Skills`, and `Badges` tabs; the per-session feedback history that used to live under a top-level `Feedback` tab now lives under `Progress > History`.
 - The Practice flow is implemented with a `PracticeFlowViewModel`, typed `PracticeRoute`, and feature-owned `NavigationStack`.
 - Practice currently supports home, daily challenge route, scenario configuration, primer, a live session placeholder, completion screen, and seeded feedback navigation.
 - Scenarios, daily challenges, personas, practice tips, and difficulty labels are static in `ScenarioData.swift`.

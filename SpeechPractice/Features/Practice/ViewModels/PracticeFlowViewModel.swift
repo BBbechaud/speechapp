@@ -49,6 +49,14 @@ final class PracticeFlowViewModel {
         navigationPath.append(.dailyMinuteWheel)
     }
 
+    func showCategory(_ category: ScenarioCategory) {
+        navigationPath.append(.categoryScenarios(category))
+    }
+
+    func showCustomScenariosHub() {
+        navigationPath.append(.customScenariosHub)
+    }
+
     func select(scenario: Scenario) {
         activeReviewFeedback = nil
         activeCustomScenarioID = nil
@@ -244,6 +252,8 @@ enum PracticeRoute: Hashable {
     case dailyChallenges
     case dailyMinuteWheel
     case dailyMinuteSession(DailyMinutePrompt)
+    case categoryScenarios(ScenarioCategory)
+    case customScenariosHub
     case configure
     case customScenarioEditor
     case primer

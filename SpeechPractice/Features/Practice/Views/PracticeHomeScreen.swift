@@ -29,6 +29,10 @@ struct PracticeHomeScreen: View {
                 DailyMinuteWheelScreen(viewModel: viewModel)
             case .dailyMinuteSession(let prompt):
                 DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
+            case .categoryScenarios(let category):
+                CategoryScenariosScreen(viewModel: viewModel, category: category)
+            case .customScenariosHub:
+                CustomScenariosScreen(viewModel: viewModel)
             case .configure:
                 ScenarioConfigScreen(viewModel: viewModel)
             case .customScenarioEditor:
@@ -172,86 +176,46 @@ struct PracticeHomeScreen: View {
         }
     }
 
-    // MARK: - Scenario List
+    // MARK: - Scenario Section
 
     private var scenarioListSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.base) {
-            Text("Scenarios")
+            // Section header
+            Text("Explore Scenarios")
                 .font(AppFonts.label(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
-
-            customScenariosBlock
-
-            ForEach(Array(Scenario.all.enumerated()), id: \.element.id) { index, scenario in
-                Button { viewModel.select(scenario: scenario) } label: {
-                    ScenarioRow(scenario: scenario)
-                }
-                .buttonStyle(PressButtonStyle())
                 .opacity(appeared ? 1 : 0)
                 .offset(y: appeared ? 0 : 10)
-                .animation(
-                    .spring(response: 0.45, dampingFraction: 0.8)
-                        .delay(scenarioDelay(forBuiltInIndex: index)),
-                    value: appeared
-                )
-            }
-        }
-    }
+                .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.1), value: appeared)
 
-    // MARK: - Custom Scenarios
-
-    private var customScenariosBlock: some View {
-        let savedCustomScenarios = viewModel.customScenarioStore.scenarios
-
-        return VStack(spacing: AppSpacing.base) {
-            Button {
-                viewModel.presentCustomScenarioCreate()
-            } label: {
-                CustomScenarioCreateRow()
+            // Custom scenarios hero card (full-width, first in the section)
+            Button { viewModel.showCustomScenariosHub() } label: {
+                CustomScenariosHeroCard(savedCount: viewModel.customScenarioStore.scenarios.count)
             }
             .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Create a custom scenario")
             .opacity(appeared ? 1 : 0)
             .offset(y: appeared ? 0 : 10)
-            .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.1), value: appeared)
+            .animation(.spring(response: 0.45, dampingFraction: 0.8).delay(0.15), value: appeared)
 
-            ForEach(Array(savedCustomScenarios.enumerated()), id: \.element.id) { index, custom in
-                Button {
-                    viewModel.selectCustomScenario(custom)
-                } label: {
-                    CustomScenarioRow(scenario: custom)
-                }
-                .buttonStyle(PressButtonStyle())
-                .contextMenu {
-                    Button {
-                        viewModel.presentCustomScenarioEdit(custom)
-                    } label: {
-                        Label("Edit", systemImage: "pencil")
+            // 2-column category grid
+            LazyVGrid(
+                columns: [GridItem(.flexible(), spacing: AppSpacing.md), GridItem(.flexible(), spacing: AppSpacing.md)],
+                spacing: AppSpacing.md
+            ) {
+                ForEach(Array(ScenarioCategory.allCases.enumerated()), id: \.element.id) { index, category in
+                    Button { viewModel.showCategory(category) } label: {
+                        CategoryCard(category: category, count: Scenario.scenarios(for: category).count)
                     }
-
-                    Button(role: .destructive) {
-                        viewModel.deleteCustomScenario(id: custom.id)
-                    } label: {
-                        Label("Delete", systemImage: "trash")
-                    }
+                    .buttonStyle(PressButtonStyle())
+                    .opacity(appeared ? 1 : 0)
+                    .offset(y: appeared ? 0 : 12)
+                    .animation(
+                        .spring(response: 0.45, dampingFraction: 0.8).delay(0.2 + Double(index) * 0.06),
+                        value: appeared
+                    )
                 }
-                .opacity(appeared ? 1 : 0)
-                .offset(y: appeared ? 0 : 10)
-                .animation(
-                    .spring(response: 0.45, dampingFraction: 0.8)
-                        .delay(0.12 + Double(index) * 0.05),
-                    value: appeared
-                )
             }
         }
-    }
-
-    /// Delay built-in scenarios so they animate after the create tile and any
-    /// saved custom rows above them, preserving the staggered cascade feel.
-    private func scenarioDelay(forBuiltInIndex index: Int) -> Double {
-        let savedCount = viewModel.customScenarioStore.scenarios.count
-        let baseDelay = 0.12 + Double(savedCount + 1) * 0.05
-        return baseDelay + Double(index) * 0.05
     }
 }
 
@@ -405,9 +369,183 @@ private struct DailyChallengeCard: View {
     }
 }
 
-// MARK: - Custom Scenario Rows
+// MARK: - Custom Scenarios Hero Card
 
-private struct CustomScenarioCreateRow: View {
+private struct CustomScenariosHeroCard: View {
+    let savedCount: Int
+
+    var body: some View {
+        HStack(spacing: AppSpacing.md) {
+            ZStack {
+                Circle()
+                    .fill(.white.opacity(0.2))
+                    .frame(width: 48, height: 48)
+                Image(systemName: "sparkles")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.white)
+            }
+            .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: AppSpacing.sm) {
+                    Text("Custom Scenarios")
+                        .font(AppFonts.title(16, weight: .bold))
+                        .foregroundStyle(.white)
+
+                    if savedCount > 0 {
+                        Text("\(savedCount) saved")
+                            .font(AppFonts.label(11, weight: .semibold))
+                            .foregroundStyle(.white.opacity(0.9))
+                            .padding(.horizontal, AppSpacing.sm)
+                            .padding(.vertical, 3)
+                            .background(Capsule().fill(.white.opacity(0.22)))
+                    }
+                }
+
+                Text("Create your own or practice saved ones")
+                    .font(AppFonts.body(13))
+                    .foregroundStyle(.white.opacity(0.8))
+            }
+
+            Spacer(minLength: 0)
+
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundStyle(.white.opacity(0.7))
+        }
+        .padding(.horizontal, AppSpacing.xl)
+        .padding(.vertical, AppSpacing.lg)
+        .frame(maxWidth: .infinity)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.xl)
+                .fill(
+                    LinearGradient(
+                        colors: [AppColors.accent300, AppColors.accent700],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .cardShadow()
+        }
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.xl))
+    }
+}
+
+// MARK: - Category Card
+
+private struct CategoryCard: View {
+    let category: ScenarioCategory
+    let count: Int
+
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            // Decorative arcs in background (bottom-trailing)
+            GeometryReader { geo in
+                ZStack {
+                    Circle()
+                        .fill(.white.opacity(0.12))
+                        .frame(width: geo.size.width * 0.8)
+                        .offset(x: geo.size.width * 0.45, y: geo.size.height * 0.35)
+                    Circle()
+                        .fill(.white.opacity(0.08))
+                        .frame(width: geo.size.width * 0.55)
+                        .offset(x: geo.size.width * 0.6, y: geo.size.height * 0.6)
+                }
+            }
+            .clipped()
+
+            VStack(alignment: .leading, spacing: 0) {
+                // Title + subtitle
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(category.rawValue)
+                        .font(AppFonts.title(17, weight: .bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+
+                    Text(category.subtitle)
+                        .font(AppFonts.body(12))
+                        .foregroundStyle(.white.opacity(0.8))
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: AppSpacing.lg)
+
+                // Count badge
+                HStack {
+                    Spacer(minLength: 0)
+                    ZStack {
+                        Circle()
+                            .fill(.white.opacity(0.25))
+                            .frame(width: 34, height: 34)
+                        Text("\(count)")
+                            .font(AppFonts.label(14, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
+                }
+            }
+            .padding(AppSpacing.base)
+        }
+        .aspectRatio(0.88, contentMode: .fit)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.xl)
+                .fill(
+                    LinearGradient(
+                        colors: category.gradientColors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .cardShadow()
+        }
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.xl))
+    }
+}
+
+// MARK: - Scenario Row
+
+struct ScenarioRow: View {
+    let scenario: Scenario
+
+    var body: some View {
+        HStack(spacing: AppSpacing.sm) {
+            Image(systemName: scenario.sfSymbol)
+                .font(.system(size: 20, weight: .semibold))
+                .foregroundStyle(AppColors.primary)
+                .frame(width: 44, height: 48, alignment: .center)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                HStack(alignment: .center, spacing: AppSpacing.sm) {
+                    Text(scenario.title)
+                        .font(AppFonts.title(15))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .lineLimit(1)
+
+                    TimeBadge(duration: scenario.durationRange)
+                }
+
+                Text(scenario.description)
+                    .font(AppFonts.body(13))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .padding(AppSpacing.base)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(AppColors.surface)
+                .subtleShadow()
+        }
+    }
+}
+
+// MARK: - Custom Scenario Rows (shared)
+
+struct CustomScenarioCreateRow: View {
     var body: some View {
         HStack(spacing: AppSpacing.sm) {
             ZStack {
@@ -461,7 +599,7 @@ private struct CustomScenarioCreateRow: View {
     }
 }
 
-private struct CustomScenarioRow: View {
+struct CustomScenarioSavedRow: View {
     let scenario: CustomScenario
 
     private var displayTitle: String {
@@ -473,7 +611,7 @@ private struct CustomScenarioRow: View {
         HStack(spacing: AppSpacing.sm) {
             Image(systemName: "sparkles")
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(AppColors.primary)
+                .foregroundStyle(AppColors.accent)
                 .frame(width: 44, height: 48, alignment: .center)
                 .accessibilityHidden(true)
 
@@ -493,47 +631,6 @@ private struct CustomScenarioRow: View {
                 }
 
                 Text(scenario.trimmedPrompt)
-                    .font(AppFonts.body(13))
-                    .foregroundStyle(AppColors.textSecondary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Spacer(minLength: 0)
-        }
-        .padding(AppSpacing.base)
-        .background {
-            RoundedRectangle(cornerRadius: AppRadius.lg)
-                .fill(AppColors.surface)
-                .subtleShadow()
-        }
-    }
-}
-
-// MARK: - Scenario Row
-
-private struct ScenarioRow: View {
-    let scenario: Scenario
-
-    var body: some View {
-        HStack(spacing: AppSpacing.sm) {
-            Image(systemName: scenario.sfSymbol)
-                .font(.system(size: 20, weight: .semibold))
-                .foregroundStyle(AppColors.primary)
-                .frame(width: 44, height: 48, alignment: .center)
-                .accessibilityHidden(true)
-
-            VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                HStack(alignment: .center, spacing: AppSpacing.sm) {
-                    Text(scenario.title)
-                        .font(AppFonts.title(15))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(1)
-
-                    TimeBadge(duration: scenario.durationRange)
-                }
-
-                Text(scenario.description)
                     .font(AppFonts.body(13))
                     .foregroundStyle(AppColors.textSecondary)
                     .lineLimit(2)

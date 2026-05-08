@@ -66,7 +66,8 @@ struct CustomScenario: Identifiable, Hashable, Codable {
                     title: "Listen and adapt",
                     description: "Adjust your pacing to match what the moment is asking for."
                 ),
-            ]
+            ],
+            category: .dailyLife
         )
     }
 }

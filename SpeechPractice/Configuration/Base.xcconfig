@@ -2,8 +2,7 @@ IPHONEOS_DEPLOYMENT_TARGET = 17.0
 MARKETING_VERSION = 0.1.0
 CURRENT_PROJECT_VERSION = 1
 
-// Empty defaults so $(HUME_*) in build settings always expands (optional overrides in Secrets.local.xcconfig).
-HUME_API_KEY =
+// Empty default so $(HUME_CONFIG_ID) in build settings always expands (optional override in Secrets.local.xcconfig).
 HUME_CONFIG_ID =
 
 #include? "Secrets.local.xcconfig"

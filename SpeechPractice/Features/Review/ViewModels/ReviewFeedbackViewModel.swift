@@ -85,21 +85,33 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let seededPreviewIDs: Set<UUID> = [
+        UUID(uuidString: "8E929020-36E5-4C37-94E0-FE0EEDBC9121"),
+        UUID(uuidString: "27391035-C42C-4E13-9C8C-1F3BE21E7582"),
+        UUID(uuidString: "7F7F0F9D-D9B3-4987-94E6-B52E22280BBA"),
+    ].compactMap { $0 }.reduce(into: Set<UUID>()) { result, id in
+        result.insert(id)
+    }
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
             do {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
-                return sortedByMostRecent(records)
+                let productionRecords = productionOnly(records)
+                if productionRecords.count != records.count {
+                    save(productionRecords)
+                }
+                return sortedByMostRecent(productionRecords)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
+                // Stored data is unreadable (schema change or corruption) - clear only the broken current store.
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
             }
         }
 
-        let records: [ReviewSessionRecord] = loadLegacyRecords()
-        save(records)
+        let records: [ReviewSessionRecord] = productionOnly(loadLegacyRecords())
+        if records.isEmpty == false {
+            save(records)
+        }
         return records
     }
 
@@ -118,7 +130,7 @@ enum ReviewHistoryStore {
         )
         let record = ReviewSessionRecord(summary: summary, feedback: feedback)
 
-        let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + records)
+        let updatedRecords: [ReviewSessionRecord] = sortedByMostRecent([record] + productionOnly(records))
         save(updatedRecords)
         return updatedRecords
     }
@@ -137,7 +149,7 @@ enum ReviewHistoryStore {
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return []
         }
 
         do {
@@ -147,9 +159,9 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
+            // Legacy data is unreadable - clear it without creating fake history rows.
             UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            return []
         }
     }
 
@@ -157,6 +169,10 @@ enum ReviewHistoryStore {
         records.sorted { lhs, rhs in
             lhs.summary.completedAt > rhs.summary.completedAt
         }
+    }
+
+    private static func productionOnly(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+        records.filter { seededPreviewIDs.contains($0.id) == false }
     }
 
     private static func sortedByMostRecent(_ summaries: [ReviewSessionSummary]) -> [ReviewSessionSummary] {

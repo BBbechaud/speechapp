@@ -31,10 +31,10 @@ enum ScenarioCategory: String, CaseIterable, Identifiable, Hashable {
 
     var gradientColors: [Color] {
         switch self {
-        case .romantic:  return [Color(hex: "#F48FB1"), Color(hex: "#E8632A")]
-        case .career:    return [Color(hex: "#9C8BDF"), Color(hex: "#3D2F87")]
+        case .romantic:  return [Color(hex: "#E91E63"), Color(hex: "#F48FB1")]
+        case .career:    return [Color(hex: "#7F9BFF"), Color(hex: "#3C58C9")]
         case .social:    return [Color(hex: "#4ECBA0"), Color(hex: "#1A7A5A")]
-        case .dailyLife: return [Color(hex: "#F4C76A"), Color(hex: "#D48A20")]
+        case .dailyLife: return [Color(hex: "#F48FB1"), Color(hex: "#E8632A")]
         }
     }
 }

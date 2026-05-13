@@ -73,28 +73,24 @@ struct CustomScenarioEditorScreen: View {
                     .offset(y: appeared ? 0 : 10)
                     .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.2), value: appeared)
 
+                saveButton
+                    .opacity(appeared ? 1 : 0)
+                    .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.25), value: appeared)
+
                 if isEditing {
                     deleteButton
                         .opacity(appeared ? 1 : 0)
-                        .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.25), value: appeared)
+                        .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.3), value: appeared)
                 }
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.base)
-            .padding(.bottom, 120)
+            .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
         .navigationTitle(isEditing ? "Edit Scenario" : "Create Scenario")
         .navigationBarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge: .bottom) {
-            saveButton
-                .padding(.horizontal, AppSpacing.base)
-                .padding(.vertical, AppSpacing.md)
-                .background(AppColors.background)
-                .opacity(appeared ? 1 : 0)
-                .animation(.spring(response: 0.4, dampingFraction: 0.8).delay(0.3), value: appeared)
-        }
         .alert("Delete this scenario?", isPresented: $showDeleteConfirm) {
             Button("Delete", role: .destructive) {
                 handleDelete()
@@ -194,7 +190,7 @@ struct CustomScenarioEditorScreen: View {
     private var promptSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.sm) {
             sectionHeader(
-                title: "The Prompt",
+                title: "Describe the scenario",
                 trailing: "\(prompt.count)/\(CustomScenarioLimits.promptLimit)"
             )
 

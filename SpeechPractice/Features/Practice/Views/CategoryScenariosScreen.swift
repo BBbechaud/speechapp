@@ -39,7 +39,7 @@ struct CategoryScenariosScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle(category.rawValue)
+        .navigationTitle("Choose scenario")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(AppColors.background, for: .navigationBar)
         .onAppear {
@@ -66,16 +66,13 @@ struct CategoryScenariosScreen: View {
             }
             .clipped()
 
-            HStack(spacing: AppSpacing.md) {
-                ZStack {
-                    Circle()
-                        .fill(.white.opacity(0.2))
-                        .frame(width: 48, height: 48)
-                    Image(systemName: category.sfSymbol)
-                        .font(.system(size: 20, weight: .semibold))
-                        .foregroundStyle(.white)
-                }
-                .accessibilityHidden(true)
+            HStack(spacing: AppSpacing.sm) {
+                Image(systemName: category.sfSymbol)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 24, alignment: .leading)
+                    .padding(.trailing, AppSpacing.xs)
+                    .accessibilityHidden(true)
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(category.rawValue)
@@ -88,18 +85,8 @@ struct CategoryScenariosScreen: View {
                 }
 
                 Spacer(minLength: 0)
-
-                ZStack {
-                    Circle()
-                        .fill(.white.opacity(0.2))
-                        .frame(width: 36, height: 36)
-                    Text("\(scenarios.count)")
-                        .font(AppFonts.label(15, weight: .bold))
-                        .foregroundStyle(.white)
-                }
-                .accessibilityLabel("\(scenarios.count) scenarios")
             }
-            .padding(.horizontal, AppSpacing.xl)
+            .padding(.horizontal, AppSpacing.lg)
             .padding(.vertical, AppSpacing.lg)
         }
         .frame(maxWidth: .infinity)

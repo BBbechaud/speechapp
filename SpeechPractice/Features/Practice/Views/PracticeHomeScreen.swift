@@ -17,7 +17,7 @@ struct PracticeHomeScreen: View {
                 scenarioListSection
             }
             .padding(.horizontal, AppSpacing.base)
-            .padding(.bottom, AppSpacing.xxxl)
+            .padding(.bottom, AppSpacing.xxl)
         }
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
@@ -97,45 +97,29 @@ struct PracticeHomeScreen: View {
                     }
 
                     VStack(alignment: .leading, spacing: AppSpacing.md) {
-                        HStack(alignment: .center) {
-                            HStack(spacing: AppSpacing.md) {
-                                // Count badge
-                                ZStack {
-                                    Circle()
-                                        .fill(.white)
-                                        .frame(width: 44, height: 44)
-                                    Text("\(DailyChallenge.all.count)")
-                                        .font(AppFonts.display(22, weight: .bold))
-                                        .foregroundStyle(AppColors.primary)
-                                }
-
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text("Today's challenges")
-                                        .font(AppFonts.label(11, weight: .semibold))
-                                        .foregroundStyle(.white.opacity(0.7))
-                                        .textCase(.uppercase)
-                                        .tracking(0.4)
-
-                                    Text("Sharpen your skills")
-                                        .font(AppFonts.title(17, weight: .bold))
-                                        .foregroundStyle(.white)
-                                }
-                            }
-
-                            Spacer(minLength: 0)
-
-                            // Arrow circle
+                        HStack(spacing: AppSpacing.md) {
+                            // Count badge
                             ZStack {
                                 Circle()
-                                    .fill(.white.opacity(0.2))
-                                    .frame(width: 34, height: 34)
-                                Image(systemName: "arrow.right")
-                                    .font(.system(size: 13, weight: .bold))
+                                    .fill(.white)
+                                    .frame(width: 44, height: 44)
+                                Text("\(DailyChallenge.all.count)")
+                                    .font(AppFonts.display(22, weight: .bold))
+                                    .foregroundStyle(AppColors.primary)
+                            }
+
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Today's challenges")
+                                    .font(AppFonts.label(11, weight: .semibold))
+                                    .foregroundStyle(.white.opacity(0.7))
+                                    .textCase(.uppercase)
+                                    .tracking(0.4)
+
+                                Text("Sharpen your skills")
+                                    .font(AppFonts.title(17, weight: .bold))
                                     .foregroundStyle(.white)
                             }
-                            .accessibilityHidden(true)
                         }
-
                         // Category pills
                         HStack(spacing: AppSpacing.sm) {
                             ForEach(DailyChallenge.all, id: \.id) { challenge in
@@ -181,7 +165,7 @@ struct PracticeHomeScreen: View {
     private var scenarioListSection: some View {
         VStack(alignment: .leading, spacing: AppSpacing.base) {
             // Section header
-            Text("Explore Scenarios")
+            Text("Practice Scenarios")
                 .font(AppFonts.label(18, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
                 .opacity(appeared ? 1 : 0)
@@ -406,12 +390,6 @@ private struct CustomScenariosHeroCard: View {
                     .font(AppFonts.body(13))
                     .foregroundStyle(.white.opacity(0.8))
             }
-
-            Spacer(minLength: 0)
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 13, weight: .bold))
-                .foregroundStyle(.white.opacity(0.7))
         }
         .padding(.horizontal, AppSpacing.xl)
         .padding(.vertical, AppSpacing.lg)
@@ -420,7 +398,7 @@ private struct CustomScenariosHeroCard: View {
             RoundedRectangle(cornerRadius: AppRadius.xl)
                 .fill(
                     LinearGradient(
-                        colors: [AppColors.accent300, AppColors.accent700],
+                        colors: [Color(hex: "#F4C76A"), Color(hex: "#D48A20")],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -464,7 +442,7 @@ private struct CategoryCard: View {
 
                     Text(category.subtitle)
                         .font(AppFonts.body(12))
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundStyle(.white)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -476,8 +454,9 @@ private struct CategoryCard: View {
                     Spacer(minLength: 0)
                     ZStack {
                         Circle()
-                            .fill(.white.opacity(0.25))
+                            .fill(AppColors.accent)
                             .frame(width: 34, height: 34)
+                            .shadow(color: .white.opacity(0.20), radius: 1, x: 0, y: 0)
                         Text("\(count)")
                             .font(AppFonts.label(14, weight: .bold))
                             .foregroundStyle(.white)
@@ -486,7 +465,7 @@ private struct CategoryCard: View {
             }
             .padding(AppSpacing.base)
         }
-        .aspectRatio(0.88, contentMode: .fit)
+        .aspectRatio(0.95, contentMode: .fit)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xl)
                 .fill(
@@ -561,19 +540,10 @@ struct CustomScenarioCreateRow: View {
             .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                HStack(alignment: .center, spacing: AppSpacing.sm) {
-                    Text("Create Custom Scenario")
-                        .font(AppFonts.title(15))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .lineLimit(1)
-
-                    Text("Yours")
-                        .font(AppFonts.label(11, weight: .semibold))
-                        .foregroundStyle(AppColors.primary)
-                        .padding(.horizontal, AppSpacing.sm)
-                        .padding(.vertical, 3)
-                        .background(AppColors.primarySubtle, in: Capsule())
-                }
+                Text("Create Custom Scenario")
+                    .font(AppFonts.title(15))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(1)
 
                 Text("Tailor a practice scenario to a specific situation you have in mind.")
                     .font(AppFonts.body(13))

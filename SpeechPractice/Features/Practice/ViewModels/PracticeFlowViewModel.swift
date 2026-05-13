@@ -146,7 +146,7 @@ final class PracticeFlowViewModel {
         }
         if editingCustomScenarioID == id {
             editingCustomScenarioID = nil
-            popEditorRoute()
+            returnToCustomScenariosHubAfterDelete()
         }
     }
 
@@ -161,6 +161,17 @@ final class PracticeFlowViewModel {
         if let index = navigationPath.lastIndex(of: .customScenarioEditor) {
             navigationPath.removeSubrange(index...)
         }
+    }
+
+    /// After deleting from the editor, always return the user to the custom
+    /// scenarios hub rather than leaving them in a stale edit context.
+    private func returnToCustomScenariosHubAfterDelete() {
+        if let hubIndex = navigationPath.firstIndex(of: .customScenariosHub) {
+            navigationPath = Array(navigationPath.prefix(through: hubIndex))
+            return
+        }
+
+        navigationPath = [.customScenariosHub]
     }
 
     func confirmConfig() {

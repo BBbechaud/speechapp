@@ -6,19 +6,36 @@ struct ProgressScreen: View {
 
     @State private var appeared = false
 
-    private let overview = ProfileOverview(
-        streakDays: 12,
-        level: "Gold",
-        practicedMinutes: 1_110,
-        totalXP: 4_120
-    )
-
     private let skills: [ProfileSkill] = makeProfileSkills()
+
+    /// Sum of per-skill XP shown under Skills; used as account-wide total until a persistence layer exists.
+    private var totalAccountXP: Int {
+        skills.map(\.detail.totalXP).reduce(0, +)
+    }
+
+    private var overview: ProfileOverview {
+        ProfileOverview(
+            streakDays: 12,
+            level: "Gold",
+            practicedMinutes: 1_110,
+            totalXP: totalAccountXP
+        )
+    }
+
+    private static let profileMemberSince: Date = {
+        var components = DateComponents()
+        components.year = 2026
+        components.month = 4
+        components.day = 1
+        return Calendar.current.date(from: components) ?? Date()
+    }()
 
     var body: some View {
         ScrollView {
             VStack(spacing: AppSpacing.xl) {
                 header
+                ProfileIdentitySection(memberSince: Self.profileMemberSince)
+                ProfileTotalAccountXPSection(totalXP: totalAccountXP)
                 overviewSection
                 profileTabs
                 selectedTabContent
@@ -275,8 +292,6 @@ private struct SettingsScreen: View {
                         Spacer()
                     }
                 }
-
-                ProfileIdentitySection()
             }
             .padding(.horizontal, AppSpacing.base)
             .padding(.top, AppSpacing.sm)
@@ -288,23 +303,117 @@ private struct SettingsScreen: View {
 }
 
 private struct ProfileIdentitySection: View {
+    let memberSince: Date
+
+    private static let memberSinceFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "MMM yyyy"
+        return formatter
+    }()
+
     var body: some View {
-        VStack(spacing: AppSpacing.md) {
-            ProfileAvatar()
+        HStack(alignment: .center, spacing: AppSpacing.md) {
+            ProfileAvatarCompact()
 
-            VStack(spacing: AppSpacing.xs) {
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
                 Text("Brian Bechaud")
-                    .font(AppFonts.title(28, weight: .semibold))
+                    .font(AppFonts.title(22, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
 
-                Text("Communication Enthusiast")
-                    .font(AppFonts.body(16))
+                Text("Member since \(Self.memberSinceFormatter.string(from: memberSince))")
+                    .font(AppFonts.body(15))
                     .foregroundStyle(AppColors.textSecondary)
-                    .multilineTextAlignment(.center)
+                    .multilineTextAlignment(.leading)
+            }
+
+            Spacer(minLength: 0)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+}
+
+private struct ProfileTotalAccountXPSection: View {
+    let totalXP: Int
+
+    private static let numberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+
+    private var breakdown: (level: Int, xpInLevel: Int, xpToAdvance: Int) {
+        accountLevelBreakdown(totalXP: totalXP)
+    }
+
+    private var progress: CGFloat {
+        let need = breakdown.xpToAdvance
+        guard need > 0 else {
+            return 0
+        }
+
+        return min(1, max(0, CGFloat(breakdown.xpInLevel) / CGFloat(need)))
+    }
+
+    private var formattedTotalXP: String {
+        Self.numberFormatter.string(from: NSNumber(value: totalXP)) ?? "\(totalXP)"
+    }
+
+    var body: some View {
+        let state = breakdown
+
+        VStack(alignment: .leading, spacing: AppSpacing.md) {
+            HStack(alignment: .firstTextBaseline) {
+                Text("Level \(state.level)")
+                    .font(AppFonts.title(18, weight: .bold))
+                    .foregroundStyle(AppColors.textPrimary)
+
+                Spacer(minLength: AppSpacing.md)
+
+                HStack(spacing: AppSpacing.xs) {
+                    Image(systemName: "bolt.fill")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(AppColors.accent)
+                        .accessibilityHidden(true)
+
+                    Text("\(formattedTotalXP) Total XP")
+                        .font(AppFonts.body(16, weight: .semibold))
+                        .foregroundStyle(AppColors.textPrimary)
+                        .monospacedDigit()
+                }
+            }
+
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                Text("\(state.xpInLevel) / \(state.xpToAdvance) XP to the next level")
+                    .font(AppFonts.label(14, weight: .bold))
+                    .foregroundStyle(AppColors.xpMetricGold)
+                    .monospacedDigit()
+
+                SkillXPBarWithEndCap(
+                    systemImage: "bolt.fill",
+                    tint: AppColors.accent,
+                    progress: progress
+                )
+                .padding(.top, -AppSpacing.xs / 2)
             }
         }
-        .frame(maxWidth: .infinity)
+        .padding(AppSpacing.lg)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .fill(AppColors.surface)
+                .cardShadow()
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: AppRadius.lg)
+                .strokeBorder(AppColors.separator.opacity(0.72), lineWidth: 1)
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "Account level \(state.level). \(formattedTotalXP) total experience. \(state.xpInLevel) of \(state.xpToAdvance) experience to the next level."
+        )
     }
 }
 
@@ -423,6 +532,31 @@ private func profileSkillDetail(for skill: CommunicationSkill) -> ProfileSkillDe
     }
 }
 
+/// XP required to advance the account from `level` to `level + 1`.
+private func accountXPToAdvanceFromLevel(_ level: Int) -> Int {
+    max(100, 150 + level * 35)
+}
+
+private func accountLevelBreakdown(totalXP: Int) -> (level: Int, xpInLevel: Int, xpToAdvance: Int) {
+    var xp = max(0, totalXP)
+    var level = 1
+
+    while true {
+        let need = accountXPToAdvanceFromLevel(level)
+        if xp < need {
+            return (level, xp, need)
+        }
+
+        xp -= need
+        level += 1
+
+        if level > 10_000 {
+            let need = accountXPToAdvanceFromLevel(level)
+            return (level, xp, need)
+        }
+    }
+}
+
 private struct ProfileOverview {
     let streakDays: Int
     let level: String
@@ -489,38 +623,41 @@ private struct ProfileSkillDetail: Identifiable {
     }
 }
 
-private struct ProfileAvatar: View {
+private struct ProfileAvatarCompact: View {
+    private let outerDiameter: CGFloat = 64
+    private let innerDiameter: CGFloat = 54
+
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack(alignment: .bottomTrailing) {
             ZStack {
                 Circle()
-                    .fill(AppColors.primary.opacity(0.72))
-                    .frame(width: 112, height: 112)
+                    .fill(AppColors.primaryMedium)
+                    .frame(width: outerDiameter, height: outerDiameter)
 
                 Circle()
-                    .fill(Color(hex: "#1263A4"))
-                    .frame(width: 98, height: 98)
+                    .fill(AppColors.accent)
+                    .frame(width: innerDiameter, height: innerDiameter)
 
                 Text("B")
-                    .font(.system(size: 58, weight: .regular, design: .rounded))
-                    .foregroundStyle(.white)
+                    .font(.system(size: 28, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.white)
             }
             .overlay {
                 Circle()
-                    .strokeBorder(AppColors.surface, lineWidth: 5)
-                    .frame(width: 102, height: 102)
+                    .strokeBorder(AppColors.surface, lineWidth: 3)
+                    .frame(width: innerDiameter + 4, height: innerDiameter + 4)
             }
 
             Text("PRO")
-                .font(AppFonts.label(12, weight: .bold))
+                .font(AppFonts.label(9, weight: .bold))
                 .foregroundStyle(.white)
-                .padding(.horizontal, AppSpacing.md)
-                .padding(.vertical, AppSpacing.xs)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
                 .background(AppColors.primary, in: Capsule())
-                .shadow(color: AppColors.primary.opacity(0.28), radius: 8, x: 0, y: 4)
-                .offset(y: AppSpacing.sm)
+                .shadow(color: AppColors.primary.opacity(0.25), radius: 4, x: 0, y: 2)
+                .offset(x: 2, y: 2)
         }
-        .padding(.bottom, AppSpacing.sm)
+        .frame(width: outerDiameter, height: outerDiameter)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Brian Bechaud profile avatar, pro member")
     }

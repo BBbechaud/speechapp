@@ -142,7 +142,7 @@ struct PracticeSessionScreen: View {
             }
             .frame(maxWidth: .infinity)
             .frame(height: 56)
-            .background(AppColors.textPrimary, in: RoundedRectangle(cornerRadius: AppRadius.xxl))
+            .background(AppColors.primary, in: RoundedRectangle(cornerRadius: AppRadius.xxl))
         }
         .buttonStyle(PressButtonStyle())
         .accessibilityLabel("End practice")
@@ -196,11 +196,11 @@ private struct StopGlyphView: View {
     var body: some View {
         ZStack {
             Circle()
-                .strokeBorder(AppColors.primary, lineWidth: 2)
+                .strokeBorder(AppColors.surface, lineWidth: 2)
                 .frame(width: 24, height: 24)
 
             RoundedRectangle(cornerRadius: 2)
-                .fill(AppColors.primary)
+                .fill(AppColors.surface)
                 .frame(width: 9, height: 9)
         }
     }

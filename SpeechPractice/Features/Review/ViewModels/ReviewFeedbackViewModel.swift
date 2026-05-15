@@ -90,16 +90,23 @@ enum ReviewHistoryStore {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
             do {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
-                return sortedByMostRecent(records)
+                return removingPersistedPreviewSeeds(from: records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
+                // Stored data is unreadable; never replace a real user's history with preview rows.
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+                return migrateLegacyRecordsIfAvailable()
             }
         }
 
+        return migrateLegacyRecordsIfAvailable()
+    }
+
+    private static func migrateLegacyRecordsIfAvailable() -> [ReviewSessionRecord] {
         let records: [ReviewSessionRecord] = loadLegacyRecords()
-        save(records)
+        if records.isEmpty == false {
+            save(records)
+            UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+        }
         return records
     }
 
@@ -137,7 +144,7 @@ enum ReviewHistoryStore {
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return []
         }
 
         do {
@@ -145,11 +152,44 @@ enum ReviewHistoryStore {
             let records: [ReviewSessionRecord] = summaries.map { summary in
                 ReviewSessionRecord(summary: summary, feedback: feedback(for: summary))
             }
-            return sortedByMostRecent(records)
+            return sortedByMostRecent(records.filter { isPreviewSeedRecord($0) == false })
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
             UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            return []
+        }
+    }
+
+    private static func removingPersistedPreviewSeeds(from records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {
+        let scrubbedRecords: [ReviewSessionRecord] = sortedByMostRecent(
+            records.filter { isPreviewSeedRecord($0) == false }
+        )
+
+        guard scrubbedRecords.count != records.count else {
+            return scrubbedRecords
+        }
+
+        if scrubbedRecords.isEmpty {
+            UserDefaults.standard.removeObject(forKey: recordsStorageKey)
+        } else {
+            save(scrubbedRecords)
+        }
+
+        return scrubbedRecords
+    }
+
+    private static func isPreviewSeedRecord(_ record: ReviewSessionRecord) -> Bool {
+        switch record.summary.id.uuidString {
+        case "8E929020-36E5-4C37-94E0-FE0EEDBC9121":
+            return record.summary.scenarioTitle == "The Big Pitch"
+                && record.summary.personaName == "Sarah"
+        case "27391035-C42C-4E13-9C8C-1F3BE21E7582":
+            return record.summary.scenarioTitle == "Casual Coffee"
+                && record.summary.personaName == "Mike"
+        case "7F7F0F9D-D9B3-4987-94E6-B52E22280BBA":
+            return record.summary.scenarioTitle == "Handling Feedback"
+                && record.summary.personaName == "Chloe"
+        default:
+            return false
         }
     }
 

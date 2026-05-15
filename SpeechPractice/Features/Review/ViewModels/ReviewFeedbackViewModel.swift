@@ -94,10 +94,14 @@ enum ReviewHistoryStore {
             } catch {
                 // Stored data is unreadable; never replace a real user's history with preview rows.
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                return []
+                return migrateLegacyRecordsIfAvailable()
             }
         }
 
+        return migrateLegacyRecordsIfAvailable()
+    }
+
+    private static func migrateLegacyRecordsIfAvailable() -> [ReviewSessionRecord] {
         let records: [ReviewSessionRecord] = loadLegacyRecords()
         if records.isEmpty == false {
             save(records)

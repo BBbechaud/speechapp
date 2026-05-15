@@ -6,9 +6,16 @@ struct PracticeHomeScreen: View {
 
     @State private var appeared = false
 
+    /// Placeholder until streak and account level are loaded from persistence.
+    private let streakDays = 10
+    private let accountLevel = 7
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppSpacing.base) {
+                practiceStatusHeader
+                    .padding(.bottom, AppSpacing.sm)
+
                 dailyChallengesSection
                     .opacity(appeared ? 1 : 0)
                     .offset(y: appeared ? 0 : 12)
@@ -17,6 +24,7 @@ struct PracticeHomeScreen: View {
                 scenarioListSection
             }
             .padding(.horizontal, AppSpacing.base)
+            .padding(.top, AppSpacing.sm)
             .padding(.bottom, AppSpacing.xxl)
         }
         .background(AppColors.background)
@@ -61,6 +69,20 @@ struct PracticeHomeScreen: View {
         .onAppear {
             appeared = true
         }
+    }
+
+    // MARK: - Header
+
+    private var practiceStatusHeader: some View {
+        HStack {
+            Spacer(minLength: 0)
+
+            HStack(spacing: AppSpacing.sm) {
+                PracticeStreakBadge(days: streakDays)
+                PracticeLevelBadge(level: accountLevel)
+            }
+        }
+        .frame(maxWidth: .infinity)
     }
 
     // MARK: - Daily Challenges
@@ -200,6 +222,54 @@ struct PracticeHomeScreen: View {
                 }
             }
         }
+    }
+}
+
+// MARK: - Practice status badges
+
+private struct PracticeStreakBadge: View {
+    let days: Int
+
+    var body: some View {
+        HStack(spacing: AppSpacing.xs) {
+            Image(systemName: "flame.fill")
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(AppColors.primary)
+                .accessibilityHidden(true)
+
+            Text("\(days)")
+                .font(AppFonts.label(15, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+        }
+        .padding(.horizontal, AppSpacing.md)
+        .padding(.vertical, AppSpacing.sm)
+        .background(AppColors.surface, in: Capsule())
+        .subtleShadow()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(days) day practice streak")
+    }
+}
+
+private struct PracticeLevelBadge: View {
+    let level: Int
+
+    var body: some View {
+        HStack(spacing: AppSpacing.xs) {
+            Text("LVL")
+                .font(AppFonts.label(11, weight: .bold))
+                .foregroundStyle(AppColors.accent)
+                .tracking(0.4)
+
+            Text("\(level)")
+                .font(AppFonts.label(15, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+        }
+        .padding(.horizontal, AppSpacing.md)
+        .padding(.vertical, AppSpacing.sm)
+        .background(AppColors.surface, in: Capsule())
+        .subtleShadow()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Level \(level)")
     }
 }
 

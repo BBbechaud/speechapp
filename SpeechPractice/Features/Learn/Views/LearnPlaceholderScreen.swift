@@ -73,6 +73,7 @@ struct LearnScreen: View {
         .frame(maxWidth: .infinity)
         .grayscale(0.82)
         .opacity(0.46)
+        .blur(radius: 5)
     }
 
     private var comingSoonOverlay: some View {

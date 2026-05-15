@@ -22,19 +22,19 @@ struct ProgressScreen: View {
         )
     }
 
-    private static let profileMemberSince: Date = {
-        var components = DateComponents()
-        components.year = 2026
-        components.month = 4
-        components.day = 1
-        return Calendar.current.date(from: components) ?? Date()
-    }()
+    private var accountLevel: Int {
+        accountLevelBreakdown(totalXP: totalAccountXP).level
+    }
+
+    private var speakerTitle: String {
+        accountSpeakerTitle(level: accountLevel)
+    }
 
     var body: some View {
         ScrollView {
             VStack(spacing: AppSpacing.xl) {
                 header
-                ProfileIdentitySection(memberSince: Self.profileMemberSince)
+                ProfileIdentitySection(speakerTitle: speakerTitle)
                 ProfileTotalAccountXPSection(totalXP: totalAccountXP)
                 overviewSection
                 profileTabs
@@ -303,14 +303,7 @@ private struct SettingsScreen: View {
 }
 
 private struct ProfileIdentitySection: View {
-    let memberSince: Date
-
-    private static let memberSinceFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.dateFormat = "MMM yyyy"
-        return formatter
-    }()
+    let speakerTitle: String
 
     var body: some View {
         HStack(alignment: .center, spacing: AppSpacing.md) {
@@ -322,7 +315,7 @@ private struct ProfileIdentitySection: View {
                     .foregroundStyle(AppColors.textPrimary)
                     .multilineTextAlignment(.leading)
 
-                Text("Member since \(Self.memberSinceFormatter.string(from: memberSince))")
+                Text(speakerTitle)
                     .font(AppFonts.body(15))
                     .foregroundStyle(AppColors.textSecondary)
                     .multilineTextAlignment(.leading)
@@ -380,19 +373,26 @@ private struct ProfileTotalAccountXPSection: View {
 
                     Text("\(formattedTotalXP) Total XP")
                         .font(AppFonts.body(16, weight: .semibold))
-                        .foregroundStyle(AppColors.textPrimary)
+                        .foregroundStyle(AppColors.xpMetricGold)
                         .monospacedDigit()
                 }
             }
 
-            VStack(alignment: .leading, spacing: AppSpacing.xs) {
-                Text("\(state.xpInLevel) / \(state.xpToAdvance) XP to the next level")
-                    .font(AppFonts.label(14, weight: .bold))
-                    .foregroundStyle(AppColors.xpMetricGold)
-                    .monospacedDigit()
+            VStack(alignment: .leading, spacing: 0) {
+                HStack(alignment: .firstTextBaseline) {
+                    Spacer(minLength: AppSpacing.md)
+
+                    Text("\(state.xpInLevel) / \(state.xpToAdvance) XP")
+                        .font(AppFonts.label(14, weight: .bold))
+                        .foregroundStyle(AppColors.xpMetricGold)
+                        .monospacedDigit()
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
+                .padding(.top, -AppSpacing.xs)
 
                 SkillXPBarWithEndCap(
-                    systemImage: "bolt.fill",
+                    endCapText: "\(state.level + 1)",
                     tint: AppColors.accent,
                     progress: progress
                 )
@@ -412,7 +412,7 @@ private struct ProfileTotalAccountXPSection: View {
         }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(
-            "Account level \(state.level). \(formattedTotalXP) total experience. \(state.xpInLevel) of \(state.xpToAdvance) experience to the next level."
+            "Account level \(state.level). \(formattedTotalXP) total experience. \(state.xpInLevel) of \(state.xpToAdvance) experience toward level \(state.level + 1)."
         )
     }
 }
@@ -529,6 +529,21 @@ private func profileSkillDetail(for skill: CommunicationSkill) -> ProfileSkillDe
             weakness: "Closings can be more decisive when the conversation needs a clear next step.",
             trendPoints: [56, 59, 63, 67, 70, 73]
         )
+    }
+}
+
+private func accountSpeakerTitle(level: Int) -> String {
+    switch level {
+    case ..<3:
+        return "Novice speaker"
+    case ..<6:
+        return "Developing speaker"
+    case ..<9:
+        return "Confident speaker"
+    case ..<13:
+        return "Skilled speaker"
+    default:
+        return "Expert speaker"
     }
 }
 
@@ -687,9 +702,24 @@ private struct OverviewMetricRow: View {
 }
 
 private struct SkillXPBarWithEndCap: View {
-    let systemImage: String
+    let systemImage: String?
+    let endCapText: String?
     let tint: Color
     let progress: CGFloat
+
+    init(systemImage: String, tint: Color, progress: CGFloat) {
+        self.systemImage = systemImage
+        self.endCapText = nil
+        self.tint = tint
+        self.progress = progress
+    }
+
+    init(endCapText: String, tint: Color, progress: CGFloat) {
+        self.systemImage = nil
+        self.endCapText = endCapText
+        self.tint = tint
+        self.progress = progress
+    }
 
     private let barHeight: CGFloat = 10
     private let circleSize: CGFloat = 26
@@ -733,9 +763,18 @@ private struct SkillXPBarWithEndCap: View {
                     Circle()
                         .fill(AppColors.separator)
 
-                    Image(systemName: systemImage)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(tint)
+                    if let endCapText {
+                        Text(endCapText)
+                            .font(AppFonts.label(11, weight: .bold))
+                            .foregroundStyle(tint)
+                            .monospacedDigit()
+                            .minimumScaleFactor(0.65)
+                            .lineLimit(1)
+                    } else if let systemImage {
+                        Image(systemName: systemImage)
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(tint)
+                    }
                 }
                 .frame(width: circleSize, height: circleSize)
                 .overlay {

@@ -9,6 +9,7 @@ import Observation
 final class CustomScenarioStore {
     private let userDefaults: UserDefaults
     private let storageKey: String
+    private let unreadableBackupKey: String
 
     private(set) var scenarios: [CustomScenario] = []
 
@@ -18,6 +19,7 @@ final class CustomScenarioStore {
     ) {
         self.userDefaults = userDefaults
         self.storageKey = storageKey
+        self.unreadableBackupKey = "\(storageKey).unreadableBackup"
         load()
     }
 
@@ -61,12 +63,20 @@ final class CustomScenarioStore {
             let decoded = try JSONDecoder().decode([CustomScenario].self, from: data)
             scenarios = decoded.sorted(by: { $0.updatedAt > $1.updatedAt })
         } catch {
-            // Local cache is corrupt; reset to empty so the app stays usable.
-            // We surface this loudly in debug to catch schema drift early.
+            // Keep the original blob so future migrations can recover user-authored scenarios.
             assertionFailure("Failed to decode CustomScenario cache: \(error)")
+            preserveUnreadableData(data)
             scenarios = []
             userDefaults.removeObject(forKey: storageKey)
         }
+    }
+
+    private func preserveUnreadableData(_ data: Data) {
+        guard userDefaults.data(forKey: unreadableBackupKey) == nil else {
+            return
+        }
+
+        userDefaults.set(data, forKey: unreadableBackupKey)
     }
 
     private func persist() {

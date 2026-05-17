@@ -18,7 +18,7 @@ final class VoiceSessionManager: ObservableObject {
     func startSession(systemPrompt: String) async {
         let apiKey = Self.resolvedAPIKey()
         guard !apiKey.isEmpty else {
-            print("VoiceSessionManager: missing HUME_API_KEY — define in Secrets.local.xcconfig and rebuild.")
+            print("VoiceSessionManager: missing HUME_API_KEY — inject it as a local launch environment variable.")
             return
         }
 
@@ -101,13 +101,6 @@ final class VoiceSessionManager: ObservableObject {
     }
 
     private static func resolvedAPIKey() -> String {
-        if let plistValue = Bundle.main.object(forInfoDictionaryKey: "HUME_API_KEY") as? String {
-            let trimmed = plistValue.trimmingCharacters(in: .whitespacesAndNewlines)
-            if !trimmed.isEmpty,
-               !(trimmed.hasPrefix("__") && trimmed.hasSuffix("__")) {
-                return trimmed
-            }
-        }
         if let env = ProcessInfo.processInfo.environment["HUME_API_KEY"] {
             let trimmed = env.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty,

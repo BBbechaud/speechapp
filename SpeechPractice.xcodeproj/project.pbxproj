@@ -759,7 +759,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeechPractice/Configuration/RuntimeSecretsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
-				INFOPLIST_KEY_HUME_API_KEY = "$(HUME_API_KEY)";
 				INFOPLIST_KEY_HUME_CONFIG_ID = "$(HUME_CONFIG_ID)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "People Skills needs microphone access to practice conversations";
@@ -791,7 +790,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SpeechPractice/Configuration/RuntimeSecretsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Speech Practice";
-				INFOPLIST_KEY_HUME_API_KEY = "$(HUME_API_KEY)";
 				INFOPLIST_KEY_HUME_CONFIG_ID = "$(HUME_CONFIG_ID)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.education";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "People Skills needs microphone access to practice conversations";

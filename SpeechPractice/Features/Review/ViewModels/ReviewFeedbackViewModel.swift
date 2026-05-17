@@ -85,6 +85,8 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let unreadableRecordsBackupStorageKey: String = "reviewSessionRecords.unreadableBackup"
+    private static let unreadableLegacySummariesBackupStorageKey: String = "reviewSessionSummaries.unreadableBackup"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
@@ -92,14 +94,18 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
+                // Preserve the raw user history for a future migration before
+                // clearing the active key so bad data is not overwritten.
+                UserDefaults.standard.set(recordsData, forKey: unreadableRecordsBackupStorageKey)
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+                return []
             }
         }
 
         let records: [ReviewSessionRecord] = loadLegacyRecords()
-        save(records)
+        if records.isEmpty == false {
+            save(records)
+        }
         return records
     }
 
@@ -137,7 +143,7 @@ enum ReviewHistoryStore {
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return []
         }
 
         do {
@@ -147,9 +153,11 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
+            // Preserve unreadable legacy data rather than replacing it with
+            // seeded preview rows in production history.
+            UserDefaults.standard.set(data, forKey: unreadableLegacySummariesBackupStorageKey)
             UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            return []
         }
     }
 

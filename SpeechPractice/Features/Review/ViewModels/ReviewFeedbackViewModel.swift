@@ -85,6 +85,7 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let unreadableBackupSuffix: String = ".unreadableBackup"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
@@ -92,9 +93,9 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
+                preserveUnreadableData(recordsData, forKey: recordsStorageKey)
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
+                return []
             }
         }
 
@@ -137,7 +138,7 @@ enum ReviewHistoryStore {
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return []
         }
 
         do {
@@ -147,10 +148,14 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
+            preserveUnreadableData(data, forKey: legacySummariesStorageKey)
             UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            return []
         }
+    }
+
+    private static func preserveUnreadableData(_ data: Data, forKey key: String) {
+        UserDefaults.standard.set(data, forKey: key + unreadableBackupSuffix)
     }
 
     private static func sortedByMostRecent(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {

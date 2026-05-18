@@ -88,8 +88,7 @@ struct CustomScenarioEditorScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle(isEditing ? "Edit Scenario" : "Create Scenario")
-        .navigationBarTitleDisplayMode(.inline)
+        .practiceFlowScreenChrome(title: isEditing ? "Edit Scenario" : "Create Scenario")
         .scrollDismissesKeyboard(.interactively)
         .alert("Delete this scenario?", isPresented: $showDeleteConfirm) {
             Button("Delete", role: .destructive) {
@@ -351,30 +350,15 @@ private struct CustomPersonaCard: View {
 
     var body: some View {
         VStack(spacing: AppSpacing.sm) {
-            ZStack(alignment: .topTrailing) {
-                PersonaAvatarView(name: persona.name, size: 64)
-                    .overlay {
-                        if isSelected {
-                            Circle()
-                                .strokeBorder(AppColors.primary, lineWidth: 2.5)
-                        }
-                    }
-                    .scaleEffect(isSelected ? 1.04 : 1.0)
-                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
-
-                if isSelected {
-                    ZStack {
+            PersonaAvatarView(name: persona.name, size: 64)
+                .overlay {
+                    if isSelected {
                         Circle()
-                            .fill(AppColors.primary)
-                            .frame(width: 22, height: 22)
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(.white)
+                            .strokeBorder(AppColors.primary, lineWidth: 2.5)
                     }
-                    .offset(x: 4, y: -4)
-                    .transition(.scale.combined(with: .opacity))
                 }
-            }
+                .scaleEffect(isSelected ? 1.04 : 1.0)
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isSelected)
 
             Text(persona.name)
                 .font(AppFonts.title(15))

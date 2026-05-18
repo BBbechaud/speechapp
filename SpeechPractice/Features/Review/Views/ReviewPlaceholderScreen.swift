@@ -21,12 +21,6 @@ struct ReviewSessionSummaryCard: View {
             }
 
             Spacer(minLength: 0)
-
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(AppColors.textTertiary)
-                .padding(.trailing, AppSpacing.xs)
-                .accessibilityHidden(true)
         }
         .padding(AppSpacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -67,6 +61,7 @@ struct ReviewHistoryFeedbackDestination: View {
     var body: some View {
         ReviewFeedbackScreen(
             feedback: feedback,
+            closeStyle: .back,
             onClose: {
                 dismiss()
             }

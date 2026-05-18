@@ -51,6 +51,7 @@ struct ProgressScreen: View {
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(for: ReviewSessionRecord.self) { record in
             ReviewHistoryFeedbackDestination(feedback: record.feedback)
+                .background(AppColors.background.ignoresSafeArea())
         }
         .onAppear {
             appeared = true
@@ -275,19 +276,12 @@ private struct SettingsScreen: View {
                     Text("Settings")
                         .font(AppFonts.title(20, weight: .bold))
                         .foregroundStyle(AppColors.textPrimary)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
+                        .accessibilityAddTraits(.isHeader)
 
                     HStack {
-                        Button {
-                            dismiss()
-                        } label: {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 18, weight: .semibold))
-                                .foregroundStyle(AppColors.textPrimary)
-                                .frame(width: 46, height: 46)
-                        }
-                        .buttonStyle(PressButtonStyle())
-                        .accessibilityLabel("Back")
+                        NavigationBackButton(action: { dismiss() })
 
                         Spacer()
                     }
@@ -298,7 +292,9 @@ private struct SettingsScreen: View {
             .padding(.bottom, AppSpacing.xxl)
         }
         .background(AppColors.background)
+        .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .navigationSwipeBackEnabled()
     }
 }
 
@@ -357,14 +353,12 @@ private struct ProfileTotalAccountXPSection: View {
     var body: some View {
         let state = breakdown
 
-        VStack(alignment: .leading, spacing: AppSpacing.md) {
-            HStack(alignment: .firstTextBaseline) {
-                Text("Level \(state.level)")
-                    .font(AppFonts.title(18, weight: .bold))
-                    .foregroundStyle(AppColors.textPrimary)
+        VStack(alignment: .leading, spacing: AppSpacing.xs) {
+            Text("Level \(state.level)")
+                .font(AppFonts.title(18, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
 
-                Spacer(minLength: AppSpacing.md)
-
+            HStack(alignment: .firstTextBaseline, spacing: AppSpacing.sm) {
                 HStack(spacing: AppSpacing.xs) {
                     Image(systemName: "bolt.fill")
                         .font(.system(size: 14, weight: .bold))
@@ -376,28 +370,22 @@ private struct ProfileTotalAccountXPSection: View {
                         .foregroundStyle(AppColors.xpMetricGold)
                         .monospacedDigit()
                 }
+
+                Spacer(minLength: AppSpacing.sm)
+
+                Text("\(state.xpInLevel) / \(state.xpToAdvance) XP")
+                    .font(AppFonts.label(14, weight: .bold))
+                    .foregroundStyle(AppColors.xpMetricGold)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
 
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .firstTextBaseline) {
-                    Spacer(minLength: AppSpacing.md)
-
-                    Text("\(state.xpInLevel) / \(state.xpToAdvance) XP")
-                        .font(AppFonts.label(14, weight: .bold))
-                        .foregroundStyle(AppColors.xpMetricGold)
-                        .monospacedDigit()
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                }
-                .padding(.top, -AppSpacing.xs)
-
-                SkillXPBarWithEndCap(
-                    endCapText: "\(state.level + 1)",
-                    tint: AppColors.accent,
-                    progress: progress
-                )
-                .padding(.top, -AppSpacing.xs / 2)
-            }
+            SkillXPBarWithEndCap(
+                endCapText: "\(state.level + 1)",
+                tint: AppColors.accent,
+                progress: progress
+            )
         }
         .padding(AppSpacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -721,7 +709,7 @@ private struct SkillXPBarWithEndCap: View {
         self.progress = progress
     }
 
-    private let barHeight: CGFloat = 10
+    private let barHeight: CGFloat = 12
     private let circleSize: CGFloat = 26
     private let overlap: CGFloat = 3
 
@@ -813,30 +801,27 @@ private struct ProfileSkillRow: View {
                 .frame(width: 64, height: 64)
                 .accessibilityHidden(true)
 
-            VStack(alignment: .leading, spacing: 0) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(skill.title)
-                        .font(AppFonts.title(19, weight: .bold))
-                        .foregroundStyle(AppColors.textPrimary)
+            VStack(alignment: .leading, spacing: AppSpacing.xs) {
+                Text(skill.title)
+                    .font(AppFonts.title(19, weight: .bold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+
+                HStack(alignment: .firstTextBaseline, spacing: AppSpacing.sm) {
+                    Text("Level \(skill.detail.level)")
+                        .font(AppFonts.label(14, weight: .bold))
+                        .foregroundStyle(AppColors.xpMetricGold)
+                        .textCase(.uppercase)
+
+                    Spacer(minLength: AppSpacing.sm)
+
+                    Text("\(skill.detail.currentLevelXP) / \(skill.detail.nextLevelXP) XP")
+                        .font(AppFonts.label(14, weight: .bold))
+                        .foregroundStyle(AppColors.xpMetricGold)
+                        .monospacedDigit()
                         .lineLimit(1)
-                        .minimumScaleFactor(0.82)
-
-                    HStack(alignment: .firstTextBaseline) {
-                        Text("Level \(skill.detail.level)")
-                            .font(AppFonts.label(14, weight: .bold))
-                            .foregroundStyle(AppColors.xpMetricGold)
-                            .textCase(.uppercase)
-
-                        Spacer(minLength: AppSpacing.md)
-
-                        Text("\(skill.detail.currentLevelXP) / \(skill.detail.nextLevelXP) XP")
-                            .font(AppFonts.label(14, weight: .bold))
-                            .foregroundStyle(AppColors.xpMetricGold)
-                            .monospacedDigit()
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-                    .padding(.top, -AppSpacing.xs)
+                        .minimumScaleFactor(0.8)
                 }
 
                 SkillXPBarWithEndCap(
@@ -844,7 +829,6 @@ private struct ProfileSkillRow: View {
                     tint: skill.color,
                     progress: levelProgressToNext
                 )
-                .padding(.top, -AppSpacing.xs / 2)
             }
         }
         .padding(.vertical, AppSpacing.base)
@@ -888,6 +872,7 @@ private struct ProfileSkillDetailScreen: View {
         .background(AppColors.background)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .navigationSwipeBackEnabled()
         .onAppear {
             appeared = true
         }
@@ -904,21 +889,7 @@ private struct ProfileSkillDetailScreen: View {
                 .frame(maxWidth: .infinity)
 
             HStack {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .frame(width: 56, height: 56)
-                        .background(AppColors.surfaceRaised, in: Circle())
-                        .overlay {
-                            Circle()
-                                .strokeBorder(AppColors.separator, lineWidth: 1)
-                        }
-                }
-                .buttonStyle(PressButtonStyle())
-                .accessibilityLabel("Close")
+                NavigationBackButton(action: { dismiss() })
 
                 Spacer(minLength: 0)
             }

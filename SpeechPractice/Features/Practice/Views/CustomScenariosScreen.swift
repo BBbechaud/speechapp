@@ -61,9 +61,7 @@ struct CustomScenariosScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle("Custom Scenarios")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .practiceFlowScreenChrome(title: "Custom Scenarios")
         .onAppear {
             appeared = true
         }

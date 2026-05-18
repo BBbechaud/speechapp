@@ -1,7 +1,15 @@
 import SwiftUI
 
+enum ReviewFeedbackCloseStyle {
+    /// Full-screen exit after a practice flow — close control only.
+    case dismiss
+    /// Pushed from Progress history — back control and edge swipe.
+    case back
+}
+
 struct ReviewFeedbackScreen: View {
     let feedback: ReviewFeedback
+    let closeStyle: ReviewFeedbackCloseStyle
     let onClose: () -> Void
 
     @AppStorage("latestPracticeReviewNotes") private var practiceNotes: String = ""
@@ -28,6 +36,7 @@ struct ReviewFeedbackScreen: View {
         .background(AppColors.background)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .modifier(ReviewFeedbackSwipeBackModifier(closeStyle: closeStyle))
         .onAppear {
             appeared = true
         }
@@ -42,24 +51,26 @@ struct ReviewFeedbackScreen: View {
                 .foregroundStyle(AppColors.textTertiary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.82)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
                 .accessibilityAddTraits(.isHeader)
 
             HStack {
                 Button {
                     onClose()
                 } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(AppColors.textPrimary)
-                        .frame(width: 46, height: 46)
-                        .background(AppColors.surfaceRaised, in: Circle())
-                        .overlay {
-                            Circle()
-                                .strokeBorder(AppColors.separator, lineWidth: 1)
-                        }
+                    switch closeStyle {
+                    case .dismiss:
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(AppColors.textPrimary)
+                            .circularNavigationButtonChrome()
+                    case .back:
+                        NavigationBackButtonLabel()
+                    }
                 }
                 .buttonStyle(PressButtonStyle())
-                .accessibilityLabel("Close feedback")
+                .accessibilityLabel(closeStyle == .dismiss ? "Close feedback" : "Back")
 
                 Spacer(minLength: 0)
             }
@@ -416,6 +427,19 @@ private struct SessionStatPill: View {
     }
 }
 
+private struct ReviewFeedbackSwipeBackModifier: ViewModifier {
+    let closeStyle: ReviewFeedbackCloseStyle
+
+    func body(content: Content) -> some View {
+        switch closeStyle {
+        case .dismiss:
+            content.navigationSwipeBackDisabled()
+        case .back:
+            content.navigationSwipeBackEnabled()
+        }
+    }
+}
+
 #Preview {
     NavigationStack {
         ReviewFeedbackScreen(
@@ -423,6 +447,7 @@ private struct SessionStatPill: View {
                 scenario: Scenario.all[3],
                 persona: Persona.all[1]
             ),
+            closeStyle: .dismiss,
             onClose: {}
         )
     }

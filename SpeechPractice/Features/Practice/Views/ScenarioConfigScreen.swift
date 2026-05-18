@@ -38,8 +38,7 @@ struct ScenarioConfigScreen: View {
             .padding(.bottom, 100)
         }
         .background(AppColors.background)
-        .navigationTitle("Configure Scenario")
-        .navigationBarTitleDisplayMode(.inline)
+        .practiceFlowScreenChrome(title: "Configure Scenario")
         .onAppear {
             appeared = true
         }

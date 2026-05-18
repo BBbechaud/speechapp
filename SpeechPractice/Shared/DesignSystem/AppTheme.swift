@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 // MARK: - App Colors
 //
@@ -197,6 +198,275 @@ struct PressScaleModifier: ViewModifier {
 extension View {
     func pressScale(_ scale: CGFloat = 0.97) -> some View {
         modifier(PressScaleModifier(scale: scale))
+    }
+}
+
+// MARK: - Navigation Chrome
+
+/// UIKit appearance for NavigationStack so pushes slide over the app background
+/// instead of flashing black, and the back chevron stays a consistent dark color.
+enum AppNavigationAppearance {
+    static let backgroundUIColor = UIColor(
+        red: 246 / 255,
+        green: 245 / 255,
+        blue: 242 / 255,
+        alpha: 1
+    )
+    private static let tintUIColor = UIColor(
+        red: 31 / 255,
+        green: 30 / 255,
+        blue: 27 / 255,
+        alpha: 1
+    )
+
+    static func configure() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = backgroundUIColor
+        appearance.shadowColor = .clear
+        appearance.titleTextAttributes = [.foregroundColor: tintUIColor]
+        appearance.largeTitleTextAttributes = [.foregroundColor: tintUIColor]
+
+        let backButtonAppearance = UIBarButtonItemAppearance()
+        backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: tintUIColor]
+        backButtonAppearance.highlighted.titleTextAttributes = [.foregroundColor: tintUIColor]
+        backButtonAppearance.disabled.titleTextAttributes = [.foregroundColor: tintUIColor]
+        appearance.backButtonAppearance = backButtonAppearance
+
+        let navigationBar = UINavigationBar.appearance()
+        navigationBar.standardAppearance = appearance
+        navigationBar.compactAppearance = appearance
+        navigationBar.scrollEdgeAppearance = appearance
+        navigationBar.compactScrollEdgeAppearance = appearance
+        navigationBar.tintColor = tintUIColor
+    }
+}
+
+extension View {
+    /// Practice flow screens: hide `UINavigationBar` and pin a non-adaptive back control.
+    /// Scroll content (e.g. category gradient headers) must not live under the system bar —
+    /// iOS still retints toolbar items there during appear transitions.
+    func practiceFlowScreenChrome<Trailing: View>(
+        title: String? = nil,
+        @ViewBuilder trailing: @escaping () -> Trailing = { EmptyView() }
+    ) -> some View {
+        modifier(PracticeFlowScreenChromeModifier(title: title, trailing: trailing))
+    }
+
+    /// Apply to the root of each `NavigationStack` so stack pushes use the app background.
+    func appNavigationHost() -> some View {
+        background {
+            AppColors.background.ignoresSafeArea()
+            NavigationControllerBackgroundConfigurator()
+        }
+        .tint(AppColors.textPrimary)
+    }
+
+    /// Ensures edge swipe-back works when the navigation bar is hidden.
+    func navigationSwipeBackEnabled() -> some View {
+        background(NavigationInteractivePopEnabler())
+    }
+
+    /// Blocks edge swipe-back (for modal-style exits that use a close button).
+    func navigationSwipeBackDisabled() -> some View {
+        background(NavigationInteractivePopLocker())
+    }
+
+    /// Raised circular chrome for custom back/close controls on pushed screens.
+    func circularNavigationButtonChrome(diameter: CGFloat = 46) -> some View {
+        frame(width: diameter, height: diameter)
+            .background(AppColors.surfaceRaised, in: Circle())
+            .overlay {
+                Circle()
+                    .strokeBorder(AppColors.separator, lineWidth: 1)
+            }
+    }
+
+    /// Trailing disclosure circle for tappable list rows (skills, history, scenarios).
+    func rowDisclosureIndicatorChrome(diameter: CGFloat = 32) -> some View {
+        frame(width: diameter, height: diameter)
+            .background(AppColors.background, in: Circle())
+            .overlay {
+                Circle()
+                    .strokeBorder(AppColors.separator.opacity(0.55), lineWidth: 1)
+            }
+    }
+}
+
+// MARK: - Navigation back button
+
+struct NavigationBackButtonLabel: View {
+    var body: some View {
+        Image(systemName: "chevron.left")
+            .font(.system(size: 18, weight: .semibold))
+            .foregroundStyle(AppColors.textPrimary)
+            .circularNavigationButtonChrome()
+    }
+}
+
+struct NavigationBackButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            NavigationBackButtonLabel()
+        }
+        .buttonStyle(PressButtonStyle())
+        .accessibilityLabel("Back")
+    }
+}
+
+// MARK: - Practice flow top bar
+
+private struct PracticeFlowTopBar<Trailing: View>: View {
+    let title: String?
+    let onBack: () -> Void
+    @ViewBuilder let trailing: () -> Trailing
+
+    var body: some View {
+        ZStack {
+            if let title {
+                Text(title)
+                    .font(AppFonts.title(18, weight: .bold))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.82)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity)
+                    .accessibilityAddTraits(.isHeader)
+            }
+
+            HStack(alignment: .center, spacing: 0) {
+                NavigationBackButton(action: onBack)
+
+                Spacer(minLength: 0)
+
+                Group {
+                    trailing()
+                }
+                .frame(width: 46, height: 46, alignment: .trailing)
+            }
+        }
+        .padding(.horizontal, AppSpacing.base)
+        .padding(.bottom, AppSpacing.sm)
+        .frame(maxWidth: .infinity)
+        .background(AppColors.background)
+    }
+}
+
+private struct PracticeFlowScreenChromeModifier<Trailing: View>: ViewModifier {
+    let title: String?
+    @ViewBuilder let trailing: () -> Trailing
+    @Environment(\.dismiss) private var dismiss
+
+    func body(content: Content) -> some View {
+        content
+            .navigationBarBackButtonHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) {
+                PracticeFlowTopBar(title: title, onBack: { dismiss() }, trailing: trailing)
+            }
+            .navigationSwipeBackEnabled()
+    }
+}
+
+// MARK: - Navigation controller background
+
+/// Sets only the navigation controller container background (not every child UIView).
+private struct NavigationControllerBackgroundConfigurator: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        NavigationControllerBackgroundHost()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
+private final class NavigationControllerBackgroundHost: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.isUserInteractionEnabled = false
+        view.backgroundColor = .clear
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.view.backgroundColor = AppNavigationAppearance.backgroundUIColor
+    }
+}
+
+// MARK: - Navigation interactive pop
+
+/// Allows the edge swipe when the nav bar is hidden (`interactivePopGestureRecognizer` defaults to off).
+private final class NavigationInteractivePopGestureDelegate: NSObject, UIGestureRecognizerDelegate {
+    weak var navigationController: UINavigationController?
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let navigationController else {
+            return false
+        }
+        return navigationController.viewControllers.count > 1
+    }
+}
+
+private struct NavigationInteractivePopEnabler: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        NavigationInteractivePopEnableHost()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {
+        (uiViewController as? NavigationInteractivePopEnableHost)?.configureInteractivePop()
+    }
+}
+
+private final class NavigationInteractivePopEnableHost: UIViewController {
+    private let popGestureDelegate = NavigationInteractivePopGestureDelegate()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.isUserInteractionEnabled = false
+        view.backgroundColor = .clear
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureInteractivePop()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        configureInteractivePop()
+    }
+
+    fileprivate func configureInteractivePop() {
+        guard let navigationController else {
+            return
+        }
+        popGestureDelegate.navigationController = navigationController
+        guard let popGesture = navigationController.interactivePopGestureRecognizer else {
+            return
+        }
+        popGesture.isEnabled = true
+        popGesture.delegate = popGestureDelegate
+    }
+}
+
+private struct NavigationInteractivePopLocker: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        NavigationInteractivePopLockHost()
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+}
+
+private final class NavigationInteractivePopLockHost: UIViewController {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.interactivePopGestureRecognizer?.isEnabled = true
     }
 }
 

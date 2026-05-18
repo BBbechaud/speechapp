@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 struct DailyMinuteSessionScreen: View {
@@ -7,9 +8,9 @@ struct DailyMinuteSessionScreen: View {
     @Environment(\.dismiss) private var dismiss
     @State private var remainingSeconds: Int = Self.durationSeconds
     @State private var hasCompleted = false
+    @State private var timerCancellable: AnyCancellable?
 
     private static let durationSeconds = 60
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var progress: CGFloat {
         CGFloat(remainingSeconds) / CGFloat(Self.durationSeconds)
@@ -44,28 +45,34 @@ struct DailyMinuteSessionScreen: View {
         .background(AppColors.surface)
         .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .navigationSwipeBackEnabled()
         .onAppear {
             remainingSeconds = Self.durationSeconds
             hasCompleted = false
+            startTimer()
         }
-        .onReceive(timer) { _ in
-            tick()
+        .onDisappear {
+            stopTimer()
         }
+    }
+
+    private func startTimer() {
+        stopTimer()
+        timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { _ in
+                tick()
+            }
+    }
+
+    private func stopTimer() {
+        timerCancellable?.cancel()
+        timerCancellable = nil
     }
 
     private var topBar: some View {
         HStack(spacing: AppSpacing.md) {
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .frame(width: 40, height: 40)
-                    .background(AppColors.surfaceRaised, in: Circle())
-            }
-            .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Back")
+            NavigationBackButton(action: { dismiss() })
 
             Spacer()
 
@@ -86,7 +93,7 @@ struct DailyMinuteSessionScreen: View {
             Spacer()
 
             Color.clear
-                .frame(width: 40, height: 40)
+                .frame(width: 46, height: 46)
                 .accessibilityHidden(true)
         }
         .padding(.horizontal, AppSpacing.base)
@@ -201,6 +208,7 @@ struct DailyMinuteSessionScreen: View {
         guard !hasCompleted else { return }
 
         hasCompleted = true
+        stopTimer()
         viewModel.completeDailyMinute()
     }
 }

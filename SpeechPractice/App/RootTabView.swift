@@ -29,11 +29,10 @@ struct RootTabView: View {
     @State private var didLoadReviewRecords: Bool = false
     @State private var practiceFlowViewModel = PracticeFlowViewModel()
 
-    /// Hide chrome during the pre-practice transition, the live session, and completion gate
-    /// so tabs cannot steal focus from the countdown, End Practice, or analysis CTA.
+    /// Hide chrome during immersive practice routes so tabs cannot steal focus mid-session.
     private var suppressTabBarForPracticeFlow: Bool {
         switch practiceFlowViewModel.navigationPath.last {
-        case .prePracticeTransition, .session, .complete:
+        case .prePracticeTransition, .dailyMinuteSession, .session, .complete:
             return true
         default:
             return false
@@ -43,10 +42,14 @@ struct RootTabView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack {
+                AppColors.background
+                    .ignoresSafeArea()
+
                 NavigationStack {
                     LearnScreen()
                 }
-                .opacity(selectedTab == .learn ? 1 : 0)
+                .appNavigationHost()
+                .zIndex(selectedTab == .learn ? 1 : 0)
                 .allowsHitTesting(selectedTab == .learn)
 
                 NavigationStack(path: $practiceFlowViewModel.navigationPath) {
@@ -59,13 +62,15 @@ struct RootTabView: View {
                         }
                     )
                 }
-                .opacity(selectedTab == .practice ? 1 : 0)
+                .appNavigationHost()
+                .zIndex(selectedTab == .practice ? 1 : 0)
                 .allowsHitTesting(selectedTab == .practice)
 
                 NavigationStack {
                     ProgressScreen(records: reviewRecords, innerTab: $progressInnerTab)
                 }
-                .opacity(selectedTab == .progress ? 1 : 0)
+                .appNavigationHost()
+                .zIndex(selectedTab == .progress ? 1 : 0)
                 .allowsHitTesting(selectedTab == .progress)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -74,9 +79,7 @@ struct RootTabView: View {
                 AppTabBar(selectedTab: $selectedTab)
             }
         }
-        .animation(.easeInOut(duration: 0.18), value: selectedTab)
         .animation(.easeInOut(duration: 0.22), value: suppressTabBarForPracticeFlow)
-        .tint(AppColors.primary)
         .onAppear {
             guard didLoadReviewRecords == false else {
                 return

@@ -34,7 +34,9 @@ struct DailyMinuteWheelScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.surface)
+        .navigationBarBackButtonHidden(true)
         .toolbar(.hidden, for: .navigationBar)
+        .navigationSwipeBackEnabled()
         .safeAreaInset(edge: .top) {
             topBar
         }
@@ -49,32 +51,27 @@ struct DailyMinuteWheelScreen: View {
     }
 
     private var topBar: some View {
-        HStack(spacing: AppSpacing.md) {
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "chevron.left")
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .frame(width: 40, height: 40)
-                    .background(AppColors.surfaceRaised, in: Circle())
-            }
-            .buttonStyle(PressButtonStyle())
-            .accessibilityLabel("Back")
-
-            VStack(alignment: .leading, spacing: 2) {
+        ZStack {
+            VStack(spacing: 2) {
                 Text("Daily Minute")
-                    .font(AppFonts.title(24, weight: .bold))
+                    .font(AppFonts.title(18, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
 
                 Text("SPIN FOR YOUR CHALLENGE")
                     .font(AppFonts.label(11, weight: .bold))
                     .foregroundStyle(AppColors.primary)
             }
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .accessibilityAddTraits(.isHeader)
 
-            Spacer(minLength: 0)
+            HStack {
+                NavigationBackButton(action: { dismiss() })
+
+                Spacer(minLength: 0)
+            }
         }
-        .padding(.horizontal, AppSpacing.xl)
+        .padding(.horizontal, AppSpacing.base)
         .padding(.top, AppSpacing.sm)
         .padding(.bottom, AppSpacing.md)
         .background(AppColors.surface)

@@ -39,9 +39,7 @@ struct CategoryScenariosScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle("Choose scenario")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .practiceFlowScreenChrome(title: "Choose scenario")
         .onAppear {
             appeared = true
         }

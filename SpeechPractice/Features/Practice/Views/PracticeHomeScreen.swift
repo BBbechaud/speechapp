@@ -30,41 +30,45 @@ struct PracticeHomeScreen: View {
         .background(AppColors.background)
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(for: PracticeRoute.self) { route in
-            switch route {
-            case .dailyChallenges:
-                DailyChallengesScreen(viewModel: viewModel)
-            case .dailyMinuteWheel:
-                DailyMinuteWheelScreen(viewModel: viewModel)
-            case .dailyMinuteSession(let prompt):
-                DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
-            case .categoryScenarios(let category):
-                CategoryScenariosScreen(viewModel: viewModel, category: category)
-            case .customScenariosHub:
-                CustomScenariosScreen(viewModel: viewModel)
-            case .configure:
-                ScenarioConfigScreen(viewModel: viewModel)
-            case .customScenarioEditor:
-                CustomScenarioEditorScreen(viewModel: viewModel)
-            case .primer:
-                PracticePrimerScreen(viewModel: viewModel)
-            case .prePracticeTransition:
-                PrePracticeTransitionScreen(viewModel: viewModel)
-            case .session:
-                PracticeSessionScreen(viewModel: viewModel)
-            case .complete:
-                PracticeCompleteScreen(onReviewFeedback: {
-                    viewModel.showReviewFeedback()
-                })
-            case .reviewFeedback:
-                let feedback = viewModel.currentReviewFeedback()
-                ReviewFeedbackScreen(
-                    feedback: feedback,
-                    onClose: {
-                        onReviewFeedbackClosed(feedback)
-                        viewModel.reset()
-                    }
-                )
+            Group {
+                switch route {
+                case .dailyChallenges:
+                    DailyChallengesScreen(viewModel: viewModel)
+                case .dailyMinuteWheel:
+                    DailyMinuteWheelScreen(viewModel: viewModel)
+                case .dailyMinuteSession(let prompt):
+                    DailyMinuteSessionScreen(viewModel: viewModel, prompt: prompt)
+                case .categoryScenarios(let category):
+                    CategoryScenariosScreen(viewModel: viewModel, category: category)
+                case .customScenariosHub:
+                    CustomScenariosScreen(viewModel: viewModel)
+                case .configure:
+                    ScenarioConfigScreen(viewModel: viewModel)
+                case .customScenarioEditor:
+                    CustomScenarioEditorScreen(viewModel: viewModel)
+                case .primer:
+                    PracticePrimerScreen(viewModel: viewModel)
+                case .prePracticeTransition:
+                    PrePracticeTransitionScreen(viewModel: viewModel)
+                case .session:
+                    PracticeSessionScreen(viewModel: viewModel)
+                case .complete:
+                    PracticeCompleteScreen(onReviewFeedback: {
+                        viewModel.showReviewFeedback()
+                    })
+                case .reviewFeedback:
+                    let feedback = viewModel.currentReviewFeedback()
+                    ReviewFeedbackScreen(
+                        feedback: feedback,
+                        closeStyle: .dismiss,
+                        onClose: {
+                            onReviewFeedbackClosed(feedback)
+                            viewModel.reset()
+                        }
+                    )
+                }
             }
+            .background(AppColors.background.ignoresSafeArea())
         }
         .onAppear {
             appeared = true
@@ -308,9 +312,7 @@ private struct DailyChallengesScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle("Daily Challenges")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbarBackground(AppColors.background, for: .navigationBar)
+        .practiceFlowScreenChrome(title: "Daily Challenges")
         .onAppear {
             appeared = true
         }
@@ -429,16 +431,12 @@ private struct CustomScenariosHeroCard: View {
     let savedCount: Int
 
     var body: some View {
-        HStack(spacing: AppSpacing.md) {
-            ZStack {
-                Circle()
-                    .fill(.white.opacity(0.2))
-                    .frame(width: 48, height: 48)
-                Image(systemName: "sparkles")
-                    .font(.system(size: 20, weight: .semibold))
-                    .foregroundStyle(.white)
-            }
-            .accessibilityHidden(true)
+        HStack(alignment: .center, spacing: AppSpacing.md) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 44, height: 44)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: AppSpacing.sm) {
@@ -460,10 +458,11 @@ private struct CustomScenariosHeroCard: View {
                     .font(AppFonts.body(13))
                     .foregroundStyle(.white.opacity(0.8))
             }
+
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, AppSpacing.xl)
-        .padding(.vertical, AppSpacing.lg)
-        .frame(maxWidth: .infinity)
+        .padding(AppSpacing.base)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.xl)
                 .fill(
@@ -596,7 +595,7 @@ struct ScenarioRow: View {
 
 struct CustomScenarioCreateRow: View {
     var body: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(alignment: .center, spacing: AppSpacing.sm) {
             ZStack {
                 Circle()
                     .fill(AppColors.primarySubtle)
@@ -606,7 +605,7 @@ struct CustomScenarioCreateRow: View {
                     .font(.system(size: 18, weight: .bold))
                     .foregroundStyle(AppColors.primary)
             }
-            .frame(width: 44, height: 48, alignment: .center)
+            .frame(width: 44, height: 48, alignment: .leading)
             .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
@@ -625,6 +624,7 @@ struct CustomScenarioCreateRow: View {
             Spacer(minLength: 0)
         }
         .padding(AppSpacing.base)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .fill(AppColors.surface)
@@ -648,11 +648,11 @@ struct CustomScenarioSavedRow: View {
     }
 
     var body: some View {
-        HStack(spacing: AppSpacing.sm) {
+        HStack(alignment: .center, spacing: AppSpacing.sm) {
             Image(systemName: "sparkles")
                 .font(.system(size: 20, weight: .semibold))
                 .foregroundStyle(AppColors.accent)
-                .frame(width: 44, height: 48, alignment: .center)
+                .frame(width: 44, height: 48, alignment: .leading)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: AppSpacing.xs) {
@@ -680,6 +680,7 @@ struct CustomScenarioSavedRow: View {
             Spacer(minLength: 0)
         }
         .padding(AppSpacing.base)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .background {
             RoundedRectangle(cornerRadius: AppRadius.lg)
                 .fill(AppColors.surface)

@@ -30,29 +30,18 @@ struct PracticePrimerScreen: View {
             .padding(.bottom, AppSpacing.xxxl)
         }
         .background(AppColors.background)
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .principal) {
-                Text(scenario.title)
-                    .font(AppFonts.display(24))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
-                    .multilineTextAlignment(.center)
-            }
-
+        .practiceFlowScreenChrome(title: scenario.title) {
             if let activeCustomScenario = viewModel.activeCustomScenario {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        viewModel.presentCustomScenarioEdit(activeCustomScenario)
-                    } label: {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(AppColors.primary)
-                    }
-                    .accessibilityLabel("Edit custom scenario")
+                Button {
+                    viewModel.presentCustomScenarioEdit(activeCustomScenario)
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(AppColors.primary)
+                        .frame(width: 40, height: 40)
                 }
+                .buttonStyle(PressButtonStyle())
+                .accessibilityLabel("Edit custom scenario")
             }
         }
         .safeAreaInset(edge: .bottom) {

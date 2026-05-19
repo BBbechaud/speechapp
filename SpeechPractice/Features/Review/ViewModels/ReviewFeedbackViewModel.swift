@@ -85,6 +85,8 @@ enum ReviewFeedbackViewModel {
 enum ReviewHistoryStore {
     private static let recordsStorageKey: String = "reviewSessionRecords"
     private static let legacySummariesStorageKey: String = "reviewSessionSummaries"
+    private static let unreadableRecordsBackupKey: String = "reviewSessionRecords.unreadableBackup"
+    private static let unreadableLegacySummariesBackupKey: String = "reviewSessionSummaries.unreadableBackup"
 
     static func loadRecords() -> [ReviewSessionRecord] {
         if let recordsData = UserDefaults.standard.data(forKey: recordsStorageKey) {
@@ -92,14 +94,16 @@ enum ReviewHistoryStore {
                 let records: [ReviewSessionRecord] = try JSONDecoder().decode([ReviewSessionRecord].self, from: recordsData)
                 return sortedByMostRecent(records)
             } catch {
-                // Stored data is unreadable (schema change or corruption) — clear all review keys and fall through.
+                // Keep the raw payload recoverable for a future migration instead of destroying user history.
+                backupUnreadableData(recordsData, key: unreadableRecordsBackupKey)
                 UserDefaults.standard.removeObject(forKey: recordsStorageKey)
-                UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
             }
         }
 
         let records: [ReviewSessionRecord] = loadLegacyRecords()
-        save(records)
+        if records.isEmpty == false {
+            save(records)
+        }
         return records
     }
 
@@ -124,10 +128,13 @@ enum ReviewHistoryStore {
     }
 
     private static func save(_ records: [ReviewSessionRecord]) {
-        guard let data = try? JSONEncoder().encode(records) else {
+        do {
+            let data = try JSONEncoder().encode(records)
+            UserDefaults.standard.set(data, forKey: recordsStorageKey)
+        } catch {
+            assertionFailure("Failed to encode review history: \(error)")
             return
         }
-        UserDefaults.standard.set(data, forKey: recordsStorageKey)
     }
 
     /// Seed rows for SwiftUI previews only — does not read or write `UserDefaults`.
@@ -137,7 +144,7 @@ enum ReviewHistoryStore {
 
     private static func loadLegacyRecords() -> [ReviewSessionRecord] {
         guard let data = UserDefaults.standard.data(forKey: legacySummariesStorageKey) else {
-            return seededRecords()
+            return []
         }
 
         do {
@@ -147,10 +154,14 @@ enum ReviewHistoryStore {
             }
             return sortedByMostRecent(records)
         } catch {
-            // Legacy data is unreadable — clear it and fall through to seeded records.
+            backupUnreadableData(data, key: unreadableLegacySummariesBackupKey)
             UserDefaults.standard.removeObject(forKey: legacySummariesStorageKey)
-            return seededRecords()
+            return []
         }
+    }
+
+    private static func backupUnreadableData(_ data: Data, key: String) {
+        UserDefaults.standard.set(data, forKey: key)
     }
 
     private static func sortedByMostRecent(_ records: [ReviewSessionRecord]) -> [ReviewSessionRecord] {

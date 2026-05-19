@@ -180,6 +180,10 @@ final class PracticeFlowViewModel {
     }
 
     func startPractice() {
+        guard navigationPath.last != .prePracticeTransition else {
+            return
+        }
+
         personaSessionPhase = .listening
         navigationPath.append(.prePracticeTransition)
     }
@@ -216,9 +220,16 @@ final class PracticeFlowViewModel {
         navigationPath = [.complete]
     }
 
-    func showReviewFeedback() {
-        activeReviewFeedback = makeReviewFeedback()
+    @discardableResult
+    func showReviewFeedback() -> ReviewFeedback? {
+        guard navigationPath.last != .reviewFeedback else {
+            return nil
+        }
+
+        let feedback = activeReviewFeedback ?? makeReviewFeedback()
+        activeReviewFeedback = feedback
         navigationPath.append(.reviewFeedback)
+        return feedback
     }
 
     func currentReviewFeedback() -> ReviewFeedback {

@@ -2,7 +2,8 @@ import SwiftUI
 
 struct PracticeHomeScreen: View {
     var viewModel: PracticeFlowViewModel
-    let onReviewFeedbackClosed: (ReviewFeedback) -> Void
+    let onReviewFeedbackCreated: (ReviewFeedback) -> Void
+    let onReviewFeedbackClosed: () -> Void
 
     @State private var appeared = false
 
@@ -54,7 +55,9 @@ struct PracticeHomeScreen: View {
                     PracticeSessionScreen(viewModel: viewModel)
                 case .complete:
                     PracticeCompleteScreen(onReviewFeedback: {
-                        viewModel.showReviewFeedback()
+                        if let feedback = viewModel.showReviewFeedback() {
+                            onReviewFeedbackCreated(feedback)
+                        }
                     })
                 case .reviewFeedback:
                     let feedback = viewModel.currentReviewFeedback()
@@ -62,7 +65,7 @@ struct PracticeHomeScreen: View {
                         feedback: feedback,
                         closeStyle: .dismiss,
                         onClose: {
-                            onReviewFeedbackClosed(feedback)
+                            onReviewFeedbackClosed()
                             viewModel.reset()
                         }
                     )
@@ -692,6 +695,10 @@ struct CustomScenarioSavedRow: View {
 #Preview {
     @Previewable @State var viewModel = PracticeFlowViewModel()
     NavigationStack(path: $viewModel.navigationPath) {
-        PracticeHomeScreen(viewModel: viewModel, onReviewFeedbackClosed: { _ in })
+        PracticeHomeScreen(
+            viewModel: viewModel,
+            onReviewFeedbackCreated: { _ in },
+            onReviewFeedbackClosed: {}
+        )
     }
 }
